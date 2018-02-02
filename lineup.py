@@ -28,11 +28,14 @@ class Lineup():
             return (requests.get(url,headers=headers,params=qs).json())
 
         # Init lineup
-        lineup = {}
+        # lineup = {}
+        # As list
+        lineup = []
         # loop over dict. to retrieve stats
         for id in ids:
             r = getInfo(id)
             j = {}
+            j['id'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['ID']
             j['firstname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['FirstName']
             j['lastname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['LastName']
             j['atbats'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['AtBats']['#text']
@@ -45,7 +48,9 @@ class Lineup():
             j['homeruns'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['Homeruns']['#text']
 
             # add the subdictionary to the main dictionary
-            lineup[id]=j
+            #lineup[id]=j
+            #lineup.update(j)
+            lineup.append(j)
 
         # return the lineup
         return (lineup)
