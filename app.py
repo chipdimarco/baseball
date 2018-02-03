@@ -1,11 +1,12 @@
 # Use the MySportsFeeds API to retrieve MLB info
-# 1/27/2018 v3
+# 2/3/2018 v4
+# Add pygame files for functions, score, setting
 
 # IMPORT
 import requests
 import json
 # also import
-from lineup import Lineup
+from game_lineup import Lineup
 
 # and from my first attempt
 # Import the Pygame library
@@ -34,12 +35,50 @@ GRASS = (   1, 166,  17 )
 
 
 def main():
-    ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
+    # Setup game_functions will occur here
+    # Select a Home Team
+    # Red Soxs are Home Team
+    home_team_name = "Red Sox"
+    # Select a Visiting Team
+    # Yankees are Visiting Team
+    visiting_team_name = "Yankees"
+    # Create a roster for each team
+    # Select the lineup. There will be a string of ids for each lineup.
+    home_ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
+    visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
+   
+    # Create Lineups
     home = Lineup()
-    home_lineup = home.create_lineup_dictionary(ids)
-    for i in range ( 0, len(home_lineup)):
-        print (home_lineup[i]["lastname"])
-        # Initialize the Game Engine
+    home_lineup_dictionary = home.create_lineup_dictionary(home_ids)
+    home_lineup_lastname = home.lineup_lastname(home_lineup_dictionary)
+    
+    # Confirm
+    # print (home_lineup_lastname)
+    visitor = Lineup()
+    visitor_lineup_dictionary = visitor.create_lineup_dictionary(visitor_ids)
+    visitor_lineup_lastname = visitor.lineup_lastname(visitor_lineup_dictionary) 
+    # Confirm
+    #print (visitor_lineup_lastname)
+     #
+    # And Select a pitcher for each team
+    home_pitcher_id = ['10432']
+    home_pitcher = home.get_pitcher(home_pitcher_id)
+
+    visitor_pitcher_id =['10719']
+    visitor_pitcher = visitor.get_pitcher(visitor_pitcher_id)
+
+    print (f'{home_pitcher["lastname"]} is the starting pitcher for the {home_team_name}')
+    print (f'And {visitor_pitcher["lastname"]} will start for the {visiting_team_name}')
+
+    print (f'{home_pitcher["lastname"]} allowed {home_pitcher["homerunsallowed"]} homerun last year.')
+
+
+
+    up = visitor_lineup_dictionary
+    print (f'The batter is {up[0]["firstname"]} {up[0]["lastname"]}.')
+    print (f'He had {up[0]["hits"]} hits in {up[0]["atbats"]} at bats.')
+
+    # Initialize the Game Engine
     pygame.init()
     
     # Access Game Settings
@@ -51,14 +90,18 @@ def main():
     score = Score()
 
     # Loop until the user is done
-    done = False
+    done = True
+    #done = False
     
     # Manage screen update rate
     clock = pygame.time.Clock()
     
     # Initialize Scoring
+    
+    '''
     v_lineup = gf.set_v_lineup()
     h_lineup = gf.set_h_lineup()
+    '''
     
     # ------- M A I N   P R O G R A M   L O O P ------- #
     while not done:
@@ -92,9 +135,9 @@ def main():
         
         # Lineup card Bottom Left
         if score.half == "top":
-            sb_lineup_display = v_lineup
+            sb_lineup_display = visitor_lineup_lastname
         else:
-            sb_lineup_display = h_lineup
+            sb_lineup_display = home_lineup_lastname
             
         pygame.draw.rect(screen, BLACK, [10, 340, 200, 150])
         sb_lineup_font = pygame.font.SysFont('Courier', 12, False, False)

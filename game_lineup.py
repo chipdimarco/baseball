@@ -19,13 +19,22 @@ class Lineup():
     def __init__(self):
         self.note = "lineup"
     
+    def getInfo(self,id):
+        self.id = id
+        qs = {}
+        qs["player"]=id
+        return (requests.get(url,headers=headers,params=qs).json())
+
+
     # Method for creating a lineup with stats from a dict. of ids
     def create_lineup_dictionary(self,ids):
         self.ids = ids
+        '''
         def getInfo(id):
             qs = {}
             qs["player"]=id
             return (requests.get(url,headers=headers,params=qs).json())
+        '''
 
         # Init lineup
         # lineup = {}
@@ -33,7 +42,7 @@ class Lineup():
         lineup = []
         # loop over dict. to retrieve stats
         for id in ids:
-            r = getInfo(id)
+            r = self.getInfo(id)
             j = {}
             j['id'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['ID']
             j['firstname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['FirstName']
@@ -55,6 +64,30 @@ class Lineup():
         # return the lineup
         return (lineup)
 
+    def lineup_lastname(self, lineup_dictionary):
+        self.lineup_dictionary = lineup_dictionary
+        lineup = []
+        for i in range ( 0, len(lineup_dictionary)):
+            lineup.append(lineup_dictionary[i]["lastname"])
+        return (lineup)
+
+    def get_pitcher(self,id):
+        self.id = id
+        r = self.getInfo(id)
+        j = {}
+        # parse out r into j
+        j['id'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['ID']
+        j['firstname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['FirstName']
+        j['lastname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['LastName']
+        j['totalbattersfaced'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['TotalBattersFaced']
+        j['hitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['HitsAllowed']['#text']
+        j['pitcherstrikeouts'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherStrikeouts']['#text']
+        j['pitcherwalks'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherWalks']['#text']
+        j['secondbasehitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['SecondBaseHitsAllowed']['#text']
+        j['thirdbasehitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['ThirdBaseHitsAllowed']['#text']
+        j['homerunsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['HomerunsAllowed']['#text']
+        
+        return (j)
 
 
 
