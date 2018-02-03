@@ -69,11 +69,13 @@ def draw_scoreboards(screen, color, color_center,v_score,h_score):
     screen.blit(v_sb_score, [55,20])
     screen.blit(h_sb_score, [505,20])
         
+# REVISE THIS TO USE THE Lineup() class
 def set_v_lineup():
     v_lineup = ['BOSTON','Pedroia','Benintendi','Betts','Ramirez','Bogaerts',
                     'Moreland','Sandoval','Bradley','Vazquez']
     return v_lineup
 
+# REVISE THIS TO USE THE Lineup() class
 def set_h_lineup():
     h_lineup = ['NEW YORK', 'Garner','Sanchez','Bird','Holliday','Ellsbury',
                     'Castro', 'Headley','Judge','Torreyes']
