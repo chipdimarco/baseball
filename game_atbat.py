@@ -1,7 +1,7 @@
 # takes the batter line and the pitcher line and returns a result
-# 2/3/2018 v1
+# 2/4/2018 v2
 # class Atbat creates the object
-# returns the result of the plate appearance
+# returns a result of hit or out
 
 import random
 
