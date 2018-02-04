@@ -1,12 +1,13 @@
 # Use the MySportsFeeds API to retrieve MLB info
-# 2/3/2018 v4
-# Add pygame files for functions, score, setting
+# 2/4/2018 v5: Use Atbat() to get results and begin creating a loop through a lineup
+# 2/3/2018 v4: Add pygame files for functions, score, setting
 
 # IMPORT
 import requests
 import json
 # also import
 from game_lineup import Lineup
+from game_atbat import Atbat
 
 # and from my first attempt
 # Import the Pygame library
@@ -70,13 +71,39 @@ def main():
     print (f'{home_pitcher["lastname"]} is the starting pitcher for the {home_team_name}')
     print (f'And {visitor_pitcher["lastname"]} will start for the {visiting_team_name}')
 
-    print (f'{home_pitcher["lastname"]} allowed {home_pitcher["homerunsallowed"]} homerun last year.')
+    print (f'{home_pitcher["lastname"]} allowed {home_pitcher["homerunsallowed"]} homeruns last year.')
+
+    #v5 Loop through the lineup
+    atbat = Atbat()
+    leads_off_inning = 5
+    out_count = 0
+    for i in range (9):
+        up = visitor_lineup_dictionary[(i+leads_off_inning)%9]
+        up_next = (i+leads_off_inning+1)%9
+        r = atbat.play(up,home_pitcher)
+        print (f'{i+1}: {up["lastname"]} - {r}' )
+        if r[0] == "O":
+            out_count += 1
+        if out_count > 2:
+            break
+    leads_off_inning = up_next
+    print ( f'{visitor_lineup_dictionary[leads_off_inning]["lastname"]} will lead off next inning.')        
 
 
 
-    up = visitor_lineup_dictionary
-    print (f'The batter is {up[0]["firstname"]} {up[0]["lastname"]}.')
-    print (f'He had {up[0]["hits"]} hits in {up[0]["atbats"]} at bats.')
+
+    # v4 Allows for getting a result from the Atbat() object
+    '''
+    up = visitor_lineup_dictionary[0]
+    print (f'The batter is {up["firstname"]} {up["lastname"]}.')
+    print (f'He had {up["hits"]} hits in {up["atbats"]} at bats.')
+
+    play = Atbat()
+    for i in range (20):
+        print (play.play(up,home_pitcher))
+    '''
+
+
 
     # Initialize the Game Engine
     pygame.init()

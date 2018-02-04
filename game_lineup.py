@@ -79,7 +79,7 @@ class Lineup():
         j['id'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['ID']
         j['firstname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['FirstName']
         j['lastname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['LastName']
-        j['totalbattersfaced'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['TotalBattersFaced']
+        j['totalbattersfaced'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['TotalBattersFaced']['#text']
         j['hitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['HitsAllowed']['#text']
         j['pitcherstrikeouts'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherStrikeouts']['#text']
         j['pitcherwalks'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherWalks']['#text']
