@@ -73,6 +73,47 @@ def main():
 
     print (f'{home_pitcher["lastname"]} allowed {home_pitcher["homerunsallowed"]} homeruns last year.')
 
+    #v6 Loop 9 times
+    atbat = Atbat()
+    visitor_leads_off_inning = 0
+    home_leads_off_inning = 0
+    out_count = 0
+    
+    for inning in range(9):
+        # Top of the inning
+        out_count = 0
+        for i in range(9):
+            up = visitor_lineup_dictionary[(i+visitor_leads_off_inning)%9]
+            visitor_up_next = (i+visitor_leads_off_inning+1)%9
+            r = atbat.play(up,home_pitcher)
+            print (f'{i+1}: {up["lastname"]} - {r}')
+            if r[0] == "O":
+                out_count += 1
+            if out_count > 2:
+                break
+        visitor_leads_off_inning = visitor_up_next
+        print ( f'Top of inning {inning+1} completed.')
+        print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.') 
+        print()
+        # Bottom of the inning
+        out_count = 0
+        for i in range(9):
+            up = home_lineup_dictionary[(i+home_leads_off_inning)%9]
+            home_up_next = (i+home_leads_off_inning+1)%9
+            r = atbat.play(up,visitor_pitcher)
+            print (f'{i+1}: {up["lastname"]} - {r}')
+            if r[0] == "O":
+                out_count += 1
+            if out_count > 2:
+                break
+        home_leads_off_inning = home_up_next
+        print ( f'Bottom of inning {inning+1} completed.')
+        print ( f'{home_lineup_dictionary[home_leads_off_inning]["lastname"]} will lead off next inning.') 
+        print ()
+    print (f'Game Over')
+
+
+    '''
     #v5 Loop through the lineup
     atbat = Atbat()
     leads_off_inning = 5
@@ -88,22 +129,7 @@ def main():
             break
     leads_off_inning = up_next
     print ( f'{visitor_lineup_dictionary[leads_off_inning]["lastname"]} will lead off next inning.')        
-
-
-
-
-    # v4 Allows for getting a result from the Atbat() object
     '''
-    up = visitor_lineup_dictionary[0]
-    print (f'The batter is {up["firstname"]} {up["lastname"]}.')
-    print (f'He had {up["hits"]} hits in {up["atbats"]} at bats.')
-
-    play = Atbat()
-    for i in range (20):
-        print (play.play(up,home_pitcher))
-    '''
-
-
 
     # Initialize the Game Engine
     pygame.init()
