@@ -1,5 +1,5 @@
-import pygame
-pygame.init()
+#import pygame
+#pygame.init()
 
 class Score():
     def __init__(self):

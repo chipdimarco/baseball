@@ -3,21 +3,18 @@
 # 2/3/2018 v4: Add pygame files for functions, score, setting
 
 # IMPORT
-import requests
-import json
+#import requests
+#import json
 # also import
-from game_lineup import Lineup
-from game_atbat import Atbat
+#from game_lineup import Lineup
+#from game_atbat import Atbat
 
-# and from my first attempt
-# Import the Pygame library
-# import pygame
 from tkinter import *
 from tkinter import ttk
 
 from game_settings import Settings
 from game_score import Score
-import game_functions as gf
+#import game_functions as gf
 
 
 '''
@@ -27,7 +24,7 @@ import game_functions as gf
 # Yankee ids
 #
 '''
-
+'''
 # Define Colors
 BLACK = (   0,   0,   0 )
 WHITE = ( 255, 255, 255 )
@@ -35,12 +32,9 @@ GREEN = (   0, 255,   0 )
 RED   = ( 255,   0,   0 )
 BLUE  = (   0,   0, 255 )
 GRASS = (   1, 166,  17 )
-
+'''
 
 def main():
-    # Setup game_functions will occur here
-    # Select a Home Team
-    # Red Soxs are Home Team
     home_team_name = "Red Sox"
     # Select a Visiting Team
     # Yankees are Visiting Team
@@ -127,13 +121,10 @@ def main():
     print (f'Visitor Hits: {score.v_score}  Home Hits: {score.h_score}')
 
 
-    # Initialize the Game Engine
-    # pygame.init()
-    
+
+
     # Access Game Settings
     settings = Settings()
-    #screen = pygame.display.set_mode(settings.size)
-    #pygame.display.set_caption(settings.caption)
     screen = Tk()
     screen.title(settings.caption)
 
@@ -141,81 +132,50 @@ def main():
     mainframe = ttk.Frame(screen, padding="3 3 12 12")
     mainframe.grid(column=0, row=0, sticky=(N,W,S,E))
     mainframe.columnconfigure(0,weight=1)
+    mainframe.columnconfigure(1,weight=1)
+    mainframe.columnconfigure(2,weight=1)
     mainframe.rowconfigure(0,weight=1)
 
-    ttk.Label(mainframe,text="VISITOR").grid(column=2,row=2,sticky=W)
-    ttk.Label(mainframe,text="Welcome to Home Field").grid(column=3,row=2)
-    ttk.Label(mainframe,text="HOME").grid(column=4, row =2, sticky=E)
+    ttk.Label(mainframe,text=visiting_team_name).grid(column=0,row=0,sticky=W)
+    ttk.Label(mainframe,text=home_team_name).grid(column=2, row =0, sticky=E)
     
     for child in mainframe.winfo_children():
         child.grid_configure(padx=5,pady=5)
+
+    field_height = 400
+    field_width = 600
+    y = int(field_height/4)
+    x = int(field_width/4)
+    diamond = (2*x,y, 3*x,2*y, 2*x,3*y, x,2*y)
+    field = Canvas(screen,height=field_height,width=field_width)
+    field.grid(column=0,row=1,sticky=(W,E))
+    #field.create_line(0,y,field_width,y,fill="#476042")
+
+    field.create_rectangle(0 , 0 , field_width, field_height, fill='green')
+    field.create_polygon(diamond, fill=settings.diamond_color)
+
+    dugout = ttk.Frame(screen,padding="3 3 3 12")
+    dugout.grid(column=0, row=2)
+    ttk.Label(dugout,text="Welcome to Home Field").grid(column=0,row=0, sticky=N)
+    
+    #dugout.columnconfigure(0,weight=1)
+    #dugout.rowconfigure(0,weight=1)
+    #field.pack()
+    #field.grid()
+
 
     screen.mainloop()
 
 
     # Loop until the user is done
-    done = True
+    #done = True
     #done = False
     
-    '''
-    # Manage screen update rate
-    clock = pygame.time.Clock()
-    '''
 
-    # Initialize Scoring
-    
     
     # ------- M A I N   P R O G R A M   L O O P ------- #
-    while not done:
-        # gf.check_events(settings, screen)
-        
-        # --- For each event
-        """
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
-            elif event.key == pygame.K_SPACE:
-        """     
-                
-        # --- Game logic here
-        
-        '''
-        # --- Clear the screen
-        screen.fill(GRASS)
-        
-        # --- Draw everything on the screen
-        
-        # Draw Field
-        gf.draw_field(screen, WHITE)
-        gf.draw_scoreboards(screen,BLUE,WHITE,score.v_score,score.h_score)
+    #while not done:
 
-        # Center Field Scoreboard
-        sb_cf_font = pygame.font.SysFont('Calibri', 14, False, True)
-        sb_cf_message = sb_cf_font.render("Welcome to Waban Stadium", True, BLACK)
-        screen.blit(sb_cf_message,[265, 20])
-        
-        
-        # Lineup card Bottom Left
-        if score.half == "top":
-            sb_lineup_display = visitor_lineup_lastname
-        else:
-            sb_lineup_display = home_lineup_lastname
-            
-        pygame.draw.rect(screen, BLACK, [10, 340, 200, 150])
-        sb_lineup_font = pygame.font.SysFont('Courier', 12, False, False)
-        
-        for i in range(len(sb_lineup_display)):
-            sb_lineup_message = sb_lineup_font.render(sb_lineup_display[i], True, WHITE)
-            screen.blit(sb_lineup_message, [12, 345 + (i*14)])
-        
-        pygame.display.flip()
-        
-        # --- 60 frames per second
-        clock.tick(60)
-    
-    # -------      Q U I T   P R O G R A M      ------- #
-    pygame.quit()
-    '''
 
 if __name__ == "__main__":
     main()
