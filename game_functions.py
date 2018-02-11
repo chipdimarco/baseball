@@ -5,7 +5,19 @@ from game_settings import Settings
 
 settings = Settings()
 
+def doSomething():
+    print ("Do Something")
+    return("Did Something")
 
+
+
+
+
+
+
+# PYGAME FUNCTIONS BELOW
+# INACTIVE
+'''
 # Respond to KEYDOWN
 def check_keydown_events(event, settings, screen):
     if event.key == pygame.K_RIGHT:
@@ -33,9 +45,9 @@ def check_events(settings, screen):
         elif event.type == pygame.KEYUP:
             # check_keyup_events(event, ship)
             return ("keyup")
-
+'''
     
-    
+'''    
 def draw_field(screen, color):
     # Foul Lines
     pygame.draw.aaline(screen, color, [0,100], [350,450] ) 
@@ -54,9 +66,10 @@ def draw_field(screen, color):
         
     # Infield arc
     pygame.draw.arc(screen, color, [215,200,260,225], 0, 3.14, 2)
+'''
         
         
-    
+'''    
 def draw_scoreboards(screen, color, color_center,v_score,h_score):
         
     # Scoreboard in outfield
@@ -69,7 +82,8 @@ def draw_scoreboards(screen, color, color_center,v_score,h_score):
     h_sb_score = settings.sb_of_font.render("Home " + str(h_score), True, color_center)
     screen.blit(v_sb_score, [55,20])
     screen.blit(h_sb_score, [505,20])
-        
+'''
+
 """
 # REVISE THIS TO USE THE Lineup() class
 def set_v_lineup():

@@ -1,4 +1,5 @@
 # Use the MySportsFeeds API to retrieve MLB info
+# 2/11/2018 v7: Refactor for putting the game play into the atbat class AND to use Tkinter, not pygame, for interface
 # 2/4/2018 v5: Use Atbat() to get results and begin creating a loop through a lineup
 # 2/3/2018 v4: Add pygame files for functions, score, setting
 
@@ -6,38 +7,19 @@
 #import requests
 #import json
 # also import
-#from game_lineup import Lineup
-#from game_atbat import Atbat
-
+from game_lineup import Lineup
+from game_atbat import Atbat
 from tkinter import *
 from tkinter import ttk
-
 from game_settings import Settings
 from game_score import Score
-#import game_functions as gf
+import sys
 
+import game_functions as gf
 
-'''
-# FOR TESTS
-# Red Sox ids
-# ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
-# Yankee ids
-#
-'''
-'''
-# Define Colors
-BLACK = (   0,   0,   0 )
-WHITE = ( 255, 255, 255 )
-GREEN = (   0, 255,   0 )
-RED   = ( 255,   0,   0 )
-BLUE  = (   0,   0, 255 )
-GRASS = (   1, 166,  17 )
-'''
-
+# Game functions
 def main():
     home_team_name = "Red Sox"
-    # Select a Visiting Team
-    # Yankees are Visiting Team
     visiting_team_name = "Yankees"
     # Create a roster for each team
     # Select the lineup. There will be a string of ids for each lineup.
@@ -46,9 +28,11 @@ def main():
    
     # Create Lineups
     home = Lineup()
+    '''
     home_lineup_dictionary = home.create_lineup_dictionary(home_ids)
     home_lineup_lastname = home.lineup_lastname(home_lineup_dictionary)
-    
+    '''
+
     # Confirm
     # print (home_lineup_lastname)
     visitor = Lineup()
@@ -60,67 +44,39 @@ def main():
     # And Select a pitcher for each team
     home_pitcher_id = ['10432']
     home_pitcher = home.get_pitcher(home_pitcher_id)
-
+    '''
     visitor_pitcher_id =['10719']
     visitor_pitcher = visitor.get_pitcher(visitor_pitcher_id)
+    '''
+    #print (f'{home_pitcher["lastname"]} is the starting pitcher for the {home_team_name}')
+    #print (f'And {visitor_pitcher["lastname"]} will start for the {visiting_team_name}')
 
-    print (f'{home_pitcher["lastname"]} is the starting pitcher for the {home_team_name}')
-    print (f'And {visitor_pitcher["lastname"]} will start for the {visiting_team_name}')
-
-    print (f'{home_pitcher["lastname"]} allowed {home_pitcher["homerunsallowed"]} homeruns last year.')
+    #print (f'{home_pitcher["lastname"]} allowed {home_pitcher["homerunsallowed"]} homeruns last year.')
     
     # Access Game Score
     score = Score()
-    # score.v_score = 0
-    # score.h_score = 0
-
-
+    #score.v_score = 0
+    #score.h_score = 0
 
     #v6 Loop 9 times
     atbat = Atbat()
+    inning = 1
     visitor_leads_off_inning = 0
     home_leads_off_inning = 0
-    out_count = 0
     
-    for inning in range(9):
-        # Top of the inning
-        out_count = 0
-        for i in range(9):
-            up = visitor_lineup_dictionary[(i+visitor_leads_off_inning)%9]
-            visitor_up_next = (i+visitor_leads_off_inning+1)%9
-            r = atbat.play(up,home_pitcher)
-            print (f'{i+1}: {up["lastname"]} - {r}')
-            if r[0] == "H":
-                score.v_score += 1
-            if r[0] == "O":
-                out_count += 1
-            if out_count > 2:
-                break
-        visitor_leads_off_inning = visitor_up_next
-        print ( f'Top of inning {inning+1} completed.')
-        print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.') 
-        print()
-        # Bottom of the inning
-        out_count = 0
-        for i in range(9):
-            up = home_lineup_dictionary[(i+home_leads_off_inning)%9]
-            home_up_next = (i+home_leads_off_inning+1)%9
-            r = atbat.play(up,visitor_pitcher)
-            print (f'{i+1}: {up["lastname"]} - {r}')
-            if r[0] == "H":
-                score.h_score += 1
-            if r[0] == "O":
-                out_count += 1
-            if out_count > 2:
-                break
-        home_leads_off_inning = home_up_next
-        print ( f'Bottom of inning {inning+1} completed.')
-        print ( f'{home_lineup_dictionary[home_leads_off_inning]["lastname"]} will lead off next inning.') 
-        print ()
-    print (f'Game Over')
-    print (f'Visitor Hits: {score.v_score}  Home Hits: {score.h_score}')
+
+    
 
 
+    # def inning_top (self, inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher )
+    #inning_top = atbat.inning_top(inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher)
+    '''
+    print ( inning_top )
+    score.v_score += inning_top["v_score"]
+    visitor_leads_off_inning = inning_top["visitor_leads_off_inning"]
+    '''
+    #print (f'Game Over')
+    #print (f'Visitor Hits: {score.v_score}  Home Hits: {score.h_score}')
 
 
     # Access Game Settings
@@ -156,7 +112,11 @@ def main():
 
     dugout = ttk.Frame(screen,padding="3 3 3 12")
     dugout.grid(column=0, row=2)
-    ttk.Label(dugout,text="Welcome to Home Field").grid(column=0,row=0, sticky=N)
+    ttk.Label(dugout,text="Welcome to Home Field").grid(column=1,row=0, sticky=N)
+
+    #quitButton = ttk.Button(dugout, text="Quit", command=gf.doSomething).grid(column=0,row=0,sticky=W)
+    playButton = ttk.Button(dugout, text="Play", command=lambda: atbat.inning_top(inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher)).grid(column=0,row=0)
+    #playButton = ttk.Button(dugout, text="Play")
     
     #dugout.columnconfigure(0,weight=1)
     #dugout.rowconfigure(0,weight=1)
@@ -164,17 +124,18 @@ def main():
     #field.grid()
 
 
-    screen.mainloop()
+    #screen.mainloop()
 
 
     # Loop until the user is done
     #done = True
-    #done = False
+    done = False
     
 
     
     # ------- M A I N   P R O G R A M   L O O P ------- #
-    #while not done:
+    while not done:
+        screen.mainloop()
 
 
 if __name__ == "__main__":
