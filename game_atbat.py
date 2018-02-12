@@ -8,6 +8,8 @@ import random
 class Atbat():
     def __init__(self):
         self.note = "Atbat"
+        self.v_total_runs = 0
+        self.play_by_play = "Play by Play goes HERE"
 
     def play(self, batter, pitcher):
         self.batter = batter
@@ -62,8 +64,11 @@ class Atbat():
             if out_count > 2:
                 break
         visitor_leads_off_inning = visitor_up_next
+        self.v_total_runs += v_score
         print ( f'Top of inning {inning+1} completed.')
-        print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
+        #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
+        self.play_by_play = f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.'
+        print (self.play_by_play)
         result = {}
         result["v_score"]=v_score
         result["visitor_leads_off_inning"]=visitor_leads_off_inning

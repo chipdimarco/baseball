@@ -17,6 +17,11 @@ import sys
 
 import game_functions as gf
 
+def update_playbyplay(var):
+    return ( var )
+
+
+
 # Game functions
 def main():
     home_team_name = "Red Sox"
@@ -60,9 +65,6 @@ def main():
 
     #v6 Loop 9 times
     atbat = Atbat()
-    inning = 1
-    visitor_leads_off_inning = 0
-    home_leads_off_inning = 0
     
 
     
@@ -70,6 +72,7 @@ def main():
 
     # def inning_top (self, inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher )
     #inning_top = atbat.inning_top(inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher)
+    
     '''
     print ( inning_top )
     score.v_score += inning_top["v_score"]
@@ -81,8 +84,11 @@ def main():
 
     # Access Game Settings
     settings = Settings()
+    done = False
     screen = Tk()
     screen.title(settings.caption)
+    #settings.inning = 1
+    #settings.half_inning = "Top"
 
     #this should be a method in Settings, yes?
     mainframe = ttk.Frame(screen, padding="3 3 12 12")
@@ -111,12 +117,30 @@ def main():
     field.create_polygon(diamond, fill=settings.diamond_color)
 
     dugout = ttk.Frame(screen,padding="3 3 3 12")
-    dugout.grid(column=0, row=2)
-    ttk.Label(dugout,text="Welcome to Home Field").grid(column=1,row=0, sticky=N)
+    dugout.grid(column=0, row=3)
+    v = StringVar()
+    ttk.Label(dugout,textvariable=v).grid(column=1,row=0, sticky=N)
+    v.set("It's a great day for baseball")
+    #ttk.Label(dugout,text="Welcome to Home Field").grid(column=1,row=0, sticky=N)
+    #play_by_play=Text(dugout,width=10,height=1).grid(column=1,row=0,sticky=N)
 
     #quitButton = ttk.Button(dugout, text="Quit", command=gf.doSomething).grid(column=0,row=0,sticky=W)
-    playButton = ttk.Button(dugout, text="Play", command=lambda: atbat.inning_top(inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher)).grid(column=0,row=0)
-    #playButton = ttk.Button(dugout, text="Play")
+    #doneButton = ttk.Button(dugout, text="Done", command=lambda: print("Done")).grid(column=2,row=0)
+    doneButton = ttk.Button(dugout, text="Done", command=lambda: play_by_play.set(atbat.play_by_play)).grid(column=2,row=0)
+    playButton = ttk.Button(dugout, text="Play", command=lambda: atbat.inning_top(settings.inning, 
+    visitor_lineup_dictionary, settings.visitor_leads_off_inning, home_pitcher)).grid(column=0,row=0)
+    
+    play_by_play = StringVar()
+    ttk.Label(screen,textvariable=play_by_play).grid(column=0,row=2)
+    #Message(screen, textvariable=play_by_play).grid(columm=0,row=2)
+    #play_by_play.set("")
+    
+
+
+
+    #play_by_play = Text(field, width=10, height=1)
+    #play_by_play.insert(END, score.v_score)
+    #play_by_play.insert(END, "It's a great day for baseball")
     
     #dugout.columnconfigure(0,weight=1)
     #dugout.rowconfigure(0,weight=1)
@@ -124,18 +148,19 @@ def main():
     #field.grid()
 
 
-    #screen.mainloop()
+    screen.mainloop()
 
 
-    # Loop until the user is done
-    #done = True
-    done = False
     
 
     
     # ------- M A I N   P R O G R A M   L O O P ------- #
+    '''
     while not done:
         screen.mainloop()
+        screen.update_idletasks()
+    ''' 
+
 
 
 if __name__ == "__main__":

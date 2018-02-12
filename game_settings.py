@@ -7,6 +7,12 @@ class Settings():
         self.size = 700, 500
         self.caption = "Tkinter Baseball"
         self.diamond_color = "#476042"
+        self.inning = 1
+        self.half_inning = "Top"
+        self.visitor_leads_off_inning = 0
+        self.home_leads_off_inning = 0
+
+        #self.done = False
         #self.sb_of_font = tkFont.nametofont("TkDefaultFont")
         #sb_of_font.configure(size=48)
         

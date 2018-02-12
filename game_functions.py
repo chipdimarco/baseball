@@ -9,9 +9,8 @@ def doSomething():
     print ("Do Something")
     return("Did Something")
 
-
-
-
+def done(done):
+    return (not done)
 
 
 
