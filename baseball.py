@@ -17,20 +17,14 @@ import sys
 
 import game_functions as gf
 
-def update_playbyplay(var):
-    return ( var )
-
-
+# Variables for sample data
+home_team_name = "Red Sox"
+visiting_team_name = "Yankees"
+home_ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
+visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
 
 # Game functions
 def main():
-    home_team_name = "Red Sox"
-    visiting_team_name = "Yankees"
-    # Create a roster for each team
-    # Select the lineup. There will be a string of ids for each lineup.
-    home_ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
-    visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
-   
     # Create Lineups
     home = Lineup()
     '''
@@ -67,8 +61,6 @@ def main():
     atbat = Atbat()
     
 
-    
-
 
     # def inning_top (self, inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher )
     #inning_top = atbat.inning_top(inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher)
@@ -78,6 +70,7 @@ def main():
     score.v_score += inning_top["v_score"]
     visitor_leads_off_inning = inning_top["visitor_leads_off_inning"]
     '''
+    
     #print (f'Game Over')
     #print (f'Visitor Hits: {score.v_score}  Home Hits: {score.h_score}')
 
@@ -121,45 +114,34 @@ def main():
     v = StringVar()
     ttk.Label(dugout,textvariable=v).grid(column=1,row=0, sticky=N)
     v.set("It's a great day for baseball")
-    #ttk.Label(dugout,text="Welcome to Home Field").grid(column=1,row=0, sticky=N)
-    #play_by_play=Text(dugout,width=10,height=1).grid(column=1,row=0,sticky=N)
-
-    #quitButton = ttk.Button(dugout, text="Quit", command=gf.doSomething).grid(column=0,row=0,sticky=W)
-    #doneButton = ttk.Button(dugout, text="Done", command=lambda: print("Done")).grid(column=2,row=0)
-    doneButton = ttk.Button(dugout, text="Done", command=lambda: play_by_play.set(atbat.play_by_play)).grid(column=2,row=0)
-    playButton = ttk.Button(dugout, text="Play", command=lambda: atbat.inning_top(settings.inning, 
-    visitor_lineup_dictionary, settings.visitor_leads_off_inning, home_pitcher)).grid(column=0,row=0)
+    
+    def update_play_by_play(s):
+        atbat.inning_top(settings.inning, visitor_lineup_dictionary, settings.visitor_leads_off_inning, home_pitcher)
+        play_by_play.set (s)
+        print (play_by_play.get())
+        #play_by_play.set(atbat.play_by_play)
     
     play_by_play = StringVar()
-    ttk.Label(screen,textvariable=play_by_play).grid(column=0,row=2)
-    #Message(screen, textvariable=play_by_play).grid(columm=0,row=2)
-    #play_by_play.set("")
     
 
-
-
-    #play_by_play = Text(field, width=10, height=1)
-    #play_by_play.insert(END, score.v_score)
-    #play_by_play.insert(END, "It's a great day for baseball")
+    #doneButton = ttk.Button(dugout, text="Done", command=lambda: update_play_by_play(atbat.play_by_play))
+    #doneButton.grid(column=2,row=0)
+    #playButton = ttk.Button(dugout, text="Play", command=lambda: atbat.inning_top(settings.inning, visitor_lineup_dictionary, settings.visitor_leads_off_inning, home_pitcher)).grid(column=0,row=0)
+    playButton = ttk.Button(dugout, text="Play", command=lambda: update_play_by_play(atbat.play_by_play))
+    playButton.grid(column=0,row=0)
     
-    #dugout.columnconfigure(0,weight=1)
-    #dugout.rowconfigure(0,weight=1)
-    #field.pack()
-    #field.grid()
-
-
+    message = ttk.Label(screen,textvariable=play_by_play)
+    message.grid(column=0,row=2)
+    
     screen.mainloop()
 
 
-    
-
-    
     # ------- M A I N   P R O G R A M   L O O P ------- #
+    screen.mainloop()
     '''
     while not done:
         screen.mainloop()
-        screen.update_idletasks()
-    ''' 
+    '''
 
 
 
