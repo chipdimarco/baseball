@@ -4,12 +4,20 @@
 # returns a result of hit or out
 
 import random
+import sys
+from tkinter import *
+from tkinter import ttk
+from game_settings import Settings
+
 
 class Atbat():
     def __init__(self):
         self.note = "Atbat"
+        # StringVar() is a Tkinter() class
+        self.play_by_play = StringVar()
+        # the .set method puts a string in that object
+        self.play_by_play.set("Play by Play goes HERE")
         self.v_total_runs = 0
-        self.play_by_play = "Play by Play goes HERE"
 
     def play(self, batter, pitcher):
         self.batter = batter
@@ -54,7 +62,6 @@ class Atbat():
         for i in range(9):
             up = visitor_lineup_dictionary[(i+visitor_leads_off_inning)%9]
             visitor_up_next = (i+visitor_leads_off_inning+1)%9
-            #r = atbat.play(up,home_pitcher)
             r = self.play(up,home_pitcher)
             print (f'{i+1}: {up["lastname"]} - {r}')
             if r[0] == "H":
@@ -66,13 +73,17 @@ class Atbat():
         visitor_leads_off_inning = visitor_up_next
         self.v_total_runs += v_score
         print ( f'Top of inning {inning+1} completed.')
+        #
+        # instead of printing to the console, set the string to the StringVar object.
         #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
-        self.play_by_play = f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.'
-        print (self.play_by_play)
+        self.play_by_play.set( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
         result = {}
         result["v_score"]=v_score
         result["visitor_leads_off_inning"]=visitor_leads_off_inning
         return (result)
+
+
+
         
 
 '''

@@ -13,7 +13,6 @@ def done(done):
     return (not done)
 
 
-
 # PYGAME FUNCTIONS BELOW
 # INACTIVE
 '''

@@ -1,4 +1,5 @@
 # Use the MySportsFeeds API to retrieve MLB info
+# 2/16/2018 v8: Get scoreboards and message boards working
 # 2/11/2018 v7: Refactor for putting the game play into the atbat class AND to use Tkinter, not pygame, for interface
 # 2/4/2018 v5: Use Atbat() to get results and begin creating a loop through a lineup
 # 2/3/2018 v4: Add pygame files for functions, score, setting
@@ -57,6 +58,17 @@ def main():
     #score.v_score = 0
     #score.h_score = 0
 
+
+    # Access Game Settings
+    # NOTE: the Tk() class has to be initialized before the Atbat() class because
+    # Atbat() needs Tk to define the StringVar() object
+    settings = Settings()
+    done = False
+    screen = Tk()
+    screen.title(settings.caption)
+    #settings.inning = 1
+    #settings.half_inning = "Top"
+
     #v6 Loop 9 times
     atbat = Atbat()
     
@@ -74,14 +86,6 @@ def main():
     #print (f'Game Over')
     #print (f'Visitor Hits: {score.v_score}  Home Hits: {score.h_score}')
 
-
-    # Access Game Settings
-    settings = Settings()
-    done = False
-    screen = Tk()
-    screen.title(settings.caption)
-    #settings.inning = 1
-    #settings.half_inning = "Top"
 
     #this should be a method in Settings, yes?
     mainframe = ttk.Frame(screen, padding="3 3 12 12")
@@ -115,27 +119,13 @@ def main():
     ttk.Label(dugout,textvariable=v).grid(column=1,row=0, sticky=N)
     v.set("It's a great day for baseball")
     
-    def update_play_by_play(s):
-        atbat.inning_top(settings.inning, visitor_lineup_dictionary, settings.visitor_leads_off_inning, home_pitcher)
-        play_by_play.set (s)
-        print (play_by_play.get())
-        #play_by_play.set(atbat.play_by_play)
-    
-    play_by_play = StringVar()
-    
-
-    #doneButton = ttk.Button(dugout, text="Done", command=lambda: update_play_by_play(atbat.play_by_play))
-    #doneButton.grid(column=2,row=0)
-    #playButton = ttk.Button(dugout, text="Play", command=lambda: atbat.inning_top(settings.inning, visitor_lineup_dictionary, settings.visitor_leads_off_inning, home_pitcher)).grid(column=0,row=0)
-    playButton = ttk.Button(dugout, text="Play", command=lambda: update_play_by_play(atbat.play_by_play))
+    #playButton = ttk.Button(dugout, text="Play", command=lambda: atbat.update_play_by_play(atbat.play_by_play))
+    playButton = ttk.Button(dugout, text="Play", command=lambda: atbat.inning_top(settings.inning, visitor_lineup_dictionary, settings.visitor_leads_off_inning, home_pitcher))
     playButton.grid(column=0,row=0)
-    
-    message = ttk.Label(screen,textvariable=play_by_play)
+    # the atbat.inning_top method will also set the play_by_play StringVar, and the message object below will draw it on screen
+    message = ttk.Label(screen,textvariable=atbat.play_by_play)
     message.grid(column=0,row=2)
     
-    screen.mainloop()
-
-
     # ------- M A I N   P R O G R A M   L O O P ------- #
     screen.mainloop()
     '''
