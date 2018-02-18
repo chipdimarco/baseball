@@ -13,6 +13,8 @@ class Settings():
         self.half_inning = "Top"
         self.visitor_leads_off_inning = 0
         self.home_leads_off_inning = 0
+        # If console_mode is True, the Tkinter interface is skipped
+        self.console_mode = True
 
         #self.done = False
         #self.sb_of_font = tkFont.nametofont("TkDefaultFont")

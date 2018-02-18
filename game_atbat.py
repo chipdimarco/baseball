@@ -13,11 +13,12 @@ from game_settings import Settings
 class Atbat():
     def __init__(self):
         self.note = "Atbat"
+        self.v_total_runs = 0
+        self.h_total_runs = 0
         # StringVar() is a Tkinter() class
         self.play_by_play = StringVar()
         # the .set method puts a string in that object
         self.play_by_play.set("Play by Play goes HERE")
-        self.v_total_runs = 0
 
     def play(self, batter, pitcher):
         self.batter = batter
@@ -41,9 +42,13 @@ class Atbat():
         pct = on/total
 
         if (roll < pct ):
-            return (f'Hit! Roll is {round(roll,3)}; On is {on}; PCT is {round(pct,3)} .')
+            return (f'Hit!')
+            # Version one with roll feedback
+            # return (f'Hit! Roll is {round(roll,3)}; On is {on}; PCT is {round(pct,3)} .')
         else:
-            return (f'Out!  Roll is {round(roll,3)}; On is {on};  PCT is {round(pct,3)}.')
+            return(f'Out!')
+            # Version one with roll feedback
+            # return (f'Out!  Roll is {round(roll,3)}; On is {on};  PCT is {round(pct,3)}.')
         
         #return (f'{b_last} is the batter and {p_last} is the pitcher')
 
@@ -86,6 +91,42 @@ class Atbat():
         result["visitor_leads_off_inning"]=visitor_leads_off_inning
         return (result)
 
+# BOTTOM of the inning
+    def inning_bottom (self, inning, home_lineup_dictionary, home_leads_off_inning, visitor_pitcher):
+        self.inning = inning
+        self.home_lineup_dictionary=home_lineup_dictionary
+        self.home_leads_off_inning= home_leads_off_inning
+        self.visitor_pitcher=visitor_pitcher
+        
+        out_count = 0
+        h_score = 0
+        scorecard = (f'Bottom of Inning {inning}')
+
+        for i in range(9):  
+            up = home_lineup_dictionary[(i+home_leads_off_inning)%9]
+            home_up_next = (i+home_leads_off_inning+1)%9
+            r = self.play(up,visitor_pitcher)
+
+            print (f'{i+1}: {up["lastname"]} - {r}')
+            scorecard += (f'\n{i+1}: {up["lastname"]} - {r}')
+            if r[0] == "H":
+                h_score += 1
+            if r[0] == "O":
+                out_count += 1
+            if out_count > 2:
+                break
+        home_leads_off_inning = home_up_next
+        self.h_total_runs += h_score
+        print ( f'BOTTOM of inning {inning} completed.')
+        #
+        # instead of printing to the console, set the string to the StringVar object.
+        #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
+        scorecard += ( f'{home_lineup_dictionary[home_leads_off_inning]["lastname"]} will lead off next inning.')
+        self.play_by_play.set(scorecard)
+        result = {}
+        result["h_score"]=h_score
+        result["home_leads_off_inning"]=home_leads_off_inning
+        return (result)
 
 
         
