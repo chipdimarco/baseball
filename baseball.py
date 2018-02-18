@@ -32,7 +32,7 @@ def main():
     home_lineup_dictionary = home.create_lineup_dictionary(home_ids)
     home_lineup_lastname = home.lineup_lastname(home_lineup_dictionary)
     # Confirm
-    print (home_lineup_lastname)
+    #print (home_lineup_lastname)
     
     visitor = Lineup()
     visitor_lineup_dictionary = visitor.create_lineup_dictionary(visitor_ids)
@@ -129,7 +129,7 @@ def main():
             h_linescore.append(inning_bottom["h_score"])
             settings.home_leads_off_inning = inning_bottom["home_leads_off_inning"]
             settings.half_inning="Top"
-        #print (f'Visitors Total: {score.v_score}')
+        
         print (f'\nGAME OVER')
         print (visiting_team_name, end='   ')
         for r in v_linescore:

@@ -20,6 +20,41 @@ class Atbat():
         # the .set method puts a string in that object
         self.play_by_play.set("Play by Play goes HERE")
 
+    def play_hit(self,batter,pitcher):
+        self.batter = batter
+        self.pitcher = pitcher
+        # Batter On Base Results
+        b_hits = int(batter['hits'])
+        b_bb = int(batter['bb'])
+        b_2b = int(batter['secondbasehits'])
+        b_3b = int(batter['thirdbasehits'])
+        b_hr = int(batter['homeruns'])
+        b_1b = b_hits - ( b_2b + b_3b + b_hr )
+        # Pitcher On Base Results
+        p_hits = int(pitcher['hitsallowed'])
+        p_bb = int(pitcher['pitcherwalks'])
+        p_2b = int(pitcher['secondbasehitsallowed'])
+        p_3b = int(pitcher['thirdbasehitsallowed'])
+        p_hr = int(pitcher['homerunsallowed'])
+        p_1b = p_hits - ( p_2b + p_3b + p_hr )
+
+        # Create the result array
+        result_array = []
+        for i in range (b_bb + p_bb):
+            result_array.append('bb')
+        for j in range (b_2b + p_2b):
+            result_array.append('2b')
+        for k in range (b_3b + p_3b):
+            result_array.append('3b')
+        for l in range (b_hr + p_hr):
+            result_array.append('hr')
+        for m in range (b_1b + p_1b):
+            result_array.append('1b')
+        
+        # Result
+        return(random.choice(result_array))
+
+
     def play(self, batter, pitcher):
         self.batter = batter
         self.pitcher = pitcher
@@ -40,16 +75,21 @@ class Atbat():
         total = b_pa + p_tbf
         roll = random.random()
         pct = on/total
+        r = []
 
         if (roll < pct ):
-            return (f'Hit!')
+            r.append('Hit')
+            r.append(self.play_hit(batter,pitcher))
+            #return (f'Hit!  type: {hit_type}')
             # Version one with roll feedback
             # return (f'Hit! Roll is {round(roll,3)}; On is {on}; PCT is {round(pct,3)} .')
         else:
-            return(f'Out!')
+            r.append('Out')
+            r.append('out')
+            #return(f'Out!')
             # Version one with roll feedback
             # return (f'Out!  Roll is {round(roll,3)}; On is {on};  PCT is {round(pct,3)}.')
-        
+        return(r)
         #return (f'{b_last} is the batter and {p_last} is the pitcher')
 
 
@@ -59,25 +99,25 @@ class Atbat():
         self.visitor_lineup_dictionary=visitor_lineup_dictionary
         self.visitor_leads_off_inning= visitor_leads_off_inning
         self.home_pitcher=home_pitcher
-        #self.visitor_up_next =visitor_up_next
         
         out_count = 0
         v_score = 0
         scorecard = (f'Top of Inning {inning}')
+        print (f'INNING {inning}')
+        i = visitor_leads_off_inning
 
-        for i in range(9):  
-            up = visitor_lineup_dictionary[(i+visitor_leads_off_inning)%9]
-            visitor_up_next = (i+visitor_leads_off_inning+1)%9
+        while out_count < 3:  
+            up = visitor_lineup_dictionary[i%9]
+            visitor_up_next = (i+1)%9
             r = self.play(up,home_pitcher)
 
-            print (f'{i+1}: {up["lastname"]} - {r}')
-            scorecard += (f'\n{i+1}: {up["lastname"]} - {r}')
-            if r[0] == "H":
+            print (f'  {i+1}: {up["lastname"]} - {r[1]}')
+            scorecard += (f'\n{i+1}: {up["lastname"]} - {r[1]}')
+            if r[0][0] == "H":
                 v_score += 1
-            if r[0] == "O":
+            if r[0][0] == "O":
                 out_count += 1
-            if out_count > 2:
-                break
+            i = visitor_up_next
         visitor_leads_off_inning = visitor_up_next
         self.v_total_runs += v_score
         print ( f'Top of inning {inning} completed.')
@@ -101,23 +141,24 @@ class Atbat():
         out_count = 0
         h_score = 0
         scorecard = (f'Bottom of Inning {inning}')
+        i = home_leads_off_inning
 
-        for i in range(9):  
-            up = home_lineup_dictionary[(i+home_leads_off_inning)%9]
-            home_up_next = (i+home_leads_off_inning+1)%9
+        while out_count < 3:
+            up = home_lineup_dictionary[(i)%9]
+            home_up_next = (i+1)%9
             r = self.play(up,visitor_pitcher)
 
-            print (f'{i+1}: {up["lastname"]} - {r}')
-            scorecard += (f'\n{i+1}: {up["lastname"]} - {r}')
-            if r[0] == "H":
+            print (f'  {i+1}: {up["lastname"]} - {r[1]}')
+            scorecard += (f'\n{i+1}: {up["lastname"]} - {r[1]}')
+            if r[0][0] == "H":
                 h_score += 1
-            if r[0] == "O":
+            if r[0][0] == "O":
                 out_count += 1
-            if out_count > 2:
-                break
+            i = home_up_next
+
         home_leads_off_inning = home_up_next
         self.h_total_runs += h_score
-        print ( f'BOTTOM of inning {inning} completed.')
+        print ( f'BOTTOM of inning {inning} completed.\n')
         #
         # instead of printing to the console, set the string to the StringVar object.
         #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
