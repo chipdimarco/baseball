@@ -23,6 +23,7 @@ home_team_name = "Red Sox"
 visiting_team_name = "Yankees"
 home_ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
 visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
+stadium_name = "Waban Field"
 
 # Game functions
 def main():
@@ -66,6 +67,7 @@ def main():
     done = False
     screen = Tk()
     screen.title(settings.caption)
+    screen.geometry(settings.size)
     #settings.inning = 1
     #settings.half_inning = "Top"
 
@@ -86,45 +88,57 @@ def main():
     #print (f'Game Over')
     #print (f'Visitor Hits: {score.v_score}  Home Hits: {score.h_score}')
 
-
-    #this should be a method in Settings, yes?
-    mainframe = ttk.Frame(screen, padding="3 3 12 12")
-    mainframe.grid(column=0, row=0, sticky=(N,W,S,E))
-    mainframe.columnconfigure(0,weight=1)
-    mainframe.columnconfigure(1,weight=1)
-    mainframe.columnconfigure(2,weight=1)
-    mainframe.rowconfigure(0,weight=1)
-
-    ttk.Label(mainframe,text=visiting_team_name).grid(column=0,row=0,sticky=W)
-    ttk.Label(mainframe,text=home_team_name).grid(column=2, row =0, sticky=E)
+    #BLEACHER BOARD - Frame (0,0)
+    bleacher_board = ttk.Frame(screen)
+    bleacher_board.grid(column=0, row=0)
     
-    for child in mainframe.winfo_children():
-        child.grid_configure(padx=5,pady=5)
+    #ttk.Label(bleacher_board, text = visiting_team_name).grid(column=0,row=0)
+    ttk.Label(bleacher_board, text = stadium_name).grid(column=0,row =0)
+    #ttk.Label(bleacher_board, text = home_team_name).grid(column=2, row =0)
 
-    field_height = 400
-    field_width = 600
+    # FIELD BOARD FRAME (0,1)
+    field_board = ttk.Frame(screen)
+    field_board.grid(column=0, row =1)
+
+    # LINEUP CARDS
+    viz = (f'VISITORS\n{visiting_team_name}')
+    for i in visitor_lineup_lastname:
+        viz += (f'\n{i}')
+
+    vlc=StringVar()
+    vlc.set(viz)
+    v_lineup_card = ttk.Label(field_board, textvariable = vlc)
+    v_lineup_card.grid(column= 0, row = 0, sticky=N)
+
+    hlc=StringVar()
+    hlc.set(f'HOME\n{home_team_name}')
+    h_lineup_card = ttk.Label(field_board, textvariable = hlc)
+    h_lineup_card.grid(column= 2, row = 0, sticky=N)
+
+    field_height = int(settings.height/2)
+    field_width = int(settings.width/2)
     y = int(field_height/4)
     x = int(field_width/4)
     diamond = (2*x,y, 3*x,2*y, 2*x,3*y, x,2*y)
-    field = Canvas(screen,height=field_height,width=field_width)
-    field.grid(column=0,row=1,sticky=(W,E))
+    field = Canvas(field_board,height=field_height,width=field_width)
+    field.grid(column=1,row=0)
     #field.create_line(0,y,field_width,y,fill="#476042")
 
     field.create_rectangle(0 , 0 , field_width, field_height, fill='green')
     field.create_polygon(diamond, fill=settings.diamond_color)
 
     dugout = ttk.Frame(screen,padding="3 3 3 12")
-    dugout.grid(column=0, row=3)
+    dugout.grid(column=0, row=2)
+
     v = StringVar()
-    ttk.Label(dugout,textvariable=v).grid(column=1,row=0, sticky=N)
+    ttk.Label(dugout,textvariable=v).grid(column=0,row=0, sticky = W)
     v.set("It's a great day for baseball")
     
-    #playButton = ttk.Button(dugout, text="Play", command=lambda: atbat.update_play_by_play(atbat.play_by_play))
-    playButton = ttk.Button(dugout, text="Play", command=lambda: atbat.inning_top(settings.inning, visitor_lineup_dictionary, settings.visitor_leads_off_inning, home_pitcher))
-    playButton.grid(column=0,row=0)
+    playButton = ttk.Button(screen, text="Play", command=lambda: atbat.inning_top(settings.inning, visitor_lineup_dictionary, settings.visitor_leads_off_inning, home_pitcher))
+    playButton.grid(column=0,row=3, sticky=W)
     # the atbat.inning_top method will also set the play_by_play StringVar, and the message object below will draw it on screen
-    message = ttk.Label(screen,textvariable=atbat.play_by_play)
-    message.grid(column=0,row=2)
+    message = ttk.Label(dugout,textvariable=atbat.play_by_play)
+    message.grid(column=0,row=1)
     
     # ------- M A I N   P R O G R A M   L O O P ------- #
     screen.mainloop()

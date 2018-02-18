@@ -4,7 +4,9 @@
 class Settings():
     def __init__(self):
         # Screen Settings
-        self.size = 700, 500
+        self.width = 900
+        self.height = 600
+        self.size = (f'{self.width}x{self.height}')
         self.caption = "Tkinter Baseball"
         self.diamond_color = "#476042"
         self.inning = 1

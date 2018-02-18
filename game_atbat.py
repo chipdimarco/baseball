@@ -58,12 +58,15 @@ class Atbat():
         
         out_count = 0
         v_score = 0
+        scorecard = (f'Top of Inning {inning}')
 
-        for i in range(9):
+        for i in range(9):  
             up = visitor_lineup_dictionary[(i+visitor_leads_off_inning)%9]
             visitor_up_next = (i+visitor_leads_off_inning+1)%9
             r = self.play(up,home_pitcher)
+
             print (f'{i+1}: {up["lastname"]} - {r}')
+            scorecard += (f'\n{i+1}: {up["lastname"]} - {r}')
             if r[0] == "H":
                 v_score += 1
             if r[0] == "O":
@@ -72,11 +75,12 @@ class Atbat():
                 break
         visitor_leads_off_inning = visitor_up_next
         self.v_total_runs += v_score
-        print ( f'Top of inning {inning+1} completed.')
+        print ( f'Top of inning {inning} completed.')
         #
         # instead of printing to the console, set the string to the StringVar object.
         #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
-        self.play_by_play.set( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
+        scorecard += ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
+        self.play_by_play.set( scorecard)
         result = {}
         result["v_score"]=v_score
         result["visitor_leads_off_inning"]=visitor_leads_off_inning
