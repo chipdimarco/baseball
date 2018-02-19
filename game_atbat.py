@@ -114,6 +114,118 @@ class Atbat():
         return(r)
         #return (f'{b_last} is the batter and {p_last} is the pitcher')
 
+    def run_the_bases(self,scenario,ac):
+        self.scenario = scenario
+        self.ac = ac
+        bases_empty =  (0,0,0)
+        bases_loaded = (1,1,1)
+        on_first =     (0,0,1)
+        on_second =    (0,1,0)
+        on_third =     (1,0,0)
+        first_second = (0,1,1)
+        first_third =  (1,0,1)
+        second_third = (1,1,0)
+        if scenario == bases_empty:
+            if ac in ['bb','1b']:
+                return([on_first,0])
+            elif ac == '2b':
+                return([on_second,0])
+            elif ac == '3b':
+                return([on_third,0])
+            elif ac == 'hr':
+                return([bases_empty,1])
+            else:
+                return(scenario,0)
+        if scenario == on_first:
+            if ac in ['bb','1b']:
+                return([first_second,0])
+            elif ac == '2b':
+                return([second_third,0])
+            elif ac == '3b':
+                return([on_third,1])
+            elif ac == 'hr':
+                return([bases_empty,2])
+            else:
+                return(scenario,0)
+        if scenario == on_second:
+            if ac == 'bb':
+                return([first_second,0])
+            elif ac == '1b':
+                return([first_third,0])
+            elif ac == '2b':
+                return([on_second,1])
+            elif ac == '3b':
+                return([on_third,1])
+            elif ac == 'hr':
+                return([bases_empty,2])
+            else:
+                return(scenario,0)
+        if scenario == on_third:
+            if ac == 'bb':
+                return([first_third,0])
+            elif ac == '1b':
+                return([on_first,1])
+            elif ac == '2b':
+                return([on_second,1])
+            elif ac == '3b':
+                return([on_third,1])
+            elif ac == 'hr':
+                return([bases_empty,2])
+            else:
+                return(scenario,0)
+        if scenario == first_second:
+            if ac == 'bb':
+                return([bases_loaded,0])
+            elif ac == '1b':
+                return([bases_loaded,0])
+            elif ac == '2b':
+                return([second_third,1])
+            elif ac == '3b':
+                return([on_third,2])
+            elif ac == 'hr':
+                return([bases_empty,3])
+            else:
+                return(scenario,0)
+        if scenario == first_third:
+            if ac == 'bb':
+                return([bases_loaded,0])
+            elif ac == '1b':
+                return([first_second,1])
+            elif ac == '2b':
+                return([second_third,1])
+            elif ac == '3b':
+                return([on_third,2])
+            elif ac == 'hr':
+                return([bases_empty,3])
+            else:
+                return(scenario,0)
+        if scenario == second_third:
+            if ac == 'bb':
+                return([bases_loaded,0])
+            elif ac == '1b':
+                return([first_third,1])
+            elif ac == '2b':
+                return([on_second,2])
+            elif ac == '3b':
+                return([on_third,2])
+            elif ac == 'hr':
+                return([bases_empty,3])
+            else:
+                return(scenario,0)
+        if scenario == bases_loaded:
+            if ac == 'bb':
+                return([bases_loaded,1])
+            elif ac == '1b':
+                return([bases_loaded,1])
+            elif ac == '2b':
+                return([second_third,2])
+            elif ac == '3b':
+                return([on_third,3])
+            elif ac == 'hr':
+                return([bases_empty,4])
+            else:
+                return(scenario,0)
+
 
     # Top of the inning
     def inning_top (self, inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher):
@@ -123,6 +235,8 @@ class Atbat():
         self.home_pitcher=home_pitcher
         
         out_count = 0
+        scenario = (0,0,0)
+        runthebases=[scenario,0]
         v_score = 0
         scorecard = (f'Top of Inning {inning}')
         print (f'INNING {inning}')
@@ -133,12 +247,18 @@ class Atbat():
             visitor_up_next = (i+1)%9
             r = self.play(up,home_pitcher)
 
-            print (f'  {i+1}: {up["lastname"]} - {r[1]}')
+            #print (f'  {i+1}: {up["lastname"]} - {r[1]}')
             scorecard += (f'\n{i+1}: {up["lastname"]} - {r[1]}')
             if r[0][0] == "H":
-                v_score += 1
+                # scenario 0-7 and advance_code comes from play result
+                runthebases = self.run_the_bases(scenario,r[1])
+                scenario = runthebases[0]
+                v_score += runthebases[1]
+                #v_score += 1
             if r[0][0] == "O":
                 out_count += 1
+                runthebases[1]=0
+            print (f'  {i+1}: {up["lastname"]} - {r[1]} - runs scored: {runthebases[1]} runners: {scenario}')
             i = visitor_up_next
         visitor_leads_off_inning = visitor_up_next
         self.v_total_runs += v_score
@@ -161,6 +281,8 @@ class Atbat():
         self.visitor_pitcher=visitor_pitcher
         
         out_count = 0
+        scenario = (0,0,0)
+        runthebases=[scenario,0]
         h_score = 0
         scorecard = (f'Bottom of Inning {inning}')
         i = home_leads_off_inning
@@ -170,12 +292,17 @@ class Atbat():
             home_up_next = (i+1)%9
             r = self.play(up,visitor_pitcher)
 
-            print (f'  {i+1}: {up["lastname"]} - {r[1]}')
+            #print (f'  {i+1}: {up["lastname"]} - {r[1]}')
             scorecard += (f'\n{i+1}: {up["lastname"]} - {r[1]}')
             if r[0][0] == "H":
-                h_score += 1
+                runthebases = self.run_the_bases(scenario,r[1])
+                scenario = runthebases[0]
+                h_score += runthebases[1]
+                #h_score += 1
             if r[0][0] == "O":
                 out_count += 1
+                runthebases[1]=0
+            print (f'  {i+1}: {up["lastname"]} - {r[1]} -   runs scored: {runthebases[1]}   runners: {scenario}')
             i = home_up_next
 
         home_leads_off_inning = home_up_next
@@ -190,6 +317,10 @@ class Atbat():
         result["h_score"]=h_score
         result["home_leads_off_inning"]=home_leads_off_inning
         return (result)
+
+
+
+
 
 
     

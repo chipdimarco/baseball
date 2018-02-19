@@ -122,12 +122,16 @@ def main():
             v_linescore.append(inning_top["v_score"])
             settings.visitor_leads_off_inning = inning_top["visitor_leads_off_inning"]
             settings.half_inning = "Bottom"
+            print(f'{visiting_team_name}-{score.v_score}')
+            print(f'{home_team_name}-{score.h_score}\n')
             # Bottom of inning
             inning_bottom = atbat.inning_bottom(settings.inning + i, home_lineup_dictionary, settings.home_leads_off_inning, visitor_pitcher)
             score.h_score += inning_bottom["h_score"]
             h_linescore.append(inning_bottom["h_score"])
             settings.home_leads_off_inning = inning_bottom["home_leads_off_inning"]
             settings.half_inning="Top"
+            print(f'{visiting_team_name}-{score.v_score}')
+            print(f'{home_team_name}-{score.h_score}\n')
         
         print (f'\nGAME OVER')
         print (visiting_team_name, end='   ')
