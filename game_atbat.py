@@ -20,6 +20,28 @@ class Atbat():
         # the .set method puts a string in that object
         self.play_by_play.set("Play by Play goes HERE")
 
+    def play_out(self, batter, pitcher):
+        self.batter = batter
+        self.pitcher = pitcher
+        # Batter Outs
+        b_so = int(batter['batterstrikeouts'])
+        b_go = int(batter['battergroundouts'])
+        b_ao = int(batter['batterflyouts'])
+        # Pitcher Outs
+        p_so = int(pitcher['pitcherstrikeouts'])
+        p_go = int(pitcher['pitchergroundouts'])
+        p_ao = int(pitcher['pitcherflyouts'])
+        # Create a Result Array
+        result_array = []
+        for i in range (b_so + p_so):
+            result_array.append('so')
+        for j in range (b_go + p_go):
+            result_array.append('go')
+        for k in range (b_ao + p_ao):
+            result_array.append('ao')
+        return(random.choice(result_array))
+
+
     def play_hit(self,batter,pitcher):
         self.batter = batter
         self.pitcher = pitcher
@@ -85,7 +107,7 @@ class Atbat():
             # return (f'Hit! Roll is {round(roll,3)}; On is {on}; PCT is {round(pct,3)} .')
         else:
             r.append('Out')
-            r.append('out')
+            r.append(self.play_out(batter,pitcher))
             #return(f'Out!')
             # Version one with roll feedback
             # return (f'Out!  Roll is {round(roll,3)}; On is {on};  PCT is {round(pct,3)}.')
@@ -170,31 +192,4 @@ class Atbat():
         return (result)
 
 
-        
-
-'''
-print()
-        # Bottom of the inning
-        out_count = 0
-        for i in range(9):
-            up = home_lineup_dictionary[(i+home_leads_off_inning)%9]
-            home_up_next = (i+home_leads_off_inning+1)%9
-            r = atbat.play(up,visitor_pitcher)
-            print (f'{i+1}: {up["lastname"]} - {r}')
-            if r[0] == "H":
-                score.h_score += 1
-            if r[0] == "O":
-                out_count += 1
-            if out_count > 2:
-                break
-        home_leads_off_inning = home_up_next
-        print ( f'Bottom of inning {inning+1} completed.')
-        print ( f'{home_lineup_dictionary[home_leads_off_inning]["lastname"]} will lead off next inning.') 
-
-'''
-
-#example = Atbat()
-#print (example.note)
-#result = example.play('sale','gardner')
-#print (result)
-#print (example.play(pitcher='sale',batter='gardner'))
+    

@@ -16,8 +16,4 @@ class Settings():
         # If console_mode is True, the Tkinter interface is skipped
         self.console_mode = True
 
-        #self.done = False
-        #self.sb_of_font = tkFont.nametofont("TkDefaultFont")
-        #sb_of_font.configure(size=48)
-        
-        #self.sb_of_font = pygame.font.SysFont('Calibri', 25, True, False )
+

@@ -49,7 +49,6 @@ def main():
     
     print (f'{home_pitcher["lastname"]} is the starting pitcher for the {home_team_name}')
     print (f'And {visitor_pitcher["lastname"]} will start for the {visiting_team_name}')
-    #print (f'{home_pitcher["lastname"]} allowed {home_pitcher["homerunsallowed"]} homeruns last year.')
     
     # Access Game Score
     score = Score()
@@ -141,10 +140,6 @@ def main():
             print (r, end = ' ')
         print (f' -- {score.h_score}')
     
-
-
-
-
     
     # ------- M A I N   P R O G R A M   L O O P ------- #
     if not settings.console_mode:

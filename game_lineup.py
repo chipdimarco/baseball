@@ -29,16 +29,8 @@ class Lineup():
     # Method for creating a lineup with stats from a dict. of ids
     def create_lineup_dictionary(self,ids):
         self.ids = ids
-        '''
-        def getInfo(id):
-            qs = {}
-            qs["player"]=id
-            return (requests.get(url,headers=headers,params=qs).json())
-        '''
 
-        # Init lineup
-        # lineup = {}
-        # As list
+        # Init lineup as dictionary
         lineup = []
         # loop over dict. to retrieve stats
         for id in ids:
@@ -55,12 +47,10 @@ class Lineup():
             j['secondbasehits'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['SecondBaseHits']['#text']
             j['thirdbasehits'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['ThirdBaseHits']['#text']
             j['homeruns'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['Homeruns']['#text']
-
-            # add the subdictionary to the main dictionary
-            #lineup[id]=j
-            #lineup.update(j)
+            j['batterstrikeouts']=r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['BatterStrikeouts']['#text']
+            j['battergroundouts']=r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['BatterGroundOuts']['#text']
+            j['batterflyouts']=r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['BatterFlyOuts']['#text']
             lineup.append(j)
-
         # return the lineup
         return (lineup)
 
@@ -86,57 +76,9 @@ class Lineup():
         j['secondbasehitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['SecondBaseHitsAllowed']['#text']
         j['thirdbasehitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['ThirdBaseHitsAllowed']['#text']
         j['homerunsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['HomerunsAllowed']['#text']
+        j['pitchergroundouts'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherGroundOuts']['#text']
+        j['pitcherflyouts'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherFlyOuts']['#text']
         
         return (j)
 
 
-
-'''
-# ids
-# example array
-ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
-# this is the array that lineup will take as its parameter
-# test for length = 9, each is a valid id.
-
-# Call Info for the Lineup from url
-# method
-def getInfo(id):
-    qs = {}
-    qs["player"]= id
-    return (requests.get(url,headers=headers,params=qs).json())
-
-# variables for loop
-count = 0
-# init python dict
-lineup = {}
-
-# loop through the array of ids
-for id in ids:
-    # get the id and call info from url
-    r = getInfo(id)
-
-    # start a new dictionary
-    j = {}
-
-    # grab just what we want from the data set
-    j['firstname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['FirstName']
-    j['lastname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['LastName']
-    j['atbats'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['AtBats']['#text']
-    j['gamesplayed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['GamesPlayed']['#text']
-    j['plateappearances'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PlateAppearances']['#text']
-    j['bb'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['BatterWalks']['#text']
-    j['hits'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['Hits']['#text']
-    j['secondbasehits'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['SecondBaseHits']['#text']
-    j['thirdbasehits'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['ThirdBaseHits']['#text']
-    j['homeruns'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['Homeruns']['#text']
-
-    # add the subdictionary to the main dictionary
-    lineup[id]=j
-
-# OUTPUT
-# print (json.dumps(lineup))
-# print (lineup)
-# print (json.dumps(lineup, indent=1))
-pprint.pprint(lineup, indent=2)
-# return ( lineup )
-'''
