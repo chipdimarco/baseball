@@ -18,7 +18,12 @@ class Atbat():
         # StringVar() is a Tkinter() class
         self.play_by_play = StringVar()
         # the .set method puts a string in that object
-        self.play_by_play.set("Play by Play goes HERE")
+        self.play_by_play.set("- - - Play by Play - - - ")
+        # StringVar() for linescore
+        self.v_linescore = StringVar()
+        self.v_linescore.set("Visitor: ")
+        self.h_linescore = StringVar()
+        self.h_linescore.set("Home:    ")
 
     def play_out(self, batter, pitcher):
         self.batter = batter
@@ -229,15 +234,37 @@ class Atbat():
     def half_inning(self, settings, visitor, home):
         inning = settings.inning
         half_inning = settings.half_inning
-        result = (f'{half_inning} of inning {inning}')
-        print (result)
-        if ( half_inning == "Top"):
-            self.inning_top(settings.inning, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)
-            settings.half_inning = "Bottom"
+        if inning > 8:
+            if self.h_total_runs > self.v_total_runs:
+                if half_inning == "Bottom":
+                    settings.done = True
+                    result = (f'Game Over')
+                    print(result)
+                    return(result)
         else:
-            self.inning_bottom(settings.inning, home.lineup_dictionary, settings.home_leads_off_inning, visitor.pitcher)
+            if inning > 9:
+                if self.h_total_runs != self.v_total_runs:
+                    if half_inning == "Top":
+                        settings.done = True
+                        result = (f'Game Over')
+                        print (result)
+                        return(result)
+            result = (f'{half_inning} of inning {inning}')
+            print (result)
+        
+        if ( half_inning == "Top"):
+            result = self.inning_top(settings.inning, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)
+            settings.half_inning = "Bottom"
+            #ls = self.v_linescore.get() + " " + str(result["v_score"])
+            self.v_linescore.set(f'{self.v_linescore.get()} {str(result["v_score"])}')
+            settings.visitor_leads_off_inning = result["visitor_leads_off_inning"]
+            
+        else:
+            result = self.inning_bottom(settings.inning, home.lineup_dictionary, settings.home_leads_off_inning, visitor.pitcher)
             settings.half_inning = "Top"
+            self.h_linescore.set(f'{self.h_linescore.get()} {str(result["h_score"])}')
             settings.inning += 1
+            settings.home_leads_off_inning = result["home_leads_off_inning"]
         return (settings,visitor,home)
 
     # Top of the inning

@@ -31,15 +31,11 @@ def main():
     home = Lineup()
     home.lineup_dictionary = home.create_lineup_dictionary(home_ids)
     home.lineup_lastname = home.create_lineup_lastname(home.lineup_dictionary)
-    # Confirm
-    #print (home_lineup_lastname)
     
     visitor = Lineup()
     visitor.lineup_dictionary = visitor.create_lineup_dictionary(visitor_ids)
     visitor.lineup_lastname = visitor.create_lineup_lastname(visitor.lineup_dictionary) 
-    # Confirm
-    #print (visitor_lineup_lastname)
-     #
+    
     # And Select a pitcher for each team
     home_pitcher_id = ['10432']
     home.pitcher = home.get_pitcher(home_pitcher_id)
@@ -47,6 +43,7 @@ def main():
     visitor_pitcher_id =['10719']
     visitor.pitcher = visitor.get_pitcher(visitor_pitcher_id)
     
+    # For testing: shows the lineups have been generated properly
     print (f'{home.pitcher["lastname"]} is the starting pitcher for the {home_team_name}')
     print (f'And {visitor.pitcher["lastname"]} will start for the {visiting_team_name}')
     
@@ -61,6 +58,7 @@ def main():
     screen = Tk()
     atbat = Atbat()
 
+    # Display settings apply in either mode
     v_linescore = []
     h_linescore = []
 
@@ -104,29 +102,30 @@ def main():
         field.create_rectangle(0 , 0 , field_width, field_height, fill='green')
         field.create_polygon(diamond, fill=settings.diamond_color)
 
+        #v1
+        #playButton = ttk.Button(screen, text="Play", command=lambda: atbat.inning_top(settings.inning, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher))
+        #playButton.grid(column=0,row=3, sticky=W)
+        
+        #v2
+        playNextHalfInningButton = ttk.Button( screen, text="PLAY", command=lambda: atbat.half_inning(settings, visitor, home))
+        playNextHalfInningButton.grid(column=0,row=2, sticky=W)
+
         dugout = ttk.Frame(screen,padding="3 3 3 12")
-        dugout.grid(column=0, row=2)
+        dugout.grid(column=0, row=3)
 
         v = StringVar()
         ttk.Label(dugout,textvariable=v).grid(column=0,row=0, sticky = W)
         v.set("It's a great day for baseball")
 
-    
-        playButton = ttk.Button(screen, text="Play", command=lambda: atbat.inning_top(settings.inning, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher))
-        playButton.grid(column=0,row=3, sticky=W)
-        
-        playNextHalfInningButton = ttk.Button( screen, text="PLAY", command=lambda: atbat.half_inning(settings, visitor, home))
-        playNextHalfInningButton.grid(column=0,row=4)
+
+        v_linescore = ttk.Label(dugout, textvariable=atbat.v_linescore)
+        v_linescore.grid(column=0,row=1,sticky=W)
+        h_linescore = ttk.Label(dugout, textvariable=atbat.h_linescore)
+        h_linescore.grid(column=0,row=2,sticky=W)
 
         # the atbat.inning_top method will also set the play_by_play StringVar, and the message object below will draw it on screen
-        message = ttk.Label(dugout,textvariable=atbat.play_by_play)
-        message.grid(column=0,row=1)
-
-
-
-        # GAME PLAY
-        #for i in range(9):
-            
+        message = ttk.Label(screen,textvariable=atbat.play_by_play)
+        message.grid(column=0,row=4)
 
 
 
@@ -134,7 +133,7 @@ def main():
     if console_mode:
         for i in range(9):
             # Top of inning
-            inning_top = atbat.inning_top(settings.inning + i, visitor_lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)
+            inning_top = atbat.inning_top(settings.inning + i, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)
             score.v_score += inning_top["v_score"]
             v_linescore.append(inning_top["v_score"])
             settings.visitor_leads_off_inning = inning_top["visitor_leads_off_inning"]
@@ -165,10 +164,7 @@ def main():
     # ------- M A I N   P R O G R A M   L O O P ------- #
     if not settings.console_mode:
         screen.mainloop()
-    '''
-    while not done:
-        screen.mainloop()
-    '''
+    
 
 
 
