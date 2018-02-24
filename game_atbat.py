@@ -226,6 +226,19 @@ class Atbat():
             else:
                 return(scenario,0)
 
+    def half_inning(self, settings, visitor, home):
+        inning = settings.inning
+        half_inning = settings.half_inning
+        result = (f'{half_inning} of inning {inning}')
+        print (result)
+        if ( half_inning == "Top"):
+            self.inning_top(settings.inning, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)
+            settings.half_inning = "Bottom"
+        else:
+            self.inning_bottom(settings.inning, home.lineup_dictionary, settings.home_leads_off_inning, visitor.pitcher)
+            settings.half_inning = "Top"
+            settings.inning += 1
+        return (settings,visitor,home)
 
     # Top of the inning
     def inning_top (self, inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher):

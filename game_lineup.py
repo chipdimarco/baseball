@@ -18,6 +18,9 @@ headers = {
 class Lineup():
     def __init__(self):
         self.note = "lineup"
+        self.lineup_dictionary = ""
+        self.lineup_lastname = ""
+        self.pitcher = ""
     
     def getInfo(self,id):
         self.id = id
@@ -54,7 +57,7 @@ class Lineup():
         # return the lineup
         return (lineup)
 
-    def lineup_lastname(self, lineup_dictionary):
+    def create_lineup_lastname(self, lineup_dictionary):
         self.lineup_dictionary = lineup_dictionary
         lineup = []
         for i in range ( 0, len(lineup_dictionary)):

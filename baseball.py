@@ -29,26 +29,26 @@ stadium_name = "Waban Field"
 def main():
     # Create Lineups
     home = Lineup()
-    home_lineup_dictionary = home.create_lineup_dictionary(home_ids)
-    home_lineup_lastname = home.lineup_lastname(home_lineup_dictionary)
+    home.lineup_dictionary = home.create_lineup_dictionary(home_ids)
+    home.lineup_lastname = home.create_lineup_lastname(home.lineup_dictionary)
     # Confirm
     #print (home_lineup_lastname)
     
     visitor = Lineup()
-    visitor_lineup_dictionary = visitor.create_lineup_dictionary(visitor_ids)
-    visitor_lineup_lastname = visitor.lineup_lastname(visitor_lineup_dictionary) 
+    visitor.lineup_dictionary = visitor.create_lineup_dictionary(visitor_ids)
+    visitor.lineup_lastname = visitor.create_lineup_lastname(visitor.lineup_dictionary) 
     # Confirm
     #print (visitor_lineup_lastname)
      #
     # And Select a pitcher for each team
     home_pitcher_id = ['10432']
-    home_pitcher = home.get_pitcher(home_pitcher_id)
+    home.pitcher = home.get_pitcher(home_pitcher_id)
     
     visitor_pitcher_id =['10719']
-    visitor_pitcher = visitor.get_pitcher(visitor_pitcher_id)
+    visitor.pitcher = visitor.get_pitcher(visitor_pitcher_id)
     
-    print (f'{home_pitcher["lastname"]} is the starting pitcher for the {home_team_name}')
-    print (f'And {visitor_pitcher["lastname"]} will start for the {visiting_team_name}')
+    print (f'{home.pitcher["lastname"]} is the starting pitcher for the {home_team_name}')
+    print (f'And {visitor.pitcher["lastname"]} will start for the {visiting_team_name}')
     
     # Access Game Score
     score = Score()
@@ -60,6 +60,10 @@ def main():
     console_mode = settings.console_mode
     screen = Tk()
     atbat = Atbat()
+
+    v_linescore = []
+    h_linescore = []
+
 
     #TKINTER MODE
     if not console_mode:    
@@ -74,8 +78,11 @@ def main():
         field_board.grid(column=0, row =1)
         # LINEUP CARDS
         viz = (f'VISITORS\n{visiting_team_name}')
-        for i in visitor_lineup_lastname:
+        for i in visitor.lineup_lastname:
             viz += (f'\n{i}')
+        hiz = (f'HOME\n{home_team_name}')
+        for i in home.lineup_lastname:
+            hiz += (f'\n{i}')
 
         vlc=StringVar()
         vlc.set(viz)
@@ -83,7 +90,7 @@ def main():
         v_lineup_card.grid(column= 0, row = 0, sticky=N)
 
         hlc=StringVar()
-        hlc.set(f'HOME\n{home_team_name}')
+        hlc.set(hiz)
         h_lineup_card = ttk.Label(field_board, textvariable = hlc)
         h_lineup_card.grid(column= 2, row = 0, sticky=N)
 
@@ -103,21 +110,31 @@ def main():
         v = StringVar()
         ttk.Label(dugout,textvariable=v).grid(column=0,row=0, sticky = W)
         v.set("It's a great day for baseball")
+
     
-        playButton = ttk.Button(screen, text="Play", command=lambda: atbat.inning_top(settings.inning, visitor_lineup_dictionary, settings.visitor_leads_off_inning, home_pitcher))
+        playButton = ttk.Button(screen, text="Play", command=lambda: atbat.inning_top(settings.inning, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher))
         playButton.grid(column=0,row=3, sticky=W)
+        
+        playNextHalfInningButton = ttk.Button( screen, text="PLAY", command=lambda: atbat.half_inning(settings, visitor, home))
+        playNextHalfInningButton.grid(column=0,row=4)
+
         # the atbat.inning_top method will also set the play_by_play StringVar, and the message object below will draw it on screen
         message = ttk.Label(dugout,textvariable=atbat.play_by_play)
         message.grid(column=0,row=1)
 
 
+
+        # GAME PLAY
+        #for i in range(9):
+            
+
+
+
     #CONSOLE MODE    
     if console_mode:
-        v_linescore = []
-        h_linescore = []
         for i in range(9):
             # Top of inning
-            inning_top = atbat.inning_top(settings.inning + i, visitor_lineup_dictionary, settings.visitor_leads_off_inning, home_pitcher)
+            inning_top = atbat.inning_top(settings.inning + i, visitor_lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)
             score.v_score += inning_top["v_score"]
             v_linescore.append(inning_top["v_score"])
             settings.visitor_leads_off_inning = inning_top["visitor_leads_off_inning"]
@@ -125,7 +142,7 @@ def main():
             print(f'{visiting_team_name}-{score.v_score}')
             print(f'{home_team_name}-{score.h_score}\n')
             # Bottom of inning
-            inning_bottom = atbat.inning_bottom(settings.inning + i, home_lineup_dictionary, settings.home_leads_off_inning, visitor_pitcher)
+            inning_bottom = atbat.inning_bottom(settings.inning + i, home.lineup_dictionary, settings.home_leads_off_inning, visitor.pitcher)
             score.h_score += inning_bottom["h_score"]
             h_linescore.append(inning_bottom["h_score"])
             settings.home_leads_off_inning = inning_bottom["home_leads_off_inning"]
