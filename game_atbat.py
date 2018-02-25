@@ -23,7 +23,7 @@ class Atbat():
         self.v_linescore = StringVar()
         self.v_linescore.set("Visitor: ")
         self.h_linescore = StringVar()
-        self.h_linescore.set("Home:    ")
+        self.h_linescore.set("Home: ")
 
     def play_out(self, batter, pitcher):
         self.batter = batter
@@ -232,9 +232,14 @@ class Atbat():
                 return(scenario,0)
 
     def half_inning(self, settings, visitor, home):
+        if settings.done:
+            print ("Game Over")
+            return("Game Over")
         inning = settings.inning
         half_inning = settings.half_inning
-        if inning > 8:
+        if inning < 9:
+            pass
+        elif inning == 9:
             if self.h_total_runs > self.v_total_runs:
                 if half_inning == "Bottom":
                     settings.done = True
@@ -242,20 +247,18 @@ class Atbat():
                     print(result)
                     return(result)
         else:
-            if inning > 9:
-                if self.h_total_runs != self.v_total_runs:
-                    if half_inning == "Top":
-                        settings.done = True
-                        result = (f'Game Over')
-                        print (result)
-                        return(result)
-            result = (f'{half_inning} of inning {inning}')
-            print (result)
+            if self.h_total_runs != self.v_total_runs:
+                if half_inning == "Top":
+                    settings.done = True
+                    result = (f'Game Over')
+                    print (result)
+                    return(result)
+        result = (f'{half_inning} of inning {inning}')
+        print (result)
         
         if ( half_inning == "Top"):
             result = self.inning_top(settings.inning, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)
             settings.half_inning = "Bottom"
-            #ls = self.v_linescore.get() + " " + str(result["v_score"])
             self.v_linescore.set(f'{self.v_linescore.get()} {str(result["v_score"])}')
             settings.visitor_leads_off_inning = result["visitor_leads_off_inning"]
             
@@ -306,7 +309,7 @@ class Atbat():
         #
         # instead of printing to the console, set the string to the StringVar object.
         #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
-        scorecard += ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
+        scorecard += ( f'\n{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
         self.play_by_play.set( scorecard)
         result = {}
         result["v_score"]=v_score
@@ -351,7 +354,7 @@ class Atbat():
         #
         # instead of printing to the console, set the string to the StringVar object.
         #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
-        scorecard += ( f'{home_lineup_dictionary[home_leads_off_inning]["lastname"]} will lead off next inning.')
+        scorecard += ( f'\n{home_lineup_dictionary[home_leads_off_inning]["lastname"]} will lead off next inning.')
         self.play_by_play.set(scorecard)
         result = {}
         result["h_score"]=h_score

@@ -1,4 +1,5 @@
 # Use the MySportsFeeds API to retrieve MLB info
+# 2/25/2018: Refactor for console/tkinter modes. Full 9 inning games in either mode
 # 2/16/2018 v8: Get scoreboards and message boards working
 # 2/11/2018 v7: Refactor for putting the game play into the atbat class AND to use Tkinter, not pygame, for interface
 # 2/4/2018 v5: Use Atbat() to get results and begin creating a loop through a lineup
