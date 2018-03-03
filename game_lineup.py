@@ -7,6 +7,8 @@
 import json
 import requests
 import os
+# added to access the settings.stored_rosters setting
+from game_settings import Settings
 
 # environment variables"
 auth = os.environ['MSF_KEY']
@@ -21,12 +23,25 @@ class Lineup():
         self.lineup_dictionary = ""
         self.lineup_lastname = ""
         self.pitcher = ""
+
     
     def getInfo(self,id):
         self.id = id
+        # How to get roster info
+        settings = Settings()
+        stored_rosters = settings.stored_rosters
+        print(stored_rosters)
+        #
         qs = {}
         qs["player"]=id
         return (requests.get(url,headers=headers,params=qs).json())
+
+    def getPlayer(self,id,stats_file):
+        self.id = id
+        self.stats_file = stats_file
+        data = json.load(open(stats_file))
+        player = {}
+
 
 
     # Method for creating a lineup with stats from a dict. of ids

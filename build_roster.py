@@ -6,6 +6,7 @@ import requests
 import json
 import os
 
+
 # environment variables"
 auth = os.environ['MSF_KEY']
 headers = {
@@ -20,7 +21,7 @@ for t in mlbteams:
     print (my_roster)
 
 def buildRoster(year,team):
-    #build active_players list and id_list
+    #BUILD ACTIVE_PLAYERS LIST AND ID_LIST
     url = "https://api.mysportsfeeds.com/v1.2/pull/mlb/" + year + "-regular/active_players.json"
     query_string = {}
     query_string["team"]=team

@@ -81,7 +81,6 @@ class Atbat():
         # Result
         return(random.choice(result_array))
 
-
     def play(self, batter, pitcher):
         self.batter = batter
         self.pitcher = pitcher
@@ -270,7 +269,7 @@ class Atbat():
             settings.home_leads_off_inning = result["home_leads_off_inning"]
         return (settings,visitor,home)
 
-    # Top of the inning
+    # TOP of the inning
     def inning_top (self, inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher):
         self.inning = inning
         self.visitor_lineup_dictionary=visitor_lineup_dictionary
@@ -316,7 +315,7 @@ class Atbat():
         result["visitor_leads_off_inning"]=visitor_leads_off_inning
         return (result)
 
-# BOTTOM of the inning
+    # BOTTOM of the inning
     def inning_bottom (self, inning, home_lineup_dictionary, home_leads_off_inning, visitor_pitcher):
         self.inning = inning
         self.home_lineup_dictionary=home_lineup_dictionary

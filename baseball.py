@@ -28,6 +28,8 @@ stadium_name = "Waban Field"
 
 # Game functions
 def main():
+    settings = Settings()
+
     # Create Lineups
     home = Lineup()
     home.lineup_dictionary = home.create_lineup_dictionary(home_ids)
@@ -54,7 +56,6 @@ def main():
     # Access Game Settings
     # NOTE: the Tk() class has to be initialized before the Atbat() class because
     # Atbat() needs Tk to define the StringVar() object
-    settings = Settings()
     console_mode = settings.console_mode
     screen = Tk()
     atbat = Atbat()
