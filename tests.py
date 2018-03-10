@@ -35,5 +35,9 @@ n.set(1)
 counting = ttk.Label(screen, textvariable=n).grid(column=1,row=2)
 countButtong = ttk.Button(screen, text="Count", command=lambda: updatecounter(n)).grid(column=1,row=0)
 
+style = ttk.Style()
+style.configure("BW.TLabel", foreground="white",background="black")
+L1 = ttk.Label(screen, text="Label Test", style="BW.TLabel")
+L1.grid(column=2,row=0)
 
 screen.mainloop()

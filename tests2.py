@@ -12,7 +12,8 @@ print (player)
 
 #this will throw the exception, but the rest of the numbers will be searched
 #home_ids = ['10300','11064','xxxxx','10303', '11339','10301','12551','10297','10296','11065']
-home_ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
+#home_ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
+home_ids = ['10300']
 
 ids = home_ids
 lineup = []
@@ -22,8 +23,11 @@ for id in ids:
         try:
             k = data['cumulativeplayerstats']['playerstatsentry'][i]['player']
             if (k["ID"] == id):
-                lineup.append(k)
-                print (k["ID"])
+                l = data['cumulativeplayerstats']['playerstatsentry'][i]['team']
+                m = data['cumulativeplayerstats']['playerstatsentry'][i]['stats']
+                player = {**k,**l,**m}
+                lineup.append(player)
+                #print (player)
                 break
         except:
             print(f'error finding {id}')

@@ -27,11 +27,6 @@ class Lineup():
     
     def getInfo(self,id):
         self.id = id
-        # How to get roster info
-        settings = Settings()
-        stored_rosters = settings.stored_rosters
-        print(stored_rosters)
-        #
         qs = {}
         qs["player"]=id
         return (requests.get(url,headers=headers,params=qs).json())
@@ -42,7 +37,69 @@ class Lineup():
         data = json.load(open(stats_file))
         player = {}
 
+    def create_lineup_dictionary_from_file(self,stats_file,ids):
+        self.stats_file = stats_file
+        self.ids = ids
+        data = json.load(open(stats_file))
+        lineup = []
+        for id in ids:
+            for i in range(100):
+                try:
+                    k = data['cumulativeplayerstats']['playerstatsentry'][i]['player']
+                    if (k["ID"] == id):
+                        j = {}
+                        l = data['cumulativeplayerstats']['playerstatsentry'][i]['team']
+                        m = data['cumulativeplayerstats']['playerstatsentry'][i]['stats']
+                        #j["id"] = id
+                        #j["player"] = {**k,**l,**m}
+                        j["player"] = k
+                        j["team"] = l
+                        j["stats"] = m
+                        #j.append(player)
+                        lineup.append(j)
+                        print (f'{id} appended')
+                        break
+                except:
+                    print(f'error finding {id}')
+                    break
+        #print (lineup)
+        return(lineup)
 
+    def get_pitcher_from_file(self,stats_file,id):
+        self.stats_file = stats_file
+        self.id = id
+        data = json.load(open(stats_file))
+
+        for i in range(100):
+            try:
+                k = data['cumulativeplayerstats']['playerstatsentry'][i]['player']
+                if (k["ID"] == id):
+                    j = {}
+                    l = data['cumulativeplayerstats']['playerstatsentry'][i]['team']
+                    m = data['cumulativeplayerstats']['playerstatsentry'][i]['stats']
+                    j["player"] = k
+                    j["team"] = l
+                    j["stats"] = m
+                    print (f'Pitcher {id} found')
+                    break
+            except:
+                print(f'Pitcher error finding {id}')
+                break
+        '''
+        j['id'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['ID']
+        j['firstname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['FirstName']
+        j['lastname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['LastName']
+        j['totalbattersfaced'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['TotalBattersFaced']['#text']
+        j['hitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['HitsAllowed']['#text']
+        j['pitcherstrikeouts'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherStrikeouts']['#text']
+        j['pitcherwalks'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherWalks']['#text']
+        j['secondbasehitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['SecondBaseHitsAllowed']['#text']
+        j['thirdbasehitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['ThirdBaseHitsAllowed']['#text']
+        j['homerunsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['HomerunsAllowed']['#text']
+        j['pitchergroundouts'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherGroundOuts']['#text']
+        j['pitcherflyouts'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherFlyOuts']['#text']
+        '''
+        return (j)
 
     # Method for creating a lineup with stats from a dict. of ids
     def create_lineup_dictionary(self,ids):
@@ -76,7 +133,7 @@ class Lineup():
         self.lineup_dictionary = lineup_dictionary
         lineup = []
         for i in range ( 0, len(lineup_dictionary)):
-            lineup.append(lineup_dictionary[i]["lastname"])
+            lineup.append(lineup_dictionary[i]['player']['LastName'])
         return (lineup)
 
     def get_pitcher(self,id):

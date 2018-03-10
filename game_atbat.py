@@ -29,13 +29,13 @@ class Atbat():
         self.batter = batter
         self.pitcher = pitcher
         # Batter Outs
-        b_so = int(batter['batterstrikeouts'])
-        b_go = int(batter['battergroundouts'])
-        b_ao = int(batter['batterflyouts'])
+        b_so = int(batter['stats']['BatterStrikeouts']['#text'])
+        b_go = int(batter['stats']['BatterGroundOuts']['#text'])
+        b_ao = int(batter['stats']['BatterFlyOuts']['#text'])
         # Pitcher Outs
-        p_so = int(pitcher['pitcherstrikeouts'])
-        p_go = int(pitcher['pitchergroundouts'])
-        p_ao = int(pitcher['pitcherflyouts'])
+        p_so = int(pitcher['stats']['PitcherStrikeouts']['#text'])
+        p_go = int(pitcher['stats']['PitcherGroundOuts']['#text'])
+        p_ao = int(pitcher['stats']['PitcherFlyOuts']['#text'])
         # Create a Result Array
         result_array = []
         for i in range (b_so + p_so):
@@ -51,18 +51,18 @@ class Atbat():
         self.batter = batter
         self.pitcher = pitcher
         # Batter On Base Results
-        b_hits = int(batter['hits'])
-        b_bb = int(batter['bb'])
-        b_2b = int(batter['secondbasehits'])
-        b_3b = int(batter['thirdbasehits'])
-        b_hr = int(batter['homeruns'])
+        b_hits = int(batter['stats']['Hits']['#text'])
+        b_bb = int(batter['stats']['BatterWalks']['#text'])
+        b_2b = int(batter['stats']['SecondBaseHits']['#text'])
+        b_3b = int(batter['stats']['ThirdBaseHits']['#text'])
+        b_hr = int(batter['stats']['Homeruns']['#text'])
         b_1b = b_hits - ( b_2b + b_3b + b_hr )
         # Pitcher On Base Results
-        p_hits = int(pitcher['hitsallowed'])
-        p_bb = int(pitcher['pitcherwalks'])
-        p_2b = int(pitcher['secondbasehitsallowed'])
-        p_3b = int(pitcher['thirdbasehitsallowed'])
-        p_hr = int(pitcher['homerunsallowed'])
+        p_hits = int(pitcher['stats']['HitsAllowed']['#text'])
+        p_bb = int(pitcher['stats']['PitcherWalks']['#text'])
+        p_2b = int(pitcher['stats']['SecondBaseHitsAllowed']['#text'])
+        p_3b = int(pitcher['stats']['ThirdBaseHitsAllowed']['#text'])
+        p_hr = int(pitcher['stats']['HomerunsAllowed']['#text'])
         p_1b = p_hits - ( p_2b + p_3b + p_hr )
 
         # Create the result array
@@ -85,17 +85,18 @@ class Atbat():
         self.batter = batter
         self.pitcher = pitcher
         # Batter info
-        b_last = batter['lastname']
-        b_pa = int(batter['plateappearances'])
-        b_hits = int(batter['hits'])
-        b_bb = int(batter['bb'])
-        b_atbats = int(batter['atbats'])
+        b_last = batter['player']['LastName']
+        #print(batter['stats']['PlateAppearances'])
+        b_pa = int(batter['stats']['PlateAppearances']['#text'])
+        b_hits = int(batter['stats']['Hits']['#text'])
+        b_bb = int(batter['stats']['BatterWalks']['#text'])
+        b_atbats = int(batter['stats']['AtBats']['#text'])
         #
         # Pitcher info
-        p_last = pitcher['lastname']
-        p_tbf = int(pitcher['totalbattersfaced'])
-        p_hits = int(pitcher['hitsallowed'])
-        p_bb  = int(pitcher['pitcherwalks'])
+        p_last = pitcher['player']['LastName']
+        p_tbf = int(pitcher['stats']['TotalBattersFaced']['#text'])
+        p_hits = int(pitcher['stats']['HitsAllowed']['#text'])
+        p_bb  = int(pitcher['stats']['PitcherWalks']['#text'])
 
         on = b_hits + b_bb + p_hits + p_bb
         total = b_pa + p_tbf
@@ -290,7 +291,7 @@ class Atbat():
             r = self.play(up,home_pitcher)
 
             #print (f'  {i+1}: {up["lastname"]} - {r[1]}')
-            scorecard += (f'\n{i+1}: {up["lastname"]} - {r[1]}')
+            scorecard += (f'\n{i+1}: {up["player"]["LastName"]} - {r[1]}')
             if r[0][0] == "H":
                 # scenario 0-7 and advance_code comes from play result
                 runthebases = self.run_the_bases(scenario,r[1])
@@ -300,7 +301,7 @@ class Atbat():
             if r[0][0] == "O":
                 out_count += 1
                 runthebases[1]=0
-            print (f'  {i+1}: {up["lastname"]} - {r[1]} - runs scored: {runthebases[1]} runners: {scenario}')
+            print (f'  {i+1}: {up["player"]["LastName"]} - {r[1]} - runs scored: {runthebases[1]} runners: {scenario}')
             i = visitor_up_next
         visitor_leads_off_inning = visitor_up_next
         self.v_total_runs += v_score
@@ -308,7 +309,7 @@ class Atbat():
         #
         # instead of printing to the console, set the string to the StringVar object.
         #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
-        scorecard += ( f'\n{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
+        scorecard += ( f'\n{visitor_lineup_dictionary[visitor_leads_off_inning]["player"]["LastName"]} will lead off next inning.')
         self.play_by_play.set( scorecard)
         result = {}
         result["v_score"]=v_score
@@ -335,7 +336,7 @@ class Atbat():
             r = self.play(up,visitor_pitcher)
 
             #print (f'  {i+1}: {up["lastname"]} - {r[1]}')
-            scorecard += (f'\n{i+1}: {up["lastname"]} - {r[1]}')
+            scorecard += (f'\n{i+1}: {up["player"]["LastName"]} - {r[1]}')
             if r[0][0] == "H":
                 runthebases = self.run_the_bases(scenario,r[1])
                 scenario = runthebases[0]
@@ -344,7 +345,7 @@ class Atbat():
             if r[0][0] == "O":
                 out_count += 1
                 runthebases[1]=0
-            print (f'  {i+1}: {up["lastname"]} - {r[1]} -   runs scored: {runthebases[1]}   runners: {scenario}')
+            print (f'  {i+1}: {up["player"]["LastName"]} - {r[1]} -   runs scored: {runthebases[1]}   runners: {scenario}')
             i = home_up_next
 
         home_leads_off_inning = home_up_next
@@ -353,7 +354,7 @@ class Atbat():
         #
         # instead of printing to the console, set the string to the StringVar object.
         #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
-        scorecard += ( f'\n{home_lineup_dictionary[home_leads_off_inning]["lastname"]} will lead off next inning.')
+        scorecard += ( f'\n{home_lineup_dictionary[home_leads_off_inning]["player"]["LastName"]} will lead off next inning.')
         self.play_by_play.set(scorecard)
         result = {}
         result["h_score"]=h_score

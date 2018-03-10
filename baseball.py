@@ -24,6 +24,8 @@ home_team_name = "Red Sox"
 visiting_team_name = "Yankees"
 home_ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
 visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
+home_stats_file = "data/2017_bos_stats.json"
+visitor_stats_file = "data/2017_nyy_stats.json"
 stadium_name = "Waban Field"
 
 # Game functions
@@ -32,23 +34,29 @@ def main():
 
     # Create Lineups
     home = Lineup()
-    home.lineup_dictionary = home.create_lineup_dictionary(home_ids)
+    #v1
+    #home.lineup_dictionary = home.create_lineup_dictionary(home_ids)
+    #v2
+    home.lineup_dictionary = home.create_lineup_dictionary_from_file(home_stats_file,home_ids)
     home.lineup_lastname = home.create_lineup_lastname(home.lineup_dictionary)
     
     visitor = Lineup()
-    visitor.lineup_dictionary = visitor.create_lineup_dictionary(visitor_ids)
+    #visitor.lineup_dictionary = visitor.create_lineup_dictionary(visitor_ids)
+    visitor.lineup_dictionary = visitor.create_lineup_dictionary_from_file(visitor_stats_file,visitor_ids)
     visitor.lineup_lastname = visitor.create_lineup_lastname(visitor.lineup_dictionary) 
     
     # And Select a pitcher for each team
-    home_pitcher_id = ['10432']
-    home.pitcher = home.get_pitcher(home_pitcher_id)
+    #home_pitcher_id = ['10432']
+    home_pitcher_id = "10432"
+    home.pitcher = home.get_pitcher_from_file(home_stats_file, home_pitcher_id)
     
-    visitor_pitcher_id =['10719']
-    visitor.pitcher = visitor.get_pitcher(visitor_pitcher_id)
+    visitor_pitcher_id ="10719"
+    #visitor.pitcher = visitor.get_pitcher(visitor_pitcher_id)
+    visitor.pitcher = visitor.get_pitcher_from_file(visitor_stats_file, visitor_pitcher_id)
     
     # For testing: shows the lineups have been generated properly
-    print (f'{home.pitcher["lastname"]} is the starting pitcher for the {home_team_name}')
-    print (f'And {visitor.pitcher["lastname"]} will start for the {visiting_team_name}')
+    print (f'{home.pitcher["player"]["LastName"]} is the starting pitcher for the {home_team_name}')
+    print (f'And {visitor.pitcher["player"]["LastName"]} will start for the {visiting_team_name}')
     
     # Access Game Score
     score = Score()
@@ -72,7 +80,8 @@ def main():
         #BLEACHER BOARD - Frame (0,0)
         bleacher_board = ttk.Frame(screen)
         bleacher_board.grid(column=0, row=0)
-        ttk.Label(bleacher_board, text = stadium_name).grid(column=0,row =0)
+        ttk.Label(bleacher_board, text = stadium_name, font="Verdana 14 bold").grid(column=0,row =0)
+        
         # FIELD BOARD FRAME (0,1)
         field_board = ttk.Frame(screen)
         field_board.grid(column=0, row =1)
