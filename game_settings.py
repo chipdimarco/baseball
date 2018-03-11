@@ -8,7 +8,7 @@ class Settings():
         self.height = 600
         self.size = (f'{self.width}x{self.height}')
         self.caption = "Tkinter Baseball"
-        self.diamond_color = "#476042"
+        self.diamond_color = "#4DBD33"  #4A777A
         self.inning = 1
         self.half_inning = "Top"
         self.visitor_leads_off_inning = 0
@@ -18,5 +18,6 @@ class Settings():
         # If stored_rosters is True, access data locally, not on line
         self.stored_rosters = True
         self.done = False
+        self.screen_background = "#ECECEC"
 
 

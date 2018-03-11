@@ -1,5 +1,5 @@
 # generates lineups from a list of player ids
-# 1/28/2018 v1
+# 1/28/2018, rev. 3/10/2018
 # class Lineup creates the lineup object
 # method create_lineup_dictionary() is called from app with a parameter of selected player ids
 # returns the python dict string over which the gameplay will loop 
@@ -19,7 +19,7 @@ headers = {
 
 class Lineup():
     def __init__(self):
-        self.note = "lineup"
+        self.note = "Lineup Notes\n"
         self.lineup_dictionary = ""
         self.lineup_lastname = ""
         self.pitcher = ""
@@ -50,12 +50,9 @@ class Lineup():
                         j = {}
                         l = data['cumulativeplayerstats']['playerstatsentry'][i]['team']
                         m = data['cumulativeplayerstats']['playerstatsentry'][i]['stats']
-                        #j["id"] = id
-                        #j["player"] = {**k,**l,**m}
                         j["player"] = k
                         j["team"] = l
                         j["stats"] = m
-                        #j.append(player)
                         lineup.append(j)
                         print (f'{id} appended')
                         break
@@ -85,23 +82,8 @@ class Lineup():
             except:
                 print(f'Pitcher error finding {id}')
                 break
-        '''
-        j['id'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['ID']
-        j['firstname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['FirstName']
-        j['lastname'] = r['cumulativeplayerstats']['playerstatsentry'][0]['player']['LastName']
-        j['totalbattersfaced'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['TotalBattersFaced']['#text']
-        j['hitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['HitsAllowed']['#text']
-        j['pitcherstrikeouts'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherStrikeouts']['#text']
-        j['pitcherwalks'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherWalks']['#text']
-        j['secondbasehitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['SecondBaseHitsAllowed']['#text']
-        j['thirdbasehitsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['ThirdBaseHitsAllowed']['#text']
-        j['homerunsallowed'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['HomerunsAllowed']['#text']
-        j['pitchergroundouts'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherGroundOuts']['#text']
-        j['pitcherflyouts'] = r['cumulativeplayerstats']['playerstatsentry'][0]['stats']['PitcherFlyOuts']['#text']
-        '''
         return (j)
 
-    # Method for creating a lineup with stats from a dict. of ids
     def create_lineup_dictionary(self,ids):
         self.ids = ids
 
