@@ -16,6 +16,7 @@ from game_score import Score
 import sys
 
 import game_functions as gf
+import game_screens as gs
 
 # Variables for sample data
 # These need to be configured via the UI
@@ -61,7 +62,10 @@ def main():
     # NOTE: the Tk() class has to be initialized before the Atbat() class because
     # Atbat() needs Tk to define the StringVar() object
     # Create Screen object
-    screen = Tk()
+    #screen = Tk()
+
+    screen = gs.GameScreen()
+
     # Create Atbat object
     atbat = Atbat()
 
@@ -81,7 +85,7 @@ def main():
         bleacher_board.grid(column=0, row=0)
         bleacher_board.grid_rowconfigure(0,minsize=settings.height/10)
         bleacher_board.grid_columnconfigure(0,minsize=settings.width)
-        ttk.Label(bleacher_board, text = stadium_name, font="Verdana 14 bold").grid(column=0,row =0)
+        #ttk.Label(bleacher_board, text = stadium_name, font="Verdana 14 bold").grid(column=0,row =0)
         
         # FIELD BOARD - Frame (0,1) - Middle Row, 3 Columns
         field_board = ttk.Frame(screen)
