@@ -1,5 +1,6 @@
 # 3/17/2018
 # help from pythonprogramming.net
+# and their YouTube tutorials
 import tkinter as tk
 from game_settings import Settings
 from game_lineup import Lineup
@@ -42,11 +43,9 @@ class GameScreen(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         container = tk.Frame(self)
 
-
         container.grid(column=0, row=0)
         container.grid_rowconfigure(0,weight=1)
         container.grid_columnconfigure(0,weight=1)
-
 
         self.frames = {}
         for F in (Splash,Setup,Play):
@@ -60,26 +59,25 @@ class GameScreen(tk.Tk):
         frame.tkraise()
 
 
-
-
-
 class Splash(tk.Frame):
     def __init__(self,parent,controller):
+        # Create Frame
         tk.Frame.__init__(self,parent)
         splash_frame = tk.Frame(self)
+        # Format Frame
         splash_frame.grid(column=0,row=0)
         splash_frame.grid_rowconfigure(0,minsize=settings.height/10)
         splash_frame.grid_rowconfigure(1,minsize=settings.height/10)
         splash_frame.grid_rowconfigure(2,minsize=settings.height*.8)
         splash_frame.grid_columnconfigure(0,minsize=settings.width/2)
         splash_frame.grid_columnconfigure(1,minsize=settings.width/2)
-
+        # Create Objects for Frame
         splash_label = tk.Label(splash_frame,text="Welcome to Waban Studio Baseball",font=LARGE_FONT)
         button_setup = tk.Button(splash_frame, text="Go to Setup", width=10, 
             command = lambda: controller.show_frame(Setup))
         button_play = tk.Button(splash_frame, text="Go to Play", width=10,
             command = lambda: controller.show_frame(Play))
-
+        # Place Objects in Frame
         splash_label.grid(column=0,row=0, sticky="n", columnspan=2)
         button_setup.grid(column=0,row=1, sticky="n")
         button_play.grid(column=1,row=1,sticky="n")
@@ -87,62 +85,104 @@ class Splash(tk.Frame):
 
 class Setup(tk.Frame):
     def __init__(self, parent, controller):
+        # Create Frame
         tk.Frame.__init__(self, parent)
         setup_frame = tk.Frame(self)
+        # Format Frame
         setup_frame.grid(column=0, row=0)
         setup_frame.grid_rowconfigure(0,minsize=settings.height/10)
         setup_frame.grid_rowconfigure(1,minsize=settings.height/10)
         setup_frame.grid_rowconfigure(2,minsize=settings.height*.8)
         setup_frame.grid_columnconfigure(0,minsize=settings.width/2)
         setup_frame.grid_columnconfigure(1,minsize=settings.width/2)
-
+        # Create Objects for Frame
         label = tk.Label(setup_frame, text = "Setup", font=LARGE_FONT)
         button_splash = tk.Button(setup_frame, text="Go to Splash", width=10,
             command = lambda: controller.show_frame(Splash))
         button_play = tk.Button(setup_frame, text="Go to Play", width=10,
             command = lambda: controller.show_frame(Play))
-        
+        # Place Objects in Frame
         label.grid(column=0,row=0, sticky="n", columnspan=2)
         button_splash.grid(column=0,row=1,sticky="n")
         button_play.grid(column=1,row=1, sticky="n")
+        #
+        #Selection Part
+        # Team Selection
+        selection_board =tk.Frame(setup_frame)
+        selection_board.grid(column=0,row=2)
+        options_Teams = ["Red Sox","Yankees", "Blue Jays", "Rays", "Orioles", "Phillies"]
+        select_VisitingTeam = tk.StringVar(selection_board)
+        visitingteamoptions = options_Teams
+        select_HomeTeam = tk.StringVar(selection_board)
+        hometeamoptions = options_Teams
+        #hometeamoptions = [i for i in options_Teams if i != select_VisitingTeam]
+        select_VisitingTeam.set ("Visiting Team")
+        select_HomeTeam.set ("Home Team")
+
+        def getVisitingTeam():
+            select_VisitingTeam.get()
+            print(select_VisitingTeam.get())
+
+        def getHomeTeam():
+            select_HomeTeam.get()
+            print (select_HomeTeam.get())
 
 
+        visitingteam = tk.OptionMenu(selection_board, select_VisitingTeam, *visitingteamoptions) 
+        visitingteam.grid(column=0,row=0)
+
+        hometeam = tk.OptionMenu(selection_board, select_HomeTeam, *hometeamoptions) 
+        hometeam.grid(column=0,row=1)
+
+        pickvisitingteam = tk.Button(selection_board, text="OK", command=getVisitingTeam)
+        pickvisitingteam.grid(column=1,row=0)
+
+        pickhometeam = tk.Button(selection_board,text="OK", command=getHomeTeam)
+        pickhometeam.grid(column=1,row=1)
 
 
 
 class Play(tk.Frame):
     def __init__(self, parent, controller):
+        # Create Frame
         tk.Frame.__init__(self, parent)
-        atbat = Atbat()
+        # Format Frame
         play_frame = tk.Frame(self)
         play_frame.grid(column=0,row=0)
-
-        #BLEACHER BOARD - Frame (0,0) - Top Row
+        # Create atbat object
+        atbat = Atbat()
+        # - - - - - - - - - - - - - - - - - - - - - -
+        # Create Child Frames
+        # - - - - - - - - - - - - - - - - - - - - - -
+        #BLEACHER BOARD - Child Frame (0,0) - Top Row
         bleacher_board = tk.Frame(play_frame)
+        # Format child frame
         bleacher_board.grid(column=0, row=0)
         bleacher_board.grid_rowconfigure(0,minsize=settings.height/10)
         bleacher_board.grid_columnconfigure(0,minsize=settings.width/2)
-
+        # Create Objects for child frame
         label = tk.Label(bleacher_board, text = "Play Ball!", font=LARGE_FONT)
         button_splash = tk.Button(bleacher_board, text="Go to Splash", width=10,
             command = lambda: controller.show_frame(Splash))
         button_setup = tk.Button(bleacher_board, text="Go to Setup", width=10,
             command = lambda: controller.show_frame(Setup))
-
+        # Place Objects in Frame
         label.grid(column=0,row=0, sticky="n", columnspan=2)
         button_splash.grid(column=0,row=1,sticky="w")
         button_setup.grid(column=1,row=1,sticky="w")
-
-        # FIELD BOARD - Frame (0,1) - Middle Row, 3 Columns
+        # - - - - - - - - - - - - - - - - - - - - - -
+        # FIELD BOARD - Child Frame (0,1) - Middle Row, 3 Columns
         field_board = tk.Frame(play_frame)
+        # Format child frame
         field_board.grid_columnconfigure(0,minsize=settings.width/4)
         field_board.grid_columnconfigure(1,minsize=settings.width/2)
         field_board.grid_columnconfigure(2,minsize=settings.width/4)
         field_board.grid_rowconfigure(0,minsize=settings.height/2)
         field_board.grid(column=0, row =1)
-
-
-        #DUGOUT - Frame (0,2) - 3 Columns
+        # Create Objects for child frame
+        # Place Objects in Frame
+        # - - - - - - - - - - - - - - - - - - - - - -
+        #DUGOUT - Child Frame (0,2) - 3 Columns
         dugout = tk.Frame(play_frame)
         dugout.grid(column=0, row=2)
         dugout.grid_columnconfigure(0,minsize=settings.width/4)
@@ -150,23 +190,9 @@ class Play(tk.Frame):
         dugout.grid_columnconfigure(2,minsize=settings.width/2)
         dugout.grid_rowconfigure(0,minsize=settings.height*.4)
 
-        '''
-        # Field Board > LINEUP CARDS
-        viz = (f'VISITORS\n\n{visiting_team_name}\n')
-        vlc=tk.StringVar()
-        vlc.set(viz)
-        
-        for i in visitor.lineup_lastname:
-            viz += (f'\n{i}')
-        
-        vlc=tk.StringVar()
-        vlc.set(viz)
-
-        v_lineup_card = tk.Label(field_board, textvariable = vlc)
-        v_lineup_card.grid(column = 0, row = 0, sticky="n")
-        '''
-
-        
+        # - - - - - - - - - - - - - - - - - - - - - -
+        # Create objects in the Child Frames
+        # - - - - - - - - - - - - - - - - - - - - - -
         # Field Board > LINEUP CARDS
         viz = (f'VISITORS\n\n{visiting_team_name}\n')
         for i in visitor.lineup_lastname:
@@ -185,6 +211,7 @@ class Play(tk.Frame):
         h_lineup_card = tk.Label(field_board, textvariable = hlc)
         h_lineup_card.grid(column= 2, row = 0, sticky="n", padx=12)
         
+        # - - - - - - - - - - - - - - - - - - - - - -
         # Field Board > FIELD
         field_height = int(settings.height/2)
         field_width = int(settings.width/2)
@@ -195,19 +222,13 @@ class Play(tk.Frame):
         field.grid(column=1,row=0)
         field.create_rectangle(0 , 0 , field_width, field_height, fill='#526F35')
         field.create_polygon(diamond, fill=settings.diamond_color)
-        '''
-        #DUGOUT - Frame (0,2) - 3 Columns
-        dugout = ttk.Frame(screen,padding="3 3 3 12")
-        dugout.grid(column=0, row=2)
-        dugout.grid_columnconfigure(0,minsize=settings.width/4)
-        dugout.grid_columnconfigure(1,minsize=settings.width/4)
-        dugout.grid_columnconfigure(2,minsize=settings.width/2)
-        dugout.grid_rowconfigure(0,minsize=settings.height*.4)
-        '''
+
+        # - - - - - - - - - - - - - - - - - - - - - -
         # Dugout > PLAY Button
         playNextHalfInningButton = tk.Button( dugout, text="PLAY", command=lambda: atbat.half_inning(settings, visitor, home))
         playNextHalfInningButton.grid(column=0,row=0, sticky="n", padx=24,pady=24)
         
+        # - - - - - - - - - - - - - - - - - - - - - -
         # Dugout > LINESCORE_FRAME        
         linescore_frame = tk.Frame(dugout)
         linescore_frame.grid(column=1,row=0,sticky="n")
@@ -229,15 +250,4 @@ class Play(tk.Frame):
         message = tk.Label(dugout,textvariable=atbat.play_by_play)
         #message = tk.Label(dugout,text="atbat.play_by_play")
         message.grid(column=2,row=0,sticky=("nw"))
-        
 
-
-
-
-
-
-'''
-# call this from baseball.py
-app = GameScreen()
-app.mainloop()
-'''
