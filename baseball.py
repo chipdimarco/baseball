@@ -20,12 +20,13 @@ import game_screens as gs
 
 # Variables for sample data
 # These need to be configured via the UI
+'''
 home_team_name = "Red Sox"
 visiting_team_name = "Yankees"
 
 home_ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
 home_stats_file = "data/2017_bos_stats.json"
-'''
+
 visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
 visitor_stats_file = "data/2017_nyy_stats.json"
 '''
@@ -37,20 +38,22 @@ def main():
     settings = Settings()
 
     # Create Lineup objects
+    '''
     home = Lineup()
     home.lineup_dictionary = home.create_lineup_dictionary_from_file(home_stats_file,home_ids)
     home.lineup_lastname = home.create_lineup_lastname(home.lineup_dictionary)
 
-    '''    
+        
     visitor = Lineup()
     visitor.lineup_dictionary = visitor.create_lineup_dictionary_from_file(visitor_stats_file,visitor_ids)
     visitor.lineup_lastname = visitor.create_lineup_lastname(visitor.lineup_dictionary) 
     '''
 
     # Create Pitcher Objects
+    '''
     home_pitcher_id = "10432"
     home.pitcher = home.get_pitcher_from_file(home_stats_file, home_pitcher_id)
-    '''
+    
     visitor_pitcher_id ="10719"
     visitor.pitcher = visitor.get_pitcher_from_file(visitor_stats_file, visitor_pitcher_id)
     '''
@@ -66,24 +69,25 @@ def main():
 
     # NOTE: the Tk() class has to be initialized before the Atbat() class because
     # Atbat() needs Tk to define the StringVar() object
+    
     # Create Screen object
-    #screen = Tk()
-
+    # screen = Tk()
     screen = gs.GameScreen()
 
+
     # Create Atbat object
-    atbat = Atbat()
+    # atbat = Atbat()
 
     # Display settings apply in either mode
-    v_linescore = []
-    h_linescore = []
 
     #TKINTER MODE
     if not console_mode:
+        #atbat = Atbat()
+
         # Configure screen
-        screen.title(settings.caption)
-        screen.geometry(settings.size)
-        screen.configure(background=settings.screen_background)
+        #screen.title(settings.caption)
+        #screen.geometry(settings.size)
+        #screen.configure(background=settings.screen_background)
 
 
         '''
@@ -168,6 +172,8 @@ def main():
 
     #CONSOLE MODE    
     if console_mode:
+        atbat = Atbat()
+
         for i in range(9):
             # Top of inning
             inning_top = atbat.inning_top(settings.inning + i, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)

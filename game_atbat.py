@@ -5,6 +5,7 @@
 
 import random
 import sys
+#import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from game_settings import Settings

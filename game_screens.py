@@ -3,11 +3,16 @@
 import tkinter as tk
 from game_settings import Settings
 from game_lineup import Lineup
+from game_atbat import Atbat
+
 
 settings = Settings()
+v_linescore = []
+h_linescore = []
 
 LARGE_FONT = ("verdana",14)
-home_team_name = "Red Sox"
+
+# Visitor Setup
 visiting_team_name = "Yankees"
 
 visitor = Lineup()
@@ -18,6 +23,19 @@ visitor_stats_file = "data/2017_nyy_stats.json"
 visitor.lineup_dictionary = visitor.create_lineup_dictionary_from_file(visitor_stats_file,visitor_ids)
 visitor.lineup_lastname = visitor.create_lineup_lastname(visitor.lineup_dictionary) 
 visitor.pitcher = visitor.get_pitcher_from_file(visitor_stats_file, visitor_pitcher_id)
+
+# Home Setup
+home_team_name = "Red Sox"
+
+home = Lineup()
+home_pitcher_id = "10432"
+home_ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
+home_stats_file = "data/2017_bos_stats.json"
+    
+home.lineup_dictionary = home.create_lineup_dictionary_from_file(home_stats_file,home_ids)
+home.lineup_lastname = home.create_lineup_lastname(home.lineup_dictionary)
+home.pitcher = home.get_pitcher_from_file(home_stats_file, home_pitcher_id)
+
 
 class GameScreen(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -36,9 +54,13 @@ class GameScreen(tk.Tk):
             self.frames[F] = frame
             frame.grid(row=0,column=0,sticky="nsew")
         self.show_frame(Splash)
+
     def show_frame(self,cont):
         frame = self.frames[cont]
         frame.tkraise()
+
+
+
 
 
 class Splash(tk.Frame):
@@ -91,6 +113,7 @@ class Setup(tk.Frame):
 class Play(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        atbat = Atbat()
         play_frame = tk.Frame(self)
         play_frame.grid(column=0,row=0)
 
@@ -127,6 +150,7 @@ class Play(tk.Frame):
         dugout.grid_columnconfigure(2,minsize=settings.width/2)
         dugout.grid_rowconfigure(0,minsize=settings.height*.4)
 
+        '''
         # Field Board > LINEUP CARDS
         viz = (f'VISITORS\n\n{visiting_team_name}\n')
         vlc=tk.StringVar()
@@ -140,9 +164,9 @@ class Play(tk.Frame):
 
         v_lineup_card = tk.Label(field_board, textvariable = vlc)
         v_lineup_card.grid(column = 0, row = 0, sticky="n")
-
-
         '''
+
+        
         # Field Board > LINEUP CARDS
         viz = (f'VISITORS\n\n{visiting_team_name}\n')
         for i in visitor.lineup_lastname:
@@ -172,6 +196,40 @@ class Play(tk.Frame):
         field.create_rectangle(0 , 0 , field_width, field_height, fill='#526F35')
         field.create_polygon(diamond, fill=settings.diamond_color)
         '''
+        #DUGOUT - Frame (0,2) - 3 Columns
+        dugout = ttk.Frame(screen,padding="3 3 3 12")
+        dugout.grid(column=0, row=2)
+        dugout.grid_columnconfigure(0,minsize=settings.width/4)
+        dugout.grid_columnconfigure(1,minsize=settings.width/4)
+        dugout.grid_columnconfigure(2,minsize=settings.width/2)
+        dugout.grid_rowconfigure(0,minsize=settings.height*.4)
+        '''
+        # Dugout > PLAY Button
+        playNextHalfInningButton = tk.Button( dugout, text="PLAY", command=lambda: atbat.half_inning(settings, visitor, home))
+        playNextHalfInningButton.grid(column=0,row=0, sticky="n", padx=24,pady=24)
+        
+        # Dugout > LINESCORE_FRAME        
+        linescore_frame = tk.Frame(dugout)
+        linescore_frame.grid(column=1,row=0,sticky="n")
+
+        # Row 0 is Text
+        v = tk.StringVar()
+        tk.Label(linescore_frame,textvariable=v).grid(column=1,row=0, sticky = ("nw"))
+        v.set("It's a great day for baseball")
+        # Row 1 is Visitors Linescore
+        v_linescore = tk.Label(linescore_frame, textvariable=atbat.v_linescore)
+        v_linescore.grid(column=1,row=1,sticky=("nw"))
+        # Row 2 is Home Linescore
+        h_linescore = tk.Label(linescore_frame, textvariable=atbat.h_linescore)
+        #h_linescore = tk.Label(linescore_frame, text="atbat wont work")
+        h_linescore.grid(column=1,row=2,sticky=("nw"))
+
+        # Dugout > PLAY BY PLAY
+        # the atbat.inning_top method will also set the play_by_play StringVar, and the message object below will draw it on screen
+        message = tk.Label(dugout,textvariable=atbat.play_by_play)
+        #message = tk.Label(dugout,text="atbat.play_by_play")
+        message.grid(column=2,row=0,sticky=("nw"))
+        
 
 
 
