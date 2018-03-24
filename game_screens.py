@@ -120,8 +120,10 @@ class Setup(tk.Frame):
         select_HomeTeam.set ("Home Team")
 
         def getVisitingTeam():
-            select_VisitingTeam.get()
-            print(select_VisitingTeam.get())
+            result = select_VisitingTeam.get()
+            #print(select_VisitingTeam.get())
+            print ( result )
+            return ( result )
 
         def getHomeTeam():
             select_HomeTeam.get()
