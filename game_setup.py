@@ -1,8 +1,9 @@
-# 3/20/2018
+# 3/20/2018, 3/25/2018
 
 import tkinter as tk
 from tkinter import ttk
 import json
+import random
 
 screen = tk.Tk()
 screen.title("Testing")
@@ -37,114 +38,12 @@ roster_VisitingTeam = tk.StringVar(screen)
 roster_HomeTeam = tk.StringVar(screen)
 
 
-def getVisitingTeam():
-    select_VisitingTeam.get()
-    if select_VisitingTeam.get() in options_Teams:
-        visitingteam = select_VisitingTeam.get()
-        visiting_team_code = team_codes.get(visitingteam)
-        print(f'\t{visiting_team_code} is the code for {visitingteam}')
-        visitor_stats_file = (f'data/2017_{visiting_team_code}_stats.json')
-        data = json.load(open(visitor_stats_file))
-        # print (data)
-
-        # FIND PITCHERS
-        visiting_pitchers = []
-        counter = 0
-        for i in range(100):
-            try:
-                k = data['cumulativeplayerstats']['playerstatsentry'][i]['player']
-                if (k["Position"] == "P"):
-                    j = {}
-                    l = data['cumulativeplayerstats']['playerstatsentry'][i]['team']
-                    m = data['cumulativeplayerstats']['playerstatsentry'][i]['stats']
-                    j["player"] = k
-                    j["team"] = l
-                    j["stats"] = m
-                    visiting_pitchers.append(j)
-                    #print (f'{i} appended')
-                    #print (k["LastName"])
-                    counter += 1
-            except:
-                print(f'\nFound  {i-1} players')
-                break
-
-        # So now we have a list of all the pitchers
-        # print (f'{counter} are pitchers.')
-        
-        # Initialize a list of ids for players on the 25 man roster
-        roster_ids = []
-        # Initialize the list of starting pitchers (with stats)
-        roster_sp = []
-        # Initialize the list of relief pitchers
-        roster_rp = []
-        # Initialzie the list of middle relief
-        roster_midp = []
-        
-
-
-        # SORT by Games Started
-        print ("\n5 Starters")
-        print ("Starts\tName")
-        list = sorted(visiting_pitchers, key=lambda player: int(player["stats"]["GamesStarted"]["#text"]), reverse=True)
-        for i in range(5):
-            roster_sp.append(list[i])
-            visiting_pitchers.remove(list[i])
-            roster_ids.append(list[i]["player"]["ID"])
-            counter -= 1
-            print (f'{list[i]["stats"]["GamesStarted"]["#text"]}\t{list[i]["player"]["LastName"]}')
-        #print (list)
-
-        # SORT by Saves
-        print ("\n3 Closers")
-        print ("Saves\tName")
-        list = sorted(visiting_pitchers, key=lambda player: int(player["stats"]["Saves"]["#text"]), reverse=True)
-        for i in range(3):
-            roster_rp.append(list[i])
-            visiting_pitchers.remove(list[i])
-            roster_ids.append(list[i]["player"]["ID"])
-            counter -= 1
-            print(f'{list[i]["stats"]["Saves"]["#text"]}\t{list[i]["player"]["LastName"]}')
-        #print(roster_ids)
-
-        # PICK remaining pitchers
-        print ("\nOther Pitchers")
-
-        # Remove 4 or more starts from list
-        # NOTE: To copy a list, you need the range parameters, otherwise you get a reference to the original not a copy
-        list = visiting_pitchers[:]
-        for i in range (counter):
-            if (int(list[i]["stats"]["GamesStarted"]["#text"]) > 3):
-                visiting_pitchers.remove(list[i])
-                counter -= 1
-        
-        # Add from the remaining list based on several factors:
-        list = sorted(visiting_pitchers, key=lambda player: float(player["stats"]["InningsPitched"]["#text"]), reverse=True)
-        roster_midp.append(list[0])
-        visiting_pitchers.remove(list[0])
-        roster_ids.append(list[0]["player"]["ID"])
-        counter -= 1
-        print(f'Added  {list[0]["player"]["LastName"]} for IP')
-
-        list = sorted(visiting_pitchers, key=lambda player: float(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
-        roster_midp.append(list[0])
-        visiting_pitchers.remove(list[0])
-        roster_ids.append(list[0]["player"]["ID"])
-        counter -= 1
-        print(f'Added  {list[0]["player"]["LastName"]} for GP')
-
-        list = sorted(visiting_pitchers, key=lambda player: float(player["stats"]["Holds"]["#text"]), reverse=True)
-        roster_midp.append(list[0])
-        visiting_pitchers.remove(list[0])
-        roster_ids.append(list[0]["player"]["ID"])
-        counter -= 1
-        print(f'Added  {list[0]["player"]["LastName"]} for H')
-
 def create_roster_25(select_team, roster):
-    #print (select_team)
-    #roster.set(select_team) 
-    #print (roster.get())
-    
-    
+    '''
+    print (select_team)
+    roster.set(select_team) 
+    print (roster.get())
+    '''
     if select_team in options_Teams:
         team_roster = select_team
         team_code = team_codes.get(team_roster)
@@ -170,12 +69,12 @@ def create_roster_25(select_team, roster):
                     roster_pitchers.append(j)
                     counter += 1
             except:
-                print(f'\nFound  {i-1} players')
+                #print(f'\nFound  {i-1} players')
                 break
 
         # So now we have a list of all the pitchers
         # print (f'{counter} are pitchers.')
-        
+
         # Initialize a list of ids for players on the 25 man roster
         roster_ids = []
         # Initialize the list of starting pitchers (with stats)
@@ -184,10 +83,111 @@ def create_roster_25(select_team, roster):
         roster_rp = []
         # Initialzie the list of middle relief
         roster_midp = []
+
+        # Now get the positions
+
+        roster_temp = get_by_postion(data,"C")
+        list = sorted(roster_temp, key=lambda player: int(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
+        roster_c = []
+        roster_c.append(list[0])
+        roster_ids.append(list[0]["player"]["ID"])
+        if len(list) > 1:
+            roster_c.append(list[1])
+            roster_ids.append(list[1]["player"]["ID"])
+        for player in roster_c:
+            print (f'c: {player["player"]["LastName"]}')
+        roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
         
+        roster_temp = get_by_postion(data,"1B")
+        list = sorted(roster_temp, key=lambda player: int(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
+        roster_1b = []
+        roster_1b.append(list[0])
+        roster_ids.append(list[0]["player"]["ID"])
+        if len(list) > 1:
+            roster_1b.append(list[1])
+            roster_ids.append(list[1]["player"]["ID"])
+        for player in roster_1b:
+            print (f'1b: {player["player"]["LastName"]}')
+        roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
+        
+        
+        roster_temp = get_by_postion(data,"2B")
+        list = sorted(roster_temp, key=lambda player: int(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
+        roster_2b = []
+        roster_2b.append(list[0])
+        roster_ids.append(list[0]["player"]["ID"])
+        if len(list) > 1:
+            roster_2b.append(list[1])
+            roster_ids.append(list[1]["player"]["ID"])
+        for player in roster_2b:
+            print (f'2b: {player["player"]["LastName"]}')
+        roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
+        
+        roster_temp = get_by_postion(data,"3B")
+        list = sorted(roster_temp, key=lambda player: int(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
+        roster_3b = []
+        roster_3b.append(list[0])
+        roster_ids.append(list[0]["player"]["ID"])
+        if len(list) > 1:
+            roster_3b.append(list[1])
+            roster_ids.append(list[1]["player"]["ID"])
+        for player in roster_3b:
+            print (f'3b: {player["player"]["LastName"]}')
+        roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
+        
+        
+        roster_temp = get_by_postion(data,"SS")
+        list = sorted(roster_temp, key=lambda player: int(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
+        roster_ss = []
+        roster_ss.append(list[0])
+        roster_ids.append(list[0]["player"]["ID"])
+        if len(list) > 1:
+            roster_ss.append(list[1])
+            roster_ids.append(list[1]["player"]["ID"])
+        for player in roster_ss:
+            print (f'ss: {player["player"]["LastName"]}')
+        roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
+
+        roster_of = []
+        roster_temp = get_by_postion(data,"LF")
+        list = sorted(roster_temp, key=lambda player: int(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
+        roster_lf = []
+        roster_lf.append(list[0])
+        roster_ids.append(list[0]["player"]["ID"])
+        if len(list) > 1:
+            roster_of.append(list[1])
+        for player in roster_lf:
+            print (f'lf: {player["player"]["LastName"]}')
+        roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
+        
+        roster_temp = get_by_postion(data,"CF")
+        list = sorted(roster_temp, key=lambda player: int(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
+        roster_cf = []
+        roster_cf.append(list[0])
+        roster_ids.append(list[0]["player"]["ID"])
+        if len(list) > 1:
+            roster_of.append(list[1])
+        for player in roster_cf:
+            print (f'cf: {player["player"]["LastName"]}')
+        roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
+        
+        roster_temp = get_by_postion(data,"RF")
+        list = sorted(roster_temp, key=lambda player: int(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
+        roster_rf = []
+        roster_rf.append(list[0])
+        roster_ids.append(list[0]["player"]["ID"])
+        if len(list) > 1:
+            roster_of.append(list[1])
+        for player in roster_rf:
+            print (f'rf: {player["player"]["LastName"]}')
+        roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
+
+        # Fourth Outfielder
+        list = sorted(roster_of, key=lambda player: int(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
+        roster_ids.append(list[0]["player"]["ID"])
         # SORT by Games Started
-        print ("\n5 Starters")
-        roster_result += (f'Starting Pitchers\n')
+        #print ("\n5 Starters")
+        roster_result += (f'\nStarting Pitchers\n')
 
         #print ("Starts\tName")
         list = sorted(roster_pitchers, key=lambda player: int(player["stats"]["GamesStarted"]["#text"]), reverse=True)
@@ -196,25 +196,26 @@ def create_roster_25(select_team, roster):
             roster_pitchers.remove(list[i])
             roster_ids.append(list[i]["player"]["ID"])
             counter -= 1
-            print (f'{list[i]["stats"]["GamesStarted"]["#text"]}\t{list[i]["player"]["LastName"]}')
+            print (f'SP: {list[i]["player"]["LastName"]} (GS: {list[i]["stats"]["GamesStarted"]["#text"]})')
             roster_result += (f'{list[i]["player"]["LastName"]} ({list[i]["stats"]["GamesStarted"]["#text"]})\n')
         #print (list)
 
         # SORT by Saves
         roster_result += ("Closers\n")
-        print ("Saves\tName")
+        #print ("Saves\tName")
         list = sorted(roster_pitchers, key=lambda player: int(player["stats"]["Saves"]["#text"]), reverse=True)
         for i in range(3):
             roster_rp.append(list[i])
             roster_pitchers.remove(list[i])
             roster_ids.append(list[i]["player"]["ID"])
             counter -= 1
-            print(f'{list[i]["stats"]["Saves"]["#text"]}\t{list[i]["player"]["LastName"]}')
+            print (f'RP: {list[i]["player"]["LastName"]} (Sv: {list[i]["stats"]["Saves"]["#text"]})')
+            #print(f'{list[i]["stats"]["Saves"]["#text"]}\t{list[i]["player"]["LastName"]}')
             roster_result += (f'{list[i]["player"]["LastName"]}({list[i]["stats"]["Saves"]["#text"]})\n')
         #print(roster_ids)
 
         # PICK remaining pitchers
-        print ("\nOther Pitchers")
+        #print ("\nOther Pitchers")
         roster_result += ("Bullpen\n")
         
 
@@ -232,7 +233,7 @@ def create_roster_25(select_team, roster):
         roster_pitchers.remove(list[0])
         roster_ids.append(list[0]["player"]["ID"])
         counter -= 1
-        print(f'Added  {list[0]["player"]["LastName"]} for IP')
+        print(f'RP:  {list[0]["player"]["LastName"]} (IP: {list[0]["stats"]["InningsPitched"]["#text"]})')
         roster_result += (f'{list[0]["player"]["LastName"]} ({list[0]["stats"]["InningsPitched"]["#text"]} IP)\n')
 
         list = sorted(roster_pitchers, key=lambda player: float(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
@@ -240,7 +241,8 @@ def create_roster_25(select_team, roster):
         roster_pitchers.remove(list[0])
         roster_ids.append(list[0]["player"]["ID"])
         counter -= 1
-        print(f'Added  {list[0]["player"]["LastName"]} for GP')
+        print(f'RP:  {list[0]["player"]["LastName"]} (GP: {list[0]["stats"]["GamesPlayed"]["#text"]})')
+        #print(f'Added  {list[0]["player"]["LastName"]} for GP')
         roster_result += (f'{list[0]["player"]["LastName"]} ({list[0]["stats"]["GamesPlayed"]["#text"]} Games)\n')
 
         list = sorted(roster_pitchers, key=lambda player: float(player["stats"]["Holds"]["#text"]), reverse=True)
@@ -248,53 +250,66 @@ def create_roster_25(select_team, roster):
         roster_pitchers.remove(list[0])
         roster_ids.append(list[0]["player"]["ID"])
         counter -= 1
-        print(f'Added  {list[0]["player"]["LastName"]} for H')
+        print(f'RP:  {list[0]["player"]["LastName"]} (H: {list[0]["stats"]["Holds"]["#text"]})')
+        #print(f'Added  {list[0]["player"]["LastName"]} for H')
         roster_result += (f'{list[0]["player"]["LastName"]} ({list[0]["stats"]["Holds"]["#text"]} Holds)\n')
-        # Return the results
+        
+        # Pick Starter
+        starting_pitcher = random.choice(roster_sp)
+        starting_pitcher_id = starting_pitcher["player"]["ID"]
+        print (f'{starting_pitcher["player"]["LastName"]} ({starting_pitcher_id})')
+        # Return the roster_result
         roster.set(roster_result)
         
+def get_by_postion(data, pos):
+    roster_pos = []
+    pos_counter = 0
+    #pos = "C"
+    for i in range (100):
+        try:
+            k = data['cumulativeplayerstats']['playerstatsentry'][i]['player']
+            if (k["Position"] == pos ):
+                j = {}
+                l = data['cumulativeplayerstats']['playerstatsentry'][i]['team']
+                m = data['cumulativeplayerstats']['playerstatsentry'][i]['stats']
+                j["player"] = k
+                j["team"] = l
+                j["stats"] = m
+                roster_pos.append(j)
+                pos_counter += 1
+                #print(f'\n{pos}: {j["player"]["LastName"]}')
+        except:
+            break
+    return (roster_pos)
 
-'''
-def getHomeTeam():
-    select_HomeTeam.get()
-    if select_HomeTeam.get() in options_Teams:
-        hometeam = select_HomeTeam.get()
-        print (f'{select_HomeTeam.get()} is selected')
-        code = team_codes.get(hometeam)
-        print (f'{code} is the code for {hometeam}')
-'''
 
+
+# Tkinterface Settings
+# Option Menus
 visitingteam = tk.OptionMenu(screen, select_VisitingTeam, *visitingteamoptions) 
-visitingteam.grid(column=0,row=0)
-
 hometeam = tk.OptionMenu(screen, select_HomeTeam, *hometeamoptions) 
-hometeam.grid(column=0,row=1)
-#print (hometeam)
 
-
-#pickvisitingteam = tk.Button(screen, text="OK", command=getVisitingTeam)
-pickvisitingteam = tk.Button(screen, text="OK", command=lambda: create_roster_25(select_VisitingTeam.get()))
-pickvisitingteam.grid(column=1,row=0)
-
+# Buttons
+pickvisitingteam = tk.Button(screen, text="OK", command=lambda: create_roster_25(select_VisitingTeam.get(), roster_VisitingTeam))
 pickhometeam = tk.Button(screen,text="OK", command= lambda: create_roster_25(select_HomeTeam.get(),roster_HomeTeam))
-pickhometeam.grid(column=1,row=1)
 
-
-
-
-# mylabel = tk.Label(screen,textvariable=select_HomeTeam)
-# mylabel.grid(column=0,row=2)
-
+# Display Labels
+visitorlabel = tk.Label(screen,textvariable=roster_VisitingTeam)
 homelabel = tk.Label(screen,textvariable=roster_HomeTeam)
-homelabel.grid(column=0,row=2)
-#mylabel_text = (f'{select_HomeTeam.get()} is Home')
-# NO mylabel = tk.Label(screen,textvariable=f'{select_HomeTeam}')
-#mylabel = tk.Label(screen,text=mylabel_text)
+
+# Grid settings
+visitingteam.grid(column=0,row=0)
+pickvisitingteam.grid(column=1,row=0)
+visitorlabel.grid(column=0,row=1)
+
+hometeam.grid(column=2,row=0)
+pickhometeam.grid(column=3,row=0)
+homelabel.grid(column=2,row=1)
+
 
 
 # Visitor Setup
 visiting_team_name = select_VisitingTeam
-visitor_pitcher_id ="10719"
 visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
 visitor_stats_file = "data/2017_nyy_stats.json"
 
