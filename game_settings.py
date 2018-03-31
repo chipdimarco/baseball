@@ -19,5 +19,14 @@ class Settings():
         self.stored_rosters = True
         self.done = False
         self.screen_background = "#ECECEC"
+        self.team_codes = {
+            'Red Sox':'bos',
+            'Yankees':'nyy',
+            'Cubs':'chc',
+            'Rays':'tb',
+            'Astros':'hou',
+            'Phillies':'phi'
+        }
+        self.use_dh = True
 
 

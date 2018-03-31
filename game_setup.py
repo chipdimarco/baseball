@@ -4,6 +4,8 @@ import tkinter as tk
 from tkinter import ttk
 import json
 import random
+from game_settings import Settings
+
 
 screen = tk.Tk()
 screen.title("Testing")
@@ -12,21 +14,19 @@ screen_height=600
 screen.geometry(f'{screen_width}x{screen_height}')
 screen.configure(background="gray")
 
+settings = Settings()
+
 
 # Choose Teams
 # From game_screens, from Setup
 # select_VisitingTeam
 # select_HomeTeam
 # Team Selection
-team_codes = {
-    'Red Sox':'bos',
-    'Yankees':'nyy',
-    'Cubs':'chc',
-    'Rays':'tb',
-    'Astros':'hou',
-    'Phillies':'phi'
-}
-options_Teams = ["Red Sox","Yankees", "Astros", "Rays", "Cubs", "Phillies"]
+
+# List comprehension will parse out the Keys from this dictionary in Settings
+options_Teams = [i for i in settings.team_codes.keys()]
+
+
 select_VisitingTeam = tk.StringVar(screen)
 visitingteamoptions = options_Teams
 select_HomeTeam = tk.StringVar(screen)
@@ -46,7 +46,7 @@ def create_roster_25(select_team, roster):
     '''
     if select_team in options_Teams:
         team_roster = select_team
-        team_code = team_codes.get(team_roster)
+        team_code = settings.team_codes.get(team_roster)
         print(f'\t{team_code} is the code for {team_roster}')
         roster_result = (f'Roster for {team_roster}\n')
         stats_file = (f'data/2017_{team_code}_stats.json')
@@ -83,7 +83,11 @@ def create_roster_25(select_team, roster):
         roster_rp = []
         # Initialzie the list of middle relief
         roster_midp = []
-
+        # Initialize the list of 9 starters
+        lineup_ids = []
+        # Initialize the list of bench players
+        bench_ids = []
+        
         # Now get the positions
 
         roster_temp = get_by_postion(data,"C")
@@ -91,9 +95,11 @@ def create_roster_25(select_team, roster):
         roster_c = []
         roster_c.append(list[0])
         roster_ids.append(list[0]["player"]["ID"])
+        lineup_ids.append(list[0]["player"]["ID"])
         if len(list) > 1:
             roster_c.append(list[1])
             roster_ids.append(list[1]["player"]["ID"])
+            bench_ids.append(list[1]["player"]["ID"])
         for player in roster_c:
             print (f'c: {player["player"]["LastName"]}')
         roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
@@ -103,9 +109,11 @@ def create_roster_25(select_team, roster):
         roster_1b = []
         roster_1b.append(list[0])
         roster_ids.append(list[0]["player"]["ID"])
+        lineup_ids.append(list[0]["player"]["ID"])
         if len(list) > 1:
             roster_1b.append(list[1])
             roster_ids.append(list[1]["player"]["ID"])
+            bench_ids.append(list[1]["player"]["ID"])
         for player in roster_1b:
             print (f'1b: {player["player"]["LastName"]}')
         roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
@@ -116,9 +124,11 @@ def create_roster_25(select_team, roster):
         roster_2b = []
         roster_2b.append(list[0])
         roster_ids.append(list[0]["player"]["ID"])
+        lineup_ids.append(list[0]["player"]["ID"])
         if len(list) > 1:
             roster_2b.append(list[1])
             roster_ids.append(list[1]["player"]["ID"])
+            bench_ids.append(list[1]["player"]["ID"])
         for player in roster_2b:
             print (f'2b: {player["player"]["LastName"]}')
         roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
@@ -128,9 +138,11 @@ def create_roster_25(select_team, roster):
         roster_3b = []
         roster_3b.append(list[0])
         roster_ids.append(list[0]["player"]["ID"])
+        lineup_ids.append(list[0]["player"]["ID"])
         if len(list) > 1:
             roster_3b.append(list[1])
             roster_ids.append(list[1]["player"]["ID"])
+            bench_ids.append(list[1]["player"]["ID"])
         for player in roster_3b:
             print (f'3b: {player["player"]["LastName"]}')
         roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
@@ -141,9 +153,11 @@ def create_roster_25(select_team, roster):
         roster_ss = []
         roster_ss.append(list[0])
         roster_ids.append(list[0]["player"]["ID"])
+        lineup_ids.append(list[0]["player"]["ID"])
         if len(list) > 1:
             roster_ss.append(list[1])
             roster_ids.append(list[1]["player"]["ID"])
+            bench_ids.append(list[1]["player"]["ID"])
         for player in roster_ss:
             print (f'ss: {player["player"]["LastName"]}')
         roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
@@ -154,6 +168,7 @@ def create_roster_25(select_team, roster):
         roster_lf = []
         roster_lf.append(list[0])
         roster_ids.append(list[0]["player"]["ID"])
+        lineup_ids.append(list[0]["player"]["ID"])
         if len(list) > 1:
             roster_of.append(list[1])
         for player in roster_lf:
@@ -165,6 +180,7 @@ def create_roster_25(select_team, roster):
         roster_cf = []
         roster_cf.append(list[0])
         roster_ids.append(list[0]["player"]["ID"])
+        lineup_ids.append(list[0]["player"]["ID"])
         if len(list) > 1:
             roster_of.append(list[1])
         for player in roster_cf:
@@ -176,6 +192,7 @@ def create_roster_25(select_team, roster):
         roster_rf = []
         roster_rf.append(list[0])
         roster_ids.append(list[0]["player"]["ID"])
+        lineup_ids.append(list[0]["player"]["ID"])
         if len(list) > 1:
             roster_of.append(list[1])
         for player in roster_rf:
@@ -185,6 +202,7 @@ def create_roster_25(select_team, roster):
         # Fourth Outfielder
         list = sorted(roster_of, key=lambda player: int(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
         roster_ids.append(list[0]["player"]["ID"])
+        bench_ids.append(list[1]["player"]["ID"])
         # SORT by Games Started
         #print ("\n5 Starters")
         roster_result += (f'\nStarting Pitchers\n')
@@ -258,9 +276,60 @@ def create_roster_25(select_team, roster):
         starting_pitcher = random.choice(roster_sp)
         starting_pitcher_id = starting_pitcher["player"]["ID"]
         print (f'{starting_pitcher["player"]["LastName"]} ({starting_pitcher_id})')
+        print (f'Bench IDs: {bench_ids}')
+        if (settings.use_dh):
+            dh = select_dh(data,bench_ids)
+            lineup_ids.append(dh)
+        else:
+            lineup_ids.append(starting_pitcher["player"]["ID"])
+        print (f'Lineup IDs: {lineup_ids}')
         # Return the roster_result
         roster.set(roster_result)
-        
+
+def select_dh(data, bench_players):
+    # Init lineup as dictionary
+    r = data
+    bench_stats = []
+    # loop over dict. to retrieve stats
+    '''
+    for i in range (100):
+        if data['cumulativeplayerstats']['playerstatsentry'][i]['player']['ID'] in bench_players:
+            j = {}
+            k = data['cumulativeplayerstats']['playerstatsentry'][i]['player']['ID']
+            l = data['cumulativeplayerstats']['playerstatsentry'][i]['team']
+            m = data['cumulativeplayerstats']['playerstatsentry'][i]['stats']
+            j["player"] = k
+            j["team"] = l
+            j["stats"] = m
+            bench_stats.append(j)
+        else:
+            pass
+    '''
+    #print (f'Length of data:{len(data)}')
+    for i in range (100):
+        try:
+            if data['cumulativeplayerstats']['playerstatsentry'][i]['player']['ID'] in bench_players:
+                j = {}
+                k = data['cumulativeplayerstats']['playerstatsentry'][i]['player']
+                l = data['cumulativeplayerstats']['playerstatsentry'][i]['team']
+                m = data['cumulativeplayerstats']['playerstatsentry'][i]['stats']
+                j["player"] = k
+                j["team"] = l
+                j["stats"] = m
+                bench_stats.append(j)
+        except:
+            break
+    
+    # return the lineup
+    #print (f'Bench stats: {bench_stats}')
+    list = sorted(bench_stats, key=lambda player: int(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
+    print (list[0]['player']['FirstName'])
+    #print (f'DH will be {list[0]['player']['FirstName']} {list[0]['player']['LastName']}')
+    #print (f'DH will be {list[0]['player']['FirstName']} {list[0]['player']['LastName']}')
+    return (list[0]['player']['ID'])
+
+
+
 def get_by_postion(data, pos):
     roster_pos = []
     pos_counter = 0
@@ -282,6 +351,14 @@ def get_by_postion(data, pos):
             break
     return (roster_pos)
 
+# algorithm for that will be something like:
+# Slot By
+# 3    highest OPS   BatterOnBasePlusSluggingPct["#text"]
+# 1    highest OBP   BatterOnBasePct["#text"]
+# 4    highest SLG   BatterSluggingPct["#text"]
+# 2    highest OBP   BatterOnBasePct["#text"]
+# 5    highest OPS   BatterOnBasePlusSluggingPct["#text"]
+# 6-9  highest OBP   BatterOnBasePct["#text"]
 
 
 # Tkinterface Settings
@@ -309,59 +386,20 @@ homelabel.grid(column=2,row=1)
 
 
 # Visitor Setup
+'''
 visiting_team_name = select_VisitingTeam
 visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
 visitor_stats_file = "data/2017_nyy_stats.json"
-
-# Find the team stats file
-# visiting_team_code =
-# Yankees = nyy
-# Red Sox = bos
-# Phillies = phi
-# etc.
-
 # visitor_stats_file =(f'data/2017_{visiting_team_code}_stats.json')
-
-# from that file, need to pull the 9 ids for each position
-# Position
-# GamesPlayed["#text"]
-# GamesStarted
-# BatterOnBasePct["#text"]
-# BatterSluggingPct["text"]
-# BatterOnBasePlusSluggingPct["#text"]
-# loop through the positions
-# for each group of players at a position, select one based on pct GamesStarted
-# when we have a list of 9 players, one for each position, sort into a lineup
+'''
 
 # algorithm for that will be something like:
 # Slot By
-# 3    highest OPS
-# 1    highest OBP
-# 4    highest SLG
-# 2    highest OBP
-# 5    highest OPS
-# 6-9  highest OBP
-
-# then:
-# get another catcher
-# get another 1b
-# get another of
-# get another 2b/ss
-# get another 3b
-
-# then:
-# get available pitchers
-# GamesStarted
-# SaveOpportunities
-# GamesPlayed
-# InningsPitched
-# Holds
-
-# Random from available starts
-# Relief pitcher with most saveopportunities
-# Relief pitcher random by innings
-# Relief pitcher random by gamesplayed
-# Relief pitcher random by batters faced
-
+# 3    highest OPS   BatterOnBasePlusSluggingPct["#text"]
+# 1    highest OBP   BatterOnBasePct["#text"]
+# 4    highest SLG   BatterSluggingPct["#text"]
+# 2    highest OBP   BatterOnBasePct["#text"]
+# 5    highest OPS   BatterOnBasePlusSluggingPct["#text"]
+# 6-9  highest OBP   BatterOnBasePct["#text"]
 
 screen.mainloop()
