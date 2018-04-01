@@ -5,6 +5,7 @@ import tkinter as tk
 from game_settings import Settings
 from game_lineup import Lineup
 from game_atbat import Atbat
+import game_setup as gs
 
 
 settings = Settings()
@@ -110,7 +111,11 @@ class Setup(tk.Frame):
         # Team Selection
         selection_board =tk.Frame(setup_frame)
         selection_board.grid(column=0,row=2)
-        options_Teams = ["Red Sox","Yankees", "Blue Jays", "Rays", "Orioles", "Phillies"]
+
+        # List comprehension will parse out the Keys from this dictionary in Settings
+        # options_Teams = ["Red Sox","Yankees", "Blue Jays", "Rays", "Orioles", "Phillies"] # old way
+        options_Teams = [i for i in settings.team_codes.keys()]
+
         select_VisitingTeam = tk.StringVar(selection_board)
         visitingteamoptions = options_Teams
         select_HomeTeam = tk.StringVar(selection_board)
@@ -118,6 +123,11 @@ class Setup(tk.Frame):
         #hometeamoptions = [i for i in options_Teams if i != select_VisitingTeam]
         select_VisitingTeam.set ("Visiting Team")
         select_HomeTeam.set ("Home Team")
+
+        # Used with game_setup
+        roster_VisitingTeam = tk.StringVar(selection_board)
+        roster_HomeTeam = tk.StringVar(selection_board)
+
 
         def getVisitingTeam():
             result = select_VisitingTeam.get()
@@ -129,7 +139,7 @@ class Setup(tk.Frame):
             select_HomeTeam.get()
             print (select_HomeTeam.get())
 
-
+        '''
         visitingteam = tk.OptionMenu(selection_board, select_VisitingTeam, *visitingteamoptions) 
         visitingteam.grid(column=0,row=0)
 
@@ -141,6 +151,32 @@ class Setup(tk.Frame):
 
         pickhometeam = tk.Button(selection_board,text="OK", command=getHomeTeam)
         pickhometeam.grid(column=1,row=1)
+        '''
+        # Tkinterface Settings from game_setup
+        # Option Menus
+        visitingteam = tk.OptionMenu(selection_board, select_VisitingTeam, *visitingteamoptions) 
+        hometeam = tk.OptionMenu(selection_board, select_HomeTeam, *hometeamoptions) 
+
+        # Buttons
+        pickvisitingteam = tk.Button(selection_board, text="OK", command=lambda: gs.create_roster_25(select_VisitingTeam.get(), roster_VisitingTeam))
+        pickhometeam = tk.Button(selection_board,text="OK", command= lambda: gs.create_roster_25(select_HomeTeam.get(),roster_HomeTeam))
+
+        # Display Labels
+        visitorlabel = tk.Label(selection_board,textvariable=roster_VisitingTeam)
+        homelabel = tk.Label(selection_board,textvariable=roster_HomeTeam)
+
+        # Grid settings
+        visitingteam.grid(column=0,row=0)
+        pickvisitingteam.grid(column=1,row=0)
+        #visitorlabel.grid(column=0,row=1)
+        visitorlabel.grid(column=0,row=1)
+
+        hometeam.grid(column=2,row=0)
+        pickhometeam.grid(column=3,row=0)
+        homelabel.grid(column=2,row=1)
+        # homelabel.grid(column=2,row=1)
+
+
 
 
 
