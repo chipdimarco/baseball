@@ -41,6 +41,10 @@ roster_VisitingTeam = tk.StringVar(screen)
 roster_HomeTeam = tk.StringVar(screen)
 '''
 
+class Roster():
+    def __init__(self):
+        self.note ="Roster Note"
+
 def create_roster_25(select_team, roster):
     # if select_team in options_Teams:
     team_roster = select_team
@@ -288,6 +292,7 @@ def create_roster_25(select_team, roster):
 
     # Return the roster_result
     roster.set(roster_result)
+    return (order_ids)
 
 def select_dh(data, bench_players):
     # Init lineup as dictionary

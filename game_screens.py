@@ -59,6 +59,12 @@ class GameScreen(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
+    def get_something(self,cont):
+        frame = self.frames[cont]
+        something = frame.getHomeRoster()
+        print (something)
+        return(something)
+
 
 class Splash(tk.Frame):
     def __init__(self,parent,controller):
@@ -125,45 +131,21 @@ class Setup(tk.Frame):
         select_HomeTeam.set ("Home Team")
 
         # Used with game_setup
-        roster_VisitingTeam = tk.StringVar(selection_board)
-        roster_HomeTeam = tk.StringVar(selection_board)
-
-
-        def getVisitingTeam():
-            result = select_VisitingTeam.get()
-            #print(select_VisitingTeam.get())
-            print ( result )
-            return ( result )
-
-        def getHomeTeam():
-            select_HomeTeam.get()
-            print (select_HomeTeam.get())
-
-        '''
-        visitingteam = tk.OptionMenu(selection_board, select_VisitingTeam, *visitingteamoptions) 
-        visitingteam.grid(column=0,row=0)
-
-        hometeam = tk.OptionMenu(selection_board, select_HomeTeam, *hometeamoptions) 
-        hometeam.grid(column=0,row=1)
-
-        pickvisitingteam = tk.Button(selection_board, text="OK", command=getVisitingTeam)
-        pickvisitingteam.grid(column=1,row=0)
-
-        pickhometeam = tk.Button(selection_board,text="OK", command=getHomeTeam)
-        pickhometeam.grid(column=1,row=1)
-        '''
+        self.roster_VisitingTeam = tk.StringVar(selection_board)
+        self.roster_HomeTeam = tk.StringVar(selection_board)
         # Tkinterface Settings from game_setup
         # Option Menus
         visitingteam = tk.OptionMenu(selection_board, select_VisitingTeam, *visitingteamoptions) 
         hometeam = tk.OptionMenu(selection_board, select_HomeTeam, *hometeamoptions) 
 
         # Buttons
-        pickvisitingteam = tk.Button(selection_board, text="OK", command=lambda: gs.create_roster_25(select_VisitingTeam.get(), roster_VisitingTeam))
-        pickhometeam = tk.Button(selection_board,text="OK", command= lambda: gs.create_roster_25(select_HomeTeam.get(),roster_HomeTeam))
+        pickvisitingteam = tk.Button(selection_board, text="OK", command=lambda: gs.create_roster_25(select_VisitingTeam.get
+        (), self.roster_VisitingTeam))
+        pickhometeam = tk.Button(selection_board,text="OK", command= lambda: gs.create_roster_25(select_HomeTeam.get(),self.roster_HomeTeam))
 
         # Display Labels
-        visitorlabel = tk.Label(selection_board,textvariable=roster_VisitingTeam)
-        homelabel = tk.Label(selection_board,textvariable=roster_HomeTeam)
+        visitorlabel = tk.Label(selection_board,textvariable=self.roster_VisitingTeam)
+        homelabel = tk.Label(selection_board,textvariable=self.roster_HomeTeam)
 
         # Grid settings
         visitingteam.grid(column=0,row=0)
@@ -175,6 +157,24 @@ class Setup(tk.Frame):
         pickhometeam.grid(column=3,row=0)
         homelabel.grid(column=2,row=1)
         # homelabel.grid(column=2,row=1)
+
+    def getVisitingTeam(self):
+        result = select_VisitingTeam.get()
+        #print(select_VisitingTeam.get())
+        print ( result )
+        return ( result )
+
+    def getHomeTeam(self):
+        select_HomeTeam.get()
+        print (select_HomeTeam.get())
+
+    def getHomeRoster(self):
+        print(self.roster_HomeTeam.get())
+        return(self.roster_HomeTeam.get())
+        # return ("something in getHomeRoster")
+        '''
+        '''
+    
 
 
 
@@ -204,6 +204,27 @@ class Play(tk.Frame):
             command = lambda: controller.show_frame(Splash))
         button_setup = tk.Button(bleacher_board, text="Go to Setup", width=10,
             command = lambda: controller.show_frame(Setup))
+
+        ###########
+        # 4-3-2018: This works
+        # v_roster = gs.Roster()
+        # print (v_roster.note)
+        # v_roster_label = tk.Label(bleacher_board, text= v_roster.note)
+        # v_roster_label.grid(column=1,row=0, sticky="n")
+        
+        ###########
+        # 4-9-2018 This works
+        # something = tk.StringVar()
+        # something.set("something string var")
+        # v_roster_label = tk.Label(bleacher_board, textvariable=something)
+        # v_roster_label.grid(column=1,row=0, sticky="n")
+        
+        something = tk.StringVar()
+        button_something = tk.Button(bleacher_board, text="Get Something",
+            command = lambda: controller.get_something(Setup))
+        #something.set(controller.get_something(Setup))
+        button_something.grid(column=1,row=0, sticky="n")
+        
         # Place Objects in Frame
         label.grid(column=0,row=0, sticky="n", columnspan=2)
         button_splash.grid(column=0,row=1,sticky="w")
