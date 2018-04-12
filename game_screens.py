@@ -62,7 +62,7 @@ class GameScreen(tk.Tk):
     def get_something(self,cont):
         frame = self.frames[cont]
         something = frame.getHomeRoster()
-        print (something)
+        #print (something)
         return(something)
 
 
@@ -219,11 +219,15 @@ class Play(tk.Frame):
         # v_roster_label = tk.Label(bleacher_board, textvariable=something)
         # v_roster_label.grid(column=1,row=0, sticky="n")
         
+        ###########
+        #4-11-2018
         something = tk.StringVar()
+        # something.set(controller.get_something(Setup))
+        #print(something.set(controller.get_something(Setup)))
         button_something = tk.Button(bleacher_board, text="Get Something",
-            command = lambda: controller.get_something(Setup))
-        #something.set(controller.get_something(Setup))
+            command = lambda: something.set(controller.get_something(Setup)))
         button_something.grid(column=1,row=0, sticky="n")
+        
         
         # Place Objects in Frame
         label.grid(column=0,row=0, sticky="n", columnspan=2)
@@ -263,11 +267,13 @@ class Play(tk.Frame):
         vlc=tk.StringVar()
         vlc.set(viz)
         v_lineup_card = tk.Label(field_board, textvariable = vlc)
+        # v_lineup_card = tk.Label(field_board, textvariable = something)
         v_lineup_card.grid(column= 0, row = 0, sticky="n", padx=12)
 
         hlc=tk.StringVar()
         hlc.set(hiz)
-        h_lineup_card = tk.Label(field_board, textvariable = hlc)
+        # h_lineup_card = tk.Label(field_board, textvariable = hlc)
+        h_lineup_card = tk.Label(field_board, textvariable = something)
         h_lineup_card.grid(column= 2, row = 0, sticky="n", padx=12)
         
         # - - - - - - - - - - - - - - - - - - - - - -
