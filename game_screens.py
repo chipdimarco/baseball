@@ -59,11 +59,21 @@ class GameScreen(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
-    def get_something(self,cont):
+    # def get_something(self,cont):
+    #     frame = self.frames[cont]
+    #     something = frame.getHomeRoster()
+    #     return(something)
+
+    def get_visitor_roster(self,cont):
         frame = self.frames[cont]
-        something = frame.getHomeRoster()
-        #print (something)
-        return(something)
+        visitor_roster = frame.getVisitorRoster()
+        return(visitor_roster)
+
+    def get_home_roster(self,cont):
+        frame = self.frames[cont]
+        home_roster = frame.getHomeRoster()
+        return(home_roster)
+
 
 
 class Splash(tk.Frame):
@@ -133,15 +143,19 @@ class Setup(tk.Frame):
         # Used with game_setup
         self.roster_VisitingTeam = tk.StringVar(selection_board)
         self.roster_HomeTeam = tk.StringVar(selection_board)
+        self.something = tk.StringVar()
         # Tkinterface Settings from game_setup
         # Option Menus
         visitingteam = tk.OptionMenu(selection_board, select_VisitingTeam, *visitingteamoptions) 
         hometeam = tk.OptionMenu(selection_board, select_HomeTeam, *hometeamoptions) 
 
         # Buttons
-        pickvisitingteam = tk.Button(selection_board, text="OK", command=lambda: gs.create_roster_25(select_VisitingTeam.get
-        (), self.roster_VisitingTeam))
+        pickvisitingteam = tk.Button(selection_board, text="OK", command=lambda:  self.something.set(gs.create_roster_25(select_VisitingTeam.get(), self.roster_VisitingTeam)))
         pickhometeam = tk.Button(selection_board,text="OK", command= lambda: gs.create_roster_25(select_HomeTeam.get(),self.roster_HomeTeam))
+
+        # 4/11/2018 - get the lineup ids
+        # print(pickvisitingteam)
+
 
         # Display Labels
         visitorlabel = tk.Label(selection_board,textvariable=self.roster_VisitingTeam)
@@ -158,26 +172,28 @@ class Setup(tk.Frame):
         homelabel.grid(column=2,row=1)
         # homelabel.grid(column=2,row=1)
 
+    # These are in use
+    def getHomeRoster(self):
+        return(self.roster_HomeTeam.get())
+
+    def getVisitorRoster(self):
+        # this will return the list of players/positions
+        # return(self.roster_VisitingTeam.get())
+        # this will return a tuple with the ids of the batting order
+        return(self.something.get())
+
+    # Not in use
     def getVisitingTeam(self):
         result = select_VisitingTeam.get()
         #print(select_VisitingTeam.get())
-        print ( result )
+        print ("getVisitingTeam invoked")
+        # print ( result )
         return ( result )
 
     def getHomeTeam(self):
         select_HomeTeam.get()
         print (select_HomeTeam.get())
-
-    def getHomeRoster(self):
-        print(self.roster_HomeTeam.get())
-        return(self.roster_HomeTeam.get())
-        # return ("something in getHomeRoster")
-        '''
-        '''
     
-
-
-
 
 
 class Play(tk.Frame):
@@ -221,13 +237,15 @@ class Play(tk.Frame):
         
         ###########
         #4-11-2018
-        something = tk.StringVar()
-        # something.set(controller.get_something(Setup))
-        #print(something.set(controller.get_something(Setup)))
-        button_something = tk.Button(bleacher_board, text="Get Something",
-            command = lambda: something.set(controller.get_something(Setup)))
-        button_something.grid(column=1,row=0, sticky="n")
+        visitor_ids = tk.StringVar()
+        button_visitor_ids = tk.Button(bleacher_board, text="Get visitor_ids",
+            command = lambda: visitor_ids.set(controller.get_visitor_roster(Setup)))
+        button_visitor_ids.grid(column=1,row=0, sticky="n")
         
+        home_ids = tk.StringVar()
+        button_home_ids = tk.Button(bleacher_board, text="Get home_ids",
+            command = lambda: home_ids.set(controller.get_home_roster(Setup)))
+        button_home_ids.grid(column=1,row=1, sticky="n")
         
         # Place Objects in Frame
         label.grid(column=0,row=0, sticky="n", columnspan=2)
@@ -266,14 +284,14 @@ class Play(tk.Frame):
         
         vlc=tk.StringVar()
         vlc.set(viz)
-        v_lineup_card = tk.Label(field_board, textvariable = vlc)
-        # v_lineup_card = tk.Label(field_board, textvariable = something)
+        # v_lineup_card = tk.Label(field_board, textvariable = vlc)
+        v_lineup_card = tk.Label(field_board, textvariable = visitor_ids)
         v_lineup_card.grid(column= 0, row = 0, sticky="n", padx=12)
 
         hlc=tk.StringVar()
         hlc.set(hiz)
         # h_lineup_card = tk.Label(field_board, textvariable = hlc)
-        h_lineup_card = tk.Label(field_board, textvariable = something)
+        h_lineup_card = tk.Label(field_board, textvariable = home_ids)
         h_lineup_card.grid(column= 2, row = 0, sticky="n", padx=12)
         
         # - - - - - - - - - - - - - - - - - - - - - -
