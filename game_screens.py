@@ -15,31 +15,6 @@ h_linescore = []
 
 LARGE_FONT = ("verdana",14)
 
-# Visitor Setup
-# visiting_team_name = "Yankees"
-
-# visitor = Lineup()
-# visitor_pitcher_id ="10719"
-# #visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
-# visitor_stats_file = "data/2017_nyy_stats.json"
-
-#visitor.lineup_dictionary = visitor.create_lineup_dictionary_from_file(visitor_stats_file,visitor_ids)
-# visitor.lineup_dictionary = visitor.create_lineup_dictionary_from_file(visitor_stats_file,self.get_visitor_ids())
-# visitor.lineup_lastname = visitor.create_lineup_lastname(visitor.lineup_dictionary) 
-# visitor.pitcher = visitor.get_pitcher_from_file(visitor_stats_file, visitor_pitcher_id)
-
-# Home Setup
-home_team_name = "Red Sox"
-
-home = Lineup()
-home_pitcher_id = "10432"
-home_ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
-home_stats_file = "data/2017_bos_stats.json"
-    
-home.lineup_dictionary = home.create_lineup_dictionary_from_file(home_stats_file,home_ids)
-home.lineup_lastname = home.create_lineup_lastname(home.lineup_dictionary)
-home.pitcher = home.get_pitcher_from_file(home_stats_file, home_pitcher_id)
-
 # The controller class
 class GameScreen(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -60,12 +35,6 @@ class GameScreen(tk.Tk):
     def show_frame(self,cont):
         frame = self.frames[cont]
         frame.tkraise()
-
-    def get_something(self,cont):
-        frame = self.frames[cont]
-        something = frame.getSomething()
-        return(something)
-
     def get_visitor_roster(self,cont):
         frame = self.frames[cont]
         visitor_roster = frame.getVisitorRoster()
@@ -74,6 +43,7 @@ class GameScreen(tk.Tk):
         frame = self.frames[cont]
         home_roster = frame.getHomeRoster()
         return(home_roster)
+        #
     def get_visitor_ids(self,cont):
         frame = self.frames[cont]
         visitor_ids = frame.getVisitorIds()
@@ -82,10 +52,15 @@ class GameScreen(tk.Tk):
         frame = self.frames[cont]
         home_ids = frame.getHomeIds()
         return(home_ids)
-    def get_visitor_code(self,cont):
+        #setup_teamname_visitor
+    def get_visitor_teamname(self,cont):
         frame = self.frames[cont]
-        visitor_code = frame.getVisitorCode()
-        return(visitor_code)
+        visitor_teamname = frame.getVisitorTeamname()
+        return(visitor_teamname)
+    def get_home_teamname(self,cont):
+        frame = self.frames[cont]
+        home_teamname = frame.getHomeTeamname()
+        return(home_teamname)
 
 
 # Frame 1: Splash screen at open
@@ -146,13 +121,13 @@ class Setup(tk.Frame):
 
         # StringVars: they hold the names of the selected teams
         self.select_VisitingTeam = tk.StringVar(selection_board)
-        select_HomeTeam = tk.StringVar(selection_board)
+        self.select_HomeTeam = tk.StringVar(selection_board)
         #
         visitingteamoptions = options_Teams
         hometeamoptions = options_Teams
         #
         self.select_VisitingTeam.set ("Visiting Team")
-        select_HomeTeam.set ("Home Team")
+        self.select_HomeTeam.set ("Home Team")
 
         # STRINGVARS: Used with game_setup; they hold the roster information
         self.roster_VisitingTeam = tk.StringVar(selection_board)
@@ -161,76 +136,56 @@ class Setup(tk.Frame):
         self.setup_result_visitor = tk.StringVar(selection_board)
         self.setup_result_home = tk.StringVar(selection_board)
         #
-        # self.something = tk.StringVar()
         self.setup_ids_visitor = tk.StringVar()
         self.setup_ids_home = tk.StringVar()
-        
-        self.something = tk.StringVar()
-        self.something.set({})
-        self.something.set(self.select_VisitingTeam.get())
-        # self.something.set(["something"])
+
+        self.setup_teamname_visitor = tk.StringVar()
+        self.setup_teamname_visitor.set({})
+        self.setup_teamname_visitor.set(self.select_VisitingTeam.get())
+
+        self.setup_teamname_home = tk.StringVar()
+        self.setup_teamname_home.set({})
+        self.setup_teamname_home.set(self.select_HomeTeam.get())
+
         #
         # Tkinterface Settings from game_setup
         # Option Menus
         visitingteam = tk.OptionMenu(selection_board, self.select_VisitingTeam, *visitingteamoptions) 
-        hometeam = tk.OptionMenu(selection_board, select_HomeTeam, *hometeamoptions) 
+        hometeam     = tk.OptionMenu(selection_board, self.select_HomeTeam    , *hometeamoptions) 
         #
         # The "OK" Buttons
         pickvisitingteam = tk.Button(selection_board, text="OK", command=lambda:  self.setup_result_visitor.set(gs.create_roster_25(self.select_VisitingTeam.get(), self.roster_VisitingTeam)))
-        pickhometeam     = tk.Button(selection_board, text="OK", command=lambda: self.setup_result_home.set(gs.create_roster_25(select_HomeTeam.get(),self.roster_HomeTeam)))
-        #
-        # 4/11/2018 - get the lineup ids
-        # print(pickvisitingteam)
+        pickhometeam     = tk.Button(selection_board, text="OK", command=lambda:  self.setup_result_home.set(gs.create_roster_25(self.select_HomeTeam.get(),self.roster_HomeTeam)))
         #
         # Display the labels
         visitorlabel = tk.Label(selection_board,textvariable=self.roster_VisitingTeam)
-        homelabel = tk.Label(selection_board,textvariable=self.roster_HomeTeam)
+        homelabel =    tk.Label(selection_board,textvariable=self.roster_HomeTeam)
         #
         # Grid settings
         visitingteam.grid(column=0,row=0)
         pickvisitingteam.grid(column=1,row=0)
-        #visitorlabel.grid(column=0,row=1)
         visitorlabel.grid(column=0,row=1)
         #
         hometeam.grid(column=2,row=0)
         pickhometeam.grid(column=3,row=0)
         homelabel.grid(column=2,row=1)
-        # homelabel.grid(column=2,row=1)
 
     # These are in use
-    def getHomeRoster(self):
-        return(self.roster_HomeTeam.get())
-
     def getVisitorRoster(self):
         return(self.roster_VisitingTeam.get())
-        # this will return the list of players/positions
-        # return(self.roster_VisitingTeam.get())
-        # this will return a tuple with the ids of the batting order
-        # return(self.something.get())
-
+    def getHomeRoster(self):
+        return(self.roster_HomeTeam.get())
+    #
     # Get the Id tuples, return as list
     def getVisitorIds(self):
-        #return(self.setup_ids_visitor.get())
         return([i for i in self.setup_ids_visitor.get()])
-    #
     def getHomeIds(self):
-        # return(self.setup_ids_home.get())
         return([i for i in self.setup_ids_home.get()])
-
-    def getSomething(self):
-        return (self.something.get())
-
-    def getVisitorCode(self):
-        return (self.select_VisitingTeam.get())
-    #     #print(select_VisitingTeam.get())
-    #     print ("getVisitingTeam invoked")
-    #     # print ( result )
-    #     return ( result )
-
-    # def getHomeTeam(self):
-    #     select_HomeTeam.get()
-    #     print (select_HomeTeam.get())
-    
+    def getVisitorTeamname(self):
+        # print  (self.setup_teammate_visitor.get())
+        return (self.setup_teamname_visitor.get())
+    def getHomeTeamname(self):
+        return (self.setup_teamname_home.get())
 
 
 class Play(tk.Frame):
@@ -258,42 +213,21 @@ class Play(tk.Frame):
         button_setup = tk.Button(bleacher_board, text="Go to Setup", width=10,
             command = lambda: controller.show_frame(Setup))
 
-        ###########
-        #4-11-2018
-        # visitor_ids = tk.StringVar()
-        # button_visitor_ids = tk.Button(bleacher_board, text="Get visitor_ids",
-        #     command = lambda: visitor_ids.set(controller.get_visitor_roster(Setup)))
-        # button_visitor_ids.grid(column=1,row=0, sticky="n")
-        
-        # home_ids = tk.StringVar()
-        # button_home_ids = tk.Button(bleacher_board, text="Get home_ids",
-        #     command = lambda: home_ids.set(controller.get_home_roster(Setup)))
-        # button_home_ids.grid(column=1,row=1, sticky="n")
-
-        # visitor_ids = tk.StringVar()
-        # button_visitor_ids = tk.Button(bleacher_board, text="Get visitor_ids",
-        #     command = lambda: visitor_ids.set(controller.get_visitor_ids(Setup)))
-        # button_visitor_ids.grid(column=1,row=0, sticky="n")
-
+        # VISITOR LINEUP OBJECT
         visitor = Lineup()
-
-        setup_code_visitor = tk.StringVar()
-        setup_code_visitor.set(controller.get_visitor_code(Setup))
-        # print (setup_code_visitor.get())
+        #
+        visitor_teamname = tk.StringVar()
+        button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname",
+            command = lambda: visitor_teamname.set(controller.get_visitor_teamname(Setup)))
+        button_visitor_teamname.grid(column=1,row=0, sticky="n")
         
-
-        visitor_ids = tk.StringVar()
-        button_visitor_ids = tk.Button(bleacher_board, text="Get visitor_ids",
-            command = lambda: visitor_ids.set(controller.get_visitor_code(Setup)))
-        button_visitor_ids.grid(column=1,row=0, sticky="n")
-        print (setup_code_visitor.get())
-
- 
-        #setup_code_visitor.set(controller.get_visitor_code(Setup))
-        home_ids = tk.StringVar()
-        button_home_ids = tk.Button(bleacher_board, text="Get home_ids",
-            command = lambda: home_ids.set(controller.get_home_ids(Setup)))
-        button_home_ids.grid(column=1,row=1, sticky="n")
+        # HOME LINEUP OBJECT
+        home = Lineup()
+        #
+        home_teamname = tk.StringVar()
+        button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname",
+            command = lambda: home_teamname.set(controller.get_home_teamname(Setup)))
+        button_home_teamname.grid(column=2,row=0, sticky="n")
         
         # Place Objects in Frame
         label.grid(column=0,row=0, sticky="n", columnspan=2)
@@ -319,50 +253,10 @@ class Play(tk.Frame):
         dugout.grid_columnconfigure(2,minsize=settings.width/2)
         dugout.grid_rowconfigure(0,minsize=settings.height*.4)
 
-
-
-        #visitor_pitcher_id ="10719"
-        #visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
-        # setup_code_visitor = tk.StringVar()
-        # setup_code_visitor.set(controller.get_visitor_code(Setup))
-        # print (setup_code_visitor.get())
-        #visiting_team_name = controller.get_something(Setup)
-        #print (visiting_team_name)
-        #print(controller.get_something(Setup))
-        # print (setup_code_visitor.get())
-        # visitor_ids.set(controller.get_visitor_ids(Setup))
-        
-        #visitor_stats_file = (f'data/2017_{setup_code_visitor}_stats.json')
-#            command = lambda: visitor_ids.set(controller.get_visitor_ids(Setup)))
-
-        #visitor.lineup_dictionary = visitor.create_lineup_dictionary_from_file(visitor_stats_file,visitor_ids)
-        #visitor.lineup_dictionary = visitor.create_lineup_dictionary_from_file(visitor_stats_file, visitor_ids.get() )
-        #visitor.lineup_lastname = visitor.create_lineup_lastname(visitor.lineup_dictionary) 
-        #visitor.pitcher = visitor.get_pitcher_from_file(visitor_stats_file, visitor_pitcher_id)
-
-
-        # - - - - - - - - - - - - - - - - - - - - - -
-        # Create objects in the Child Frames
-        # - - - - - - - - - - - - - - - - - - - - - -
-        # Field Board > LINEUP CARDS
-        # viz = (f'VISITORS\n\n{visiting_team_name}\n')
-        # for i in visitor.lineup_lastname:
-        #     viz += (f'\n{i}')
-        # hiz = (f'HOME\n\n{home_team_name}\n')
-        # for i in home.lineup_lastname:
-        #     hiz += (f'\n{i}')
-        
-        # vlc=tk.StringVar()
-        # v_lineup_card = tk.Label(field_board, textvariable = vlc)
-        # # vlc.set(viz)
-        # vlc.set(visitor_ids.get())
-        v_lineup_card = tk.Label(field_board, textvariable = visitor_ids)
+        v_lineup_card = tk.Label(field_board, textvariable = visitor_teamname)
         v_lineup_card.grid(column= 0, row = 0, sticky="n", padx=12)
 
-        # hlc=tk.StringVar()
-        # hlc.set(hiz)
-        # h_lineup_card = tk.Label(field_board, textvariable = hlc)
-        h_lineup_card = tk.Label(field_board, textvariable = home_ids)
+        h_lineup_card = tk.Label(field_board, textvariable = home_teamname)
         h_lineup_card.grid(column= 2, row = 0, sticky="n", padx=12)
         
         # - - - - - - - - - - - - - - - - - - - - - -
@@ -402,6 +296,5 @@ class Play(tk.Frame):
         # Dugout > PLAY BY PLAY
         # the atbat.inning_top method will also set the play_by_play StringVar, and the message object below will draw it on screen
         message = tk.Label(dugout,textvariable=atbat.play_by_play)
-        #message = tk.Label(dugout,text="atbat.play_by_play")
         message.grid(column=2,row=0,sticky=("nw"))
 
