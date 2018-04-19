@@ -7,6 +7,8 @@ from game_settings import Settings
 from game_lineup import Lineup
 from game_atbat import Atbat
 import game_setup as gs
+import json
+import ast #converts str to dict
 
 
 settings = Settings()
@@ -35,19 +37,20 @@ class GameScreen(tk.Tk):
     def show_frame(self,cont):
         frame = self.frames[cont]
         frame.tkraise()
-    def get_visitor_roster(self,cont):
-        frame = self.frames[cont]
-        visitor_roster = frame.getVisitorRoster()
-        return(visitor_roster)
+
+    # def get_visitor_roster(self,cont):
+    #     frame = self.frames[cont]
+    #     visitor_roster = frame.getVisitorRoster()
+    #     return(visitor_roster)
     def get_home_roster(self,cont):
         frame = self.frames[cont]
         home_roster = frame.getHomeRoster()
         return(home_roster)
         #
-    def get_visitor_ids(self,cont):
-        frame = self.frames[cont]
-        visitor_ids = frame.getVisitorIds()
-        return(visitor_ids)
+    # def get_visitor_ids(self,cont):
+    #     frame = self.frames[cont]
+    #     visitor_ids = frame.getVisitorIds()
+    #     return(visitor_ids)
     def get_home_ids(self,cont):
         frame = self.frames[cont]
         home_ids = frame.getHomeIds()
@@ -55,12 +58,43 @@ class GameScreen(tk.Tk):
         #setup_teamname_visitor
     def get_visitor_teamname(self,cont):
         frame = self.frames[cont]
-        visitor_teamname = frame.getVisitorTeamname()
-        return(visitor_teamname)
+        # visitor_teamname = frame.getVisitorTeamname()
+        # visitor_ids = frame.getVisitorIds()
+        # visitor_roster = frame.getVisitorRoster()
+        visitor_result = frame.getVisitorResult()
+        # visitor_stuff = {}
+        # visitor_stuff["teamname"] = visitor_teamname
+        # visitor_stuff["ids"] = visitor_ids
+        # visitor_stuff["roster"] = visitor_roster
+        # visitor_stuff["result"] = visitor_result
+        # return(visitor_stuff)
+        return (visitor_result)
     def get_home_teamname(self,cont):
         frame = self.frames[cont]
-        home_teamname = frame.getHomeTeamname()
-        return(home_teamname)
+        home_result = frame.getHomeResult()
+        return(home_result)
+
+    # def get_home_teamname(self,cont):
+    #     frame = self.frames[cont]
+    #     home_teamname = frame.getHomeTeamname()
+    #     home_ids = frame.getHomeIds()
+    #     home_roster = frame.getHomeRoster()
+    #     home_result = frame.getHomeResult()
+    #     home_stuff = {}
+    #     home_stuff["teamname"] = home_teamname
+    #     home_stuff["ids"] = home_ids
+    #     # home_stuff["roster"] = home_roster
+    #     home_stuff["result"] = home_result
+    #     return(home_stuff)
+    
+    # def get_visitor_teamname(self,cont):
+    #     frame = self.frames[cont]
+    #     visitor_teamname = frame.getVisitorTeamname()
+    #     return(visitor_teamname)
+    # def get_home_teamname(self,cont):
+    #     frame = self.frames[cont]
+    #     home_teamname = frame.getHomeTeamname()
+    #     return(home_teamname)
 
 
 # Frame 1: Splash screen at open
@@ -176,13 +210,17 @@ class Setup(tk.Frame):
     def getHomeRoster(self):
         return(self.roster_HomeTeam.get())
     #
+    def getVisitorResult(self):
+        return(self.setup_result_visitor.get())
+    def getHomeResult(self):
+        return(self.setup_result_home.get())
+    #
     # Get the Id tuples, return as list
     def getVisitorIds(self):
         return([i for i in self.setup_ids_visitor.get()])
     def getHomeIds(self):
         return([i for i in self.setup_ids_home.get()])
     def getVisitorTeamname(self):
-        # print  (self.setup_teammate_visitor.get())
         return (self.setup_teamname_visitor.get())
     def getHomeTeamname(self):
         return (self.setup_teamname_home.get())
@@ -217,16 +255,20 @@ class Play(tk.Frame):
         visitor = Lineup()
         #
         visitor_teamname = tk.StringVar()
-        button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname",
-            command = lambda: visitor_teamname.set(controller.get_visitor_teamname(Setup)))
+        # parse_visitor_teamname(self,stuff)
+        # button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname", command = lambda: self.parse_visitor_teamname(visitor_teamname.set(controller.get_visitor_teamname(Setup))))
+        button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname", command = lambda: self.parse_visitor_teamname(controller.get_visitor_teamname(Setup)))
+
+        # button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname",
+            # command = lambda: visitor_teamname.set(controller.get_visitor_teamname(Setup)))
         button_visitor_teamname.grid(column=1,row=0, sticky="n")
         
         # HOME LINEUP OBJECT
         home = Lineup()
         #
         home_teamname = tk.StringVar()
-        button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname",
-            command = lambda: home_teamname.set(controller.get_home_teamname(Setup)))
+        # button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname", command = lambda: home_teamname.set(controller.get_home_teamname(Setup)))
+        button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname", command = lambda: self.parse_home_teamname(controller.get_home_teamname(Setup)))
         button_home_teamname.grid(column=2,row=0, sticky="n")
         
         # Place Objects in Frame
@@ -252,10 +294,17 @@ class Play(tk.Frame):
         dugout.grid_columnconfigure(1,minsize=settings.width/4)
         dugout.grid_columnconfigure(2,minsize=settings.width/2)
         dugout.grid_rowconfigure(0,minsize=settings.height*.4)
-
-        v_lineup_card = tk.Label(field_board, textvariable = visitor_teamname)
-        v_lineup_card.grid(column= 0, row = 0, sticky="n", padx=12)
-
+        # print(visitor_teamname.get())
+        # roster_ids = []
+        # roster_sp = []
+        # roster_rp = []
+        # roster_midp = []
+        # lineup_ids = []
+        # bench_ids = []
+        # v_lineup_card = tk.Label(field_board, text = v_stuff)
+        # v_lineup_card.grid(column= 0, row = 0, sticky="n", padx=12)
+        # v_lineup_card = tk.Label(field_board, textvariable = visitor_teamname)
+        # v_lineup_card.grid(column= 0, row = 0, sticky="n", padx=12)
         h_lineup_card = tk.Label(field_board, textvariable = home_teamname)
         h_lineup_card.grid(column= 2, row = 0, sticky="n", padx=12)
         
@@ -298,3 +347,29 @@ class Play(tk.Frame):
         message = tk.Label(dugout,textvariable=atbat.play_by_play)
         message.grid(column=2,row=0,sticky=("nw"))
 
+    def parse_visitor_teamname(self,stuff):
+        data = ast.literal_eval(stuff)
+        print (data['roster_ids'])
+        print ()
+        print (data['lineup_ids'])
+        print ()
+        print (data['bench_ids'])
+    def parse_home_teamname(self,stuff):
+        data = ast.literal_eval(stuff)
+        print (data['roster_ids'])
+        print ()
+        print (data['lineup_ids'])
+        print ()
+        print (data['bench_ids'])
+        #
+        # self.stuff = stuff
+        # self.lineup_ids = stuff['lineup_ids']
+        # print (lineup_ids)
+        # print (stuff["order_ids"])
+        # roster_ids = []
+        # roster_sp = []
+        # roster_rp = []
+        # roster_midp = []
+        # lineup_ids = []
+        # bench_ids = []
+        # print (for i in stuff: i)

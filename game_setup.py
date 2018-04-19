@@ -288,11 +288,36 @@ def create_roster_25(select_team, roster):
         lineup_ids.append(starting_pitcher["player"]["ID"])
     print (f'Lineup IDs: {lineup_ids}')
 
-    order_ids = batting_order(data,lineup_ids)
+    '''
+    # Initialize a list of ids for players on the 25 man roster
+    roster_ids = []
+    # Initialize the list of starting pitchers (with stats)
+    roster_sp = []
+    # Initialize the list of relief pitchers
+    roster_rp = []
+    # Initialzie the list of middle relief
+    roster_midp = []
+    # Initialize the list of 9 starters
+    lineup_ids = []
+    # Initialize the list of bench players
+    bench_ids = []
+    '''
+    stuff = {}
+    stuff["roster_ids"] = roster_ids
+    # stuff["roster_sp"] = roster_sp
+    # stuff["roster_rp"] = roster_rp
+    # stuff["roster_midp"] = roster_midp
+    stuff["lineup_ids"] = lineup_ids
+    stuff["bench_ids"] = bench_ids
 
-    # Return the roster_result
-    roster.set(roster_result)
-    return (order_ids)
+    order_ids = batting_order(data,lineup_ids)
+    stuff["order_ids"] = order_ids
+
+    # roster.set(roster_result)
+    stuff["roster_result"] = roster.set(roster_result)
+
+    return(stuff)
+    # return (order_ids)
 
 def select_dh(data, bench_players):
     # Init lineup as dictionary
