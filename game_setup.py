@@ -5,6 +5,7 @@ from tkinter import ttk
 import json
 import random
 from game_settings import Settings
+from game_lineup import Lineup
 
 '''
 turn off form modular use
@@ -45,7 +46,7 @@ class Roster():
     def __init__(self):
         self.note ="Roster Note"
 
-def create_roster_25(select_team, roster):
+def create_roster_25(select_team, roster, lineup):
     # if select_team in options_Teams:
     team_roster = select_team
     team_code = settings.team_codes.get(team_roster)
@@ -302,6 +303,9 @@ def create_roster_25(select_team, roster):
     # Initialize the list of bench players
     bench_ids = []
     '''
+    lineup.roster_ids = roster_ids
+    lineup.roster_result = roster_result
+
     stuff = {}
     stuff["roster_ids"] = roster_ids
     # stuff["roster_sp"] = roster_sp

@@ -23,7 +23,10 @@ class Lineup():
         self.lineup_dictionary = ""
         self.lineup_lastname = ""
         self.pitcher = ""
-
+        self.roster_ids = ""
+        self.lineup_ids = ""
+        self.bench_ids = ""
+        self.roster_result = ""
     
     def getInfo(self,id):
         self.id = id
