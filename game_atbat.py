@@ -286,6 +286,7 @@ class Atbat():
         print (f'INNING {inning}')
         i = visitor_leads_off_inning
 
+        print (visitor_lineup_dictionary)
         while out_count < 3:  
             up = visitor_lineup_dictionary[i%9]
             visitor_up_next = (i+1)%9

@@ -16,7 +16,7 @@ screen_height=600
 screen.geometry(f'{screen_width}x{screen_height}')
 screen.configure(background="gray")
 '''
-settings = Settings()
+# settings = Settings()
 
 
 # Choose Teams
@@ -46,11 +46,11 @@ class Roster():
     def __init__(self):
         self.note ="Roster Note"
 
-def create_roster_25(select_team, roster, lineup):
+def create_roster_25(select_team, roster, lineup, settings):
     # if select_team in options_Teams:
     team_roster = select_team
     team_code = settings.team_codes.get(team_roster)
-    print(f'\t{team_code} is the code for {team_roster}')
+    # print(f'\t{team_code} is the code for {team_roster}')
     roster_result = (f'Roster for {team_roster}\n')
     stats_file = (f'data/2017_{team_code}_stats.json')
     data = json.load(open(stats_file))
@@ -103,7 +103,8 @@ def create_roster_25(select_team, roster, lineup):
         roster_ids.append(list[1]["player"]["ID"])
         bench_ids.append(list[1]["player"]["ID"])
     for player in roster_c:
-        print (f'c: {player["player"]["LastName"]}')
+        pass
+        # print (f'c: {player["player"]["LastName"]}')
     roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
     
     # 1b
@@ -118,7 +119,8 @@ def create_roster_25(select_team, roster, lineup):
         roster_ids.append(list[1]["player"]["ID"])
         bench_ids.append(list[1]["player"]["ID"])
     for player in roster_1b:
-        print (f'1b: {player["player"]["LastName"]}')
+        pass
+        # print (f'1b: {player["player"]["LastName"]}')
     roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
     
     
@@ -133,7 +135,8 @@ def create_roster_25(select_team, roster, lineup):
         roster_ids.append(list[1]["player"]["ID"])
         bench_ids.append(list[1]["player"]["ID"])
     for player in roster_2b:
-        print (f'2b: {player["player"]["LastName"]}')
+        pass
+        # print (f'2b: {player["player"]["LastName"]}')
     roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
     
     roster_temp = get_by_postion(data,"3B")
@@ -147,7 +150,8 @@ def create_roster_25(select_team, roster, lineup):
         roster_ids.append(list[1]["player"]["ID"])
         bench_ids.append(list[1]["player"]["ID"])
     for player in roster_3b:
-        print (f'3b: {player["player"]["LastName"]}')
+        pass
+        # print (f'3b: {player["player"]["LastName"]}')
     roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
     
     
@@ -162,7 +166,8 @@ def create_roster_25(select_team, roster, lineup):
         roster_ids.append(list[1]["player"]["ID"])
         bench_ids.append(list[1]["player"]["ID"])
     for player in roster_ss:
-        print (f'ss: {player["player"]["LastName"]}')
+        pass
+        # print (f'ss: {player["player"]["LastName"]}')
     roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
 
     roster_of = []
@@ -175,7 +180,8 @@ def create_roster_25(select_team, roster, lineup):
     if len(list) > 1:
         roster_of.append(list[1])
     for player in roster_lf:
-        print (f'lf: {player["player"]["LastName"]}')
+        pass
+        #print (f'lf: {player["player"]["LastName"]}')
     roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
     
     roster_temp = get_by_postion(data,"CF")
@@ -187,7 +193,8 @@ def create_roster_25(select_team, roster, lineup):
     if len(list) > 1:
         roster_of.append(list[1])
     for player in roster_cf:
-        print (f'cf: {player["player"]["LastName"]}')
+        pass
+        #print (f'cf: {player["player"]["LastName"]}')
     roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
     
     roster_temp = get_by_postion(data,"RF")
@@ -199,7 +206,8 @@ def create_roster_25(select_team, roster, lineup):
     if len(list) > 1:
         roster_of.append(list[1])
     for player in roster_rf:
-        print (f'rf: {player["player"]["LastName"]}')
+        pass
+        # print (f'rf: {player["player"]["LastName"]}')
     roster_result += (f'{list[0]["player"]["LastName"]} - {list[0]["player"]["Position"]}\n')
 
     # Fourth Outfielder
@@ -217,7 +225,7 @@ def create_roster_25(select_team, roster, lineup):
         roster_pitchers.remove(list[i])
         roster_ids.append(list[i]["player"]["ID"])
         counter -= 1
-        print (f'SP: {list[i]["player"]["LastName"]} (GS: {list[i]["stats"]["GamesStarted"]["#text"]})')
+        # print (f'SP: {list[i]["player"]["LastName"]} (GS: {list[i]["stats"]["GamesStarted"]["#text"]})')
         roster_result += (f'{list[i]["player"]["LastName"]} ({list[i]["stats"]["GamesStarted"]["#text"]})\n')
     #print (list)
 
@@ -230,10 +238,9 @@ def create_roster_25(select_team, roster, lineup):
         roster_pitchers.remove(list[i])
         roster_ids.append(list[i]["player"]["ID"])
         counter -= 1
-        print (f'RP: {list[i]["player"]["LastName"]} (Sv: {list[i]["stats"]["Saves"]["#text"]})')
-        #print(f'{list[i]["stats"]["Saves"]["#text"]}\t{list[i]["player"]["LastName"]}')
+        # print (f'RP: {list[i]["player"]["LastName"]} (Sv: {list[i]["stats"]["Saves"]["#text"]})')
         roster_result += (f'{list[i]["player"]["LastName"]}({list[i]["stats"]["Saves"]["#text"]})\n')
-    #print(roster_ids)
+
 
     # PICK remaining pitchers
     #print ("\nOther Pitchers")
@@ -254,7 +261,7 @@ def create_roster_25(select_team, roster, lineup):
     roster_pitchers.remove(list[0])
     roster_ids.append(list[0]["player"]["ID"])
     counter -= 1
-    print(f'RP:  {list[0]["player"]["LastName"]} (IP: {list[0]["stats"]["InningsPitched"]["#text"]})')
+    # print(f'RP:  {list[0]["player"]["LastName"]} (IP: {list[0]["stats"]["InningsPitched"]["#text"]})')
     roster_result += (f'{list[0]["player"]["LastName"]} ({list[0]["stats"]["InningsPitched"]["#text"]} IP)\n')
 
     list = sorted(roster_pitchers, key=lambda player: float(player["stats"]["GamesPlayed"]["#text"]), reverse=True)
@@ -262,8 +269,7 @@ def create_roster_25(select_team, roster, lineup):
     roster_pitchers.remove(list[0])
     roster_ids.append(list[0]["player"]["ID"])
     counter -= 1
-    print(f'RP:  {list[0]["player"]["LastName"]} (GP: {list[0]["stats"]["GamesPlayed"]["#text"]})')
-    #print(f'Added  {list[0]["player"]["LastName"]} for GP')
+    # print(f'RP:  {list[0]["player"]["LastName"]} (GP: {list[0]["stats"]["GamesPlayed"]["#text"]})')
     roster_result += (f'{list[0]["player"]["LastName"]} ({list[0]["stats"]["GamesPlayed"]["#text"]} Games)\n')
 
     list = sorted(roster_pitchers, key=lambda player: float(player["stats"]["Holds"]["#text"]), reverse=True)
@@ -271,14 +277,14 @@ def create_roster_25(select_team, roster, lineup):
     roster_pitchers.remove(list[0])
     roster_ids.append(list[0]["player"]["ID"])
     counter -= 1
-    print(f'RP:  {list[0]["player"]["LastName"]} (H: {list[0]["stats"]["Holds"]["#text"]})')
-    #print(f'Added  {list[0]["player"]["LastName"]} for H')
+    # print(f'RP:  {list[0]["player"]["LastName"]} (H: {list[0]["stats"]["Holds"]["#text"]})')
     roster_result += (f'{list[0]["player"]["LastName"]} ({list[0]["stats"]["Holds"]["#text"]} Holds)\n')
     
     # Pick Starter
     starting_pitcher = random.choice(roster_sp)
     starting_pitcher_id = starting_pitcher["player"]["ID"]
-    print (f'{starting_pitcher["player"]["LastName"]} ({starting_pitcher_id})')
+    # print (f'{starting_pitcher["player"]["LastName"]} ({starting_pitcher_id})')
+    lineup.pitcher = starting_pitcher
 
     # Pick DH
     # print (f'Bench IDs: {bench_ids}')
@@ -303,8 +309,13 @@ def create_roster_25(select_team, roster, lineup):
     # Initialize the list of bench players
     bench_ids = []
     '''
+    order_ids = batting_order(data,lineup_ids)
+
+
     lineup.roster_ids = roster_ids
     lineup.roster_result = roster_result
+    lineup.lineup_dictionary = lineup.create_lineup_dictionary_from_file(stats_file,order_ids)
+    # lineup.order_ids = batting_order(data,lineup_ids)
 
     stuff = {}
     stuff["roster_ids"] = roster_ids
@@ -314,7 +325,7 @@ def create_roster_25(select_team, roster, lineup):
     stuff["lineup_ids"] = lineup_ids
     stuff["bench_ids"] = bench_ids
 
-    order_ids = batting_order(data,lineup_ids)
+    # order_ids = batting_order(data,lineup_ids)
     stuff["order_ids"] = order_ids
 
     # roster.set(roster_result)

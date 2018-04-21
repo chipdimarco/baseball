@@ -37,7 +37,7 @@ def main():
     if not console_mode:
         screen = gs.GameScreen()
         print (f'Initialize Tkinter mode.')
-
+    '''
     #CONSOLE MODE    
     if console_mode:
 
@@ -95,7 +95,7 @@ def main():
         for r in h_linescore:
             print (r, end = ' ')
         print (f' -- {score.h_score}')
-    
+    '''
     # ------- M A I N   P R O G R A M   L O O P ------- #
     if not settings.console_mode:
         screen.mainloop()
