@@ -57,7 +57,7 @@ class Lineup():
                         j["team"] = l
                         j["stats"] = m
                         lineup.append(j)
-                        print (f'{id} appended')
+                        # print (f'{id} appended')
                         break
                 except:
                     print(f'error finding {id}')

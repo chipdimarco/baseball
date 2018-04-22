@@ -8,32 +8,16 @@ from game_lineup import Lineup
 from game_atbat import Atbat
 import game_setup as gs
 import json
-# import ast #converts str to dict
 
-
+# Create Objects
 settings = Settings()
-
-# VISITOR LINEUP OBJECT
 visitor = Lineup()
 home = Lineup()
 
-
+# Initialize Variables
 v_linescore = []
 h_linescore = []
-
 LARGE_FONT = ("verdana",14)
-
-'''
-class Roster():
-    def __init__(self):
-        self.roster = "something"
-
-    def parse_teamname(self,stuff):
-        data = ast.literal_eval(stuff)
-        self.roster = data['roster_ids']
-        self.lineup = data['lineup_ids']
-        self.bench = data['bench_ids']
-'''
 
 # The controller class
 class GameScreen(tk.Tk):
@@ -54,14 +38,7 @@ class GameScreen(tk.Tk):
     def show_frame(self,cont):
         frame = self.frames[cont]
         frame.tkraise()
-    # def get_visitor_teamname(self,cont):
-    #     frame = self.frames[cont]
-    #     visitor_result = frame.getVisitorResult()
-    #     return (visitor_result)
-    # def get_home_teamname(self,cont):
-    #     frame = self.frames[cont]
-    #     home_result = frame.getHomeResult()
-    #     return(home_result)
+
 
 # S P L A S H : FRAME 1 - on open 
 class Splash(tk.Frame):
@@ -86,6 +63,7 @@ class Splash(tk.Frame):
         splash_label.grid(column=0,row=0, sticky="n", columnspan=2)
         button_setup.grid(column=0,row=1, sticky="n")
         button_play.grid(column=1,row=1,sticky="n")
+
 
 # S E T U P : FRAME 2: Setup a game - read stats and create roster/lineup 
 class Setup(tk.Frame):
@@ -154,8 +132,8 @@ class Setup(tk.Frame):
         pickhometeam     = tk.Button(selection_board, text="OK", command=lambda:  self.setup_result_home.set(gs.create_roster_25(self.select_HomeTeam.get(),self.roster_HomeTeam, home, settings)))
         #
         # Display the labels
-        visitorlabel = tk.Label(selection_board,textvariable=self.roster_VisitingTeam)
-        homelabel =    tk.Label(selection_board,textvariable=self.roster_HomeTeam)
+        visitorlabel = tk.Label(selection_board,textvariable=self.setup_result_visitor)
+        homelabel =    tk.Label(selection_board,textvariable=self.setup_result_home)
         #
         # Grid settings
         visitingteam.grid(column=0,row=0)
@@ -175,6 +153,7 @@ class Setup(tk.Frame):
         return (self.setup_teamname_visitor.get())
     def getHomeTeamname(self):
         return (self.setup_teamname_home.get())
+
 
 # P L A Y : FRAME 3: Where the game functions take place 
 class Play(tk.Frame):
@@ -202,14 +181,16 @@ class Play(tk.Frame):
         button_setup = tk.Button(bleacher_board, text="Go to Setup", width=10,
             command = lambda: controller.show_frame(Setup))
 
+        # Display data from Setup
         visitor_teamname = tk.StringVar()
-        button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname", command = lambda: visitor_teamname.set(visitor.roster_result))
+        # button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname", command = lambda: visitor_teamname.set(visitor.roster_result))
+        button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname", command = lambda: visitor_teamname.set(visitor.battingorder_result))
         button_visitor_teamname.grid(column=1,row=0, sticky="n")
               
-        # pull data from Setup
+        # Display data from Setup
         home_teamname = tk.StringVar()
-        # button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname", command = lambda: self.parse_home_teamname(controller.get_home_teamname(Setup)))
-        button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname", command = lambda: home_teamname.set(home.roster_result))
+        # button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname", command = lambda: home_teamname.set(home.roster_result))
+        button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname", command = lambda: home_teamname.set(home.battingorder_result))
         button_home_teamname.grid(column=2,row=0, sticky="n")
 
         # Place Objects in Frame
@@ -235,6 +216,7 @@ class Play(tk.Frame):
         dugout.grid_columnconfigure(1,minsize=settings.width/4)
         dugout.grid_columnconfigure(2,minsize=settings.width/2)
         dugout.grid_rowconfigure(0,minsize=settings.height*.4)
+
         # Display Rosters
         v_lineup_card = tk.Label(field_board, textvariable = visitor_teamname)
         v_lineup_card.grid(column= 0, row = 0, sticky="n", padx=12)
@@ -281,25 +263,3 @@ class Play(tk.Frame):
         message = tk.Label(dugout,textvariable=atbat.play_by_play)
         message.grid(column=2,row=0,sticky=("nw"))
 
-    '''
-    def parse_visitor_teamname(self,stuff,visitor,v_stringvar):
-        data = ast.literal_eval(stuff)
-        print ("VISITOR")
-        print (data['roster_ids'])
-        print ()
-        print (data['lineup_ids'])
-        print ()
-        print (data['bench_ids'])
-        visitor.lineup_dictionary = data['lineup_ids']
-        v_stringvar.set(data['lineup_ids'])
-    
-    def parse_home_teamname(self,stuff):
-        print ("HOME")
-        data = ast.literal_eval(stuff)
-        print (data['roster_ids'])
-        print ()
-        print (data['lineup_ids'])
-        print ()
-        print (data['bench_ids'])
-        return(data['lineup_ids'])
-    '''

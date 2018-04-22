@@ -7,44 +7,9 @@ import random
 from game_settings import Settings
 from game_lineup import Lineup
 
-'''
-turn off form modular use
-screen = tk.Tk()
-screen.title("Testing")
-screen_width=900
-screen_height=600
-screen.geometry(f'{screen_width}x{screen_height}')
-screen.configure(background="gray")
-'''
-# settings = Settings()
-
-
-# Choose Teams
-# From game_screens, from Setup
-# select_VisitingTeam
-# select_HomeTeam
-# Team Selection
 
 # List comprehension will parse out the Keys from this dictionary in Settings
 #options_Teams = [i for i in settings.team_codes.keys()]
-
-# Initialize StringVars
-'''
-turn off for module use
-select_VisitingTeam = tk.StringVar(screen)
-visitingteamoptions = options_Teams
-select_HomeTeam = tk.StringVar(screen)
-hometeamoptions = options_Teams
-select_VisitingTeam.set ("Visiting Team")
-select_HomeTeam.set ("Home Team")
-
-roster_VisitingTeam = tk.StringVar(screen)
-roster_HomeTeam = tk.StringVar(screen)
-'''
-
-class Roster():
-    def __init__(self):
-        self.note ="Roster Note"
 
 def create_roster_25(select_team, roster, lineup, settings):
     # if select_team in options_Teams:
@@ -293,7 +258,7 @@ def create_roster_25(select_team, roster, lineup, settings):
         lineup_ids.append(dh)
     else:
         lineup_ids.append(starting_pitcher["player"]["ID"])
-    print (f'Lineup IDs: {lineup_ids}')
+    # print (f'Lineup IDs: {lineup_ids}')
 
     '''
     # Initialize a list of ids for players on the 25 man roster
@@ -309,29 +274,27 @@ def create_roster_25(select_team, roster, lineup, settings):
     # Initialize the list of bench players
     bench_ids = []
     '''
-    order_ids = batting_order(data,lineup_ids)
+    order_ids = batting_order(data,lineup_ids,lineup)
 
 
     lineup.roster_ids = roster_ids
     lineup.roster_result = roster_result
     lineup.lineup_dictionary = lineup.create_lineup_dictionary_from_file(stats_file,order_ids)
-    # lineup.order_ids = batting_order(data,lineup_ids)
+    lineup.battingorder_result += (f'\n\nStarting Pitcher: {starting_pitcher["player"]["LastName"]}')
 
-    stuff = {}
-    stuff["roster_ids"] = roster_ids
-    # stuff["roster_sp"] = roster_sp
-    # stuff["roster_rp"] = roster_rp
-    # stuff["roster_midp"] = roster_midp
-    stuff["lineup_ids"] = lineup_ids
-    stuff["bench_ids"] = bench_ids
+    return(roster_result)
+    
 
-    # order_ids = batting_order(data,lineup_ids)
-    stuff["order_ids"] = order_ids
+    # stuff = {}
+    # stuff["roster_ids"] = roster_ids
+    # stuff["lineup_ids"] = lineup_ids
+    # stuff["bench_ids"] = bench_ids
+    # stuff["order_ids"] = order_ids
 
     # roster.set(roster_result)
-    stuff["roster_result"] = roster.set(roster_result)
+    # stuff["roster_result"] = roster.set(roster_result)
 
-    return(stuff)
+    # return(stuff)
     # return (order_ids)
 
 def select_dh(data, bench_players):
@@ -378,10 +341,11 @@ def get_by_postion(data, pos):
             break
     return (roster_pos)
 
-def batting_order(data,lineup_ids):
+def batting_order(data,lineup_ids,lineup):
     # Init lineup as dictionary
     r = data
     batters = []
+    battingorder_result = "Starting Lineup\n"
     # loop over dict. to retrieve stats
     for i in range (100):
         try:
@@ -403,37 +367,48 @@ def batting_order(data,lineup_ids):
     bo3 = list[0]
     battingorder_ids.append(list[0]['player']['ID'])
     batters.remove(bo3)
+    battingorder_result += (f'{list[0]["player"]["LastName"]} ({list[0]["player"]["Position"]})\n')
     
     list = sorted(batters, key=lambda player: float(player["stats"]["BatterOnBasePct"]["#text"]), reverse=True)
     bo1 = list[0]
     battingorder_ids.append(list[0]['player']['ID'])
     batters.remove(bo1)
+    battingorder_result += (f'{list[0]["player"]["LastName"]} ({list[0]["player"]["Position"]})\n')
 
     list = sorted(batters, key=lambda player: float(player["stats"]["BatterSluggingPct"]["#text"]), reverse=True)
     bo4 = list[0]
     battingorder_ids.append(list[0]['player']['ID'])
     batters.remove(bo4)
+    battingorder_result += (f'{list[0]["player"]["LastName"]} ({list[0]["player"]["Position"]})\n')
     
     list = sorted(batters, key=lambda player: float(player["stats"]["BatterOnBasePct"]["#text"]), reverse=True)
     bo2 = list[0]
     battingorder_ids.append(list[0]['player']['ID'])
     batters.remove(bo2)
+    battingorder_result += (f'{list[0]["player"]["LastName"]} ({list[0]["player"]["Position"]})\n')
     
     list = sorted(batters, key=lambda player: float(player["stats"]["BatterOnBasePlusSluggingPct"]["#text"]), reverse=True)
     bo5 = list[0]
     battingorder_ids.append(list[0]['player']['ID'])
     batters.remove(bo5)
+    battingorder_result += (f'{list[0]["player"]["LastName"]} ({list[0]["player"]["Position"]})\n')
 
     #6-9    
     list = sorted(batters, key=lambda player: float(player["stats"]["BatterSluggingPct"]["#text"]), reverse=True)
     bo6 = list[0]
     battingorder_ids.append(list[0]['player']['ID'])
+    battingorder_result += (f'{list[0]["player"]["LastName"]} ({list[0]["player"]["Position"]})\n')
     bo7 = list[1]
     battingorder_ids.append(list[1]['player']['ID'])
+    battingorder_result += (f'{list[1]["player"]["LastName"]} ({list[1]["player"]["Position"]})\n')
     bo8 = list[2]
     battingorder_ids.append(list[2]['player']['ID'])
+    battingorder_result += (f'{list[2]["player"]["LastName"]} ({list[2]["player"]["Position"]})\n')
     bo9 = list[3]
     battingorder_ids.append(list[3]['player']['ID'])
+    battingorder_result += (f'{list[3]["player"]["LastName"]} ({list[3]["player"]["Position"]})\n')
+
+
     '''
     print (bo1['player']['LastName'])
     print (bo2['player']['LastName'])
@@ -445,60 +420,9 @@ def batting_order(data,lineup_ids):
     print (bo8['player']['LastName'])
     print (bo9['player']['LastName'])
     '''
-    #print (list[0]['player']['LastName'])
+    lineup.battingorder_result = battingorder_result
+    
+    # print (list[0]['player']['LastName'])
     return (battingorder_ids)
     
 
-# algorithm for that will be something like:
-# Slot By
-# 3    highest OPS   BatterOnBasePlusSluggingPct["#text"]
-# 1    highest OBP   BatterOnBasePct["#text"]
-# 4    highest SLG   BatterSluggingPct["#text"]
-# 2    highest OBP   BatterOnBasePct["#text"]
-# 5    highest OPS   BatterOnBasePlusSluggingPct["#text"]
-# 6-9  highest OBP   BatterOnBasePct["#text"]
-
-
-# Tkinterface Settings
-# Option Menus
-'''
-visitingteam = tk.OptionMenu(screen, select_VisitingTeam, *visitingteamoptions) 
-hometeam = tk.OptionMenu(screen, select_HomeTeam, *hometeamoptions) 
-
-# Buttons
-pickvisitingteam = tk.Button(screen, text="OK", command=lambda: create_roster_25(select_VisitingTeam.get(), roster_VisitingTeam))
-pickhometeam = tk.Button(screen,text="OK", command= lambda: create_roster_25(select_HomeTeam.get(),roster_HomeTeam))
-
-# Display Labels
-visitorlabel = tk.Label(screen,textvariable=roster_VisitingTeam)
-homelabel = tk.Label(screen,textvariable=roster_HomeTeam)
-
-# Grid settings
-visitingteam.grid(column=0,row=0)
-pickvisitingteam.grid(column=1,row=0)
-visitorlabel.grid(column=0,row=1)
-
-hometeam.grid(column=2,row=0)
-pickhometeam.grid(column=3,row=0)
-homelabel.grid(column=2,row=1)
-'''
-
-
-# Visitor Setup
-'''
-visiting_team_name = select_VisitingTeam
-visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
-visitor_stats_file = "data/2017_nyy_stats.json"
-# visitor_stats_file =(f'data/2017_{visiting_team_code}_stats.json')
-'''
-
-# algorithm for that will be something like:
-# Slot By
-# 3    highest OPS   BatterOnBasePlusSluggingPct["#text"]
-# 1    highest OBP   BatterOnBasePct["#text"]
-# 4    highest SLG   BatterSluggingPct["#text"]
-# 2    highest OBP   BatterOnBasePct["#text"]
-# 5    highest OPS   BatterOnBasePlusSluggingPct["#text"]
-# 6-9  highest OBP   BatterOnBasePct["#text"]
-
-#screen.mainloop()
