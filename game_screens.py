@@ -89,10 +89,12 @@ class Setup(tk.Frame):
         button_splash.grid(column=0,row=1,sticky="n")
         button_play.grid(column=1,row=1, sticky="n")
         #
+        # - - - - - - - - - - - - - - - - - - - - - -
         #Selection Part
+        # - - - - - - - - - - - - - - - - - - - - - -
         # Team Selection
         selection_board =tk.Frame(setup_frame)
-        selection_board.grid(column=0,row=2)
+        selection_board.grid(column=0,row=2, sticky="n")
 
         # List comprehension will parse out the Keys from this dictionary in Settings
         options_Teams = [i for i in settings.team_codes.keys()]
@@ -136,13 +138,13 @@ class Setup(tk.Frame):
         homelabel =    tk.Label(selection_board,textvariable=self.setup_result_home)
         #
         # Grid settings
-        visitingteam.grid(column=0,row=0)
-        pickvisitingteam.grid(column=1,row=0)
-        visitorlabel.grid(column=0,row=1)
+        visitingteam.grid(column=0,row=1, sticky="n")
+        pickvisitingteam.grid(column=1,row=1, sticky="n")
+        visitorlabel.grid(column=0,row=2,  sticky="n")
         #
-        hometeam.grid(column=2,row=0)
-        pickhometeam.grid(column=3,row=0)
-        homelabel.grid(column=2,row=1)
+        hometeam.grid(column=2,row=1,  sticky="n")
+        pickhometeam.grid(column=3,row=1, sticky="n")
+        homelabel.grid(column=2,row=2, sticky="n")
     # Setup methods display results from game_setup
     def getVisitorResult(self):
         return(self.setup_result_visitor.get())
@@ -169,6 +171,7 @@ class Play(tk.Frame):
         # Create Child Frames
         # - - - - - - - - - - - - - - - - - - - - - -
         #BLEACHER BOARD - Child Frame (0,0) - Top Row
+        # - - - - - - - - - - - - - - - - - - - - - -
         bleacher_board = tk.Frame(play_frame)
         # Format child frame
         bleacher_board.grid(column=0, row=0)
@@ -181,17 +184,15 @@ class Play(tk.Frame):
         button_setup = tk.Button(bleacher_board, text="Go to Setup", width=10,
             command = lambda: controller.show_frame(Setup))
 
-        # Display data from Setup
-        visitor_teamname = tk.StringVar()
-        # button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname", command = lambda: visitor_teamname.set(visitor.roster_result))
-        button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname", command = lambda: visitor_teamname.set(visitor.battingorder_result))
-        button_visitor_teamname.grid(column=1,row=0, sticky="n")
+        # # Display Lineup for Visitors
+        # visitor_teamname = tk.StringVar()
+        # button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname", command = lambda: visitor_teamname.set(visitor.battingorder_result))
+        # button_visitor_teamname.grid(column=1,row=0, sticky="n")
               
-        # Display data from Setup
-        home_teamname = tk.StringVar()
-        # button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname", command = lambda: home_teamname.set(home.roster_result))
-        button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname", command = lambda: home_teamname.set(home.battingorder_result))
-        button_home_teamname.grid(column=2,row=0, sticky="n")
+        # # Display Lineup for Home
+        # home_teamname = tk.StringVar()
+        # button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname", command = lambda: home_teamname.set(home.battingorder_result))
+        # button_home_teamname.grid(column=2,row=0, sticky="n")
 
         # Place Objects in Frame
         label.grid(column=0,row=0, sticky="n", columnspan=2)
@@ -199,30 +200,33 @@ class Play(tk.Frame):
         button_setup.grid(column=1,row=1,sticky="w")
         # - - - - - - - - - - - - - - - - - - - - - -
         # FIELD BOARD - Child Frame (0,1) - Middle Row, 3 Columns
+        # - - - - - - - - - - - - - - - - - - - - - -
         field_board = tk.Frame(play_frame)
         # Format child frame
         field_board.grid_columnconfigure(0,minsize=settings.width/4)
         field_board.grid_columnconfigure(1,minsize=settings.width/2)
         field_board.grid_columnconfigure(2,minsize=settings.width/4)
-        field_board.grid_rowconfigure(0,minsize=settings.height/2)
+        field_board.grid_rowconfigure(0,minsize=settings.height/5)
+        field_board.grid_rowconfigure(1,minsize=settings.height/2)
         field_board.grid(column=0, row =1)
         # Create Objects for child frame
         # Place Objects in Frame
-        # - - - - - - - - - - - - - - - - - - - - - -
-        #DUGOUT - Child Frame (0,2) - 3 Columns
-        dugout = tk.Frame(play_frame)
-        dugout.grid(column=0, row=2)
-        dugout.grid_columnconfigure(0,minsize=settings.width/4)
-        dugout.grid_columnconfigure(1,minsize=settings.width/4)
-        dugout.grid_columnconfigure(2,minsize=settings.width/2)
-        dugout.grid_rowconfigure(0,minsize=settings.height*.4)
+        # Display Lineup for Visitors
+        visitor_teamname = tk.StringVar()
+        button_visitor_teamname = tk.Button(field_board, text="Get Visting Lineup", command = lambda: visitor_teamname.set(visitor.battingorder_result))
+        button_visitor_teamname.grid(column=0,row=0, sticky="n")
+              
+        # Display Lineup for Home
+        home_teamname = tk.StringVar()
+        button_home_teamname = tk.Button(field_board, text="Get Home Lineup", command = lambda: home_teamname.set(home.battingorder_result))
+        button_home_teamname.grid(column=2,row=0, sticky="n")
 
         # Display Rosters
         v_lineup_card = tk.Label(field_board, textvariable = visitor_teamname)
-        v_lineup_card.grid(column= 0, row = 0, sticky="n", padx=12)
+        v_lineup_card.grid(column= 0, row = 1, sticky="n", padx=12)
 
         h_lineup_card = tk.Label(field_board, textvariable = home_teamname)
-        h_lineup_card.grid(column= 2, row = 0, sticky="n", padx=12)
+        h_lineup_card.grid(column= 2, row = 1, sticky="n", padx=12)
 
         # - - - - - - - - - - - - - - - - - - - - - -
         # Field Board > FIELD
@@ -232,9 +236,19 @@ class Play(tk.Frame):
         x = int(field_width/4)
         diamond = (2*x,y, 3*x,2*y, 2*x,3*y, x,2*y)
         field = tk.Canvas(field_board,height=field_height,width=field_width)
-        field.grid(column=1,row=0)
+        field.grid(column=1,row=1, sticky="n")
         field.create_rectangle(0 , 0 , field_width, field_height, fill='#526F35')
         field.create_polygon(diamond, fill=settings.diamond_color)
+        # - - - - - - - - - - - - - - - - - - - - - -
+        #DUGOUT - Child Frame (0,2) - 3 Columns
+        # - - - - - - - - - - - - - - - - - - - - - -
+        dugout = tk.Frame(play_frame)
+        dugout.grid(column=0, row=2, sticky="n")
+        dugout.grid_columnconfigure(0,minsize=settings.width/4)
+        dugout.grid_columnconfigure(1,minsize=settings.width/4)
+        dugout.grid_columnconfigure(2,minsize=settings.width/2)
+        dugout.grid_rowconfigure(0,minsize=settings.height*.4)
+
 
         # - - - - - - - - - - - - - - - - - - - - - -
         # Dugout > PLAY Button

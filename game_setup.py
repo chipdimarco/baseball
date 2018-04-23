@@ -1,4 +1,5 @@
 # 3/20/2018, 3/25/2018
+# 4/22/2018: setting the lineup object done.
 
 import tkinter as tk
 from tkinter import ttk
@@ -245,10 +246,13 @@ def create_roster_25(select_team, roster, lineup, settings):
     # print(f'RP:  {list[0]["player"]["LastName"]} (H: {list[0]["stats"]["Holds"]["#text"]})')
     roster_result += (f'{list[0]["player"]["LastName"]} ({list[0]["stats"]["Holds"]["#text"]} Holds)\n')
     
+    lineup.midp = roster_midp
+    lineup.sp = roster_sp
+    lineup.rp = roster_rp
+
     # Pick Starter
     starting_pitcher = random.choice(roster_sp)
     starting_pitcher_id = starting_pitcher["player"]["ID"]
-    # print (f'{starting_pitcher["player"]["LastName"]} ({starting_pitcher_id})')
     lineup.pitcher = starting_pitcher
 
     # Pick DH
@@ -260,20 +264,6 @@ def create_roster_25(select_team, roster, lineup, settings):
         lineup_ids.append(starting_pitcher["player"]["ID"])
     # print (f'Lineup IDs: {lineup_ids}')
 
-    '''
-    # Initialize a list of ids for players on the 25 man roster
-    roster_ids = []
-    # Initialize the list of starting pitchers (with stats)
-    roster_sp = []
-    # Initialize the list of relief pitchers
-    roster_rp = []
-    # Initialzie the list of middle relief
-    roster_midp = []
-    # Initialize the list of 9 starters
-    lineup_ids = []
-    # Initialize the list of bench players
-    bench_ids = []
-    '''
     order_ids = batting_order(data,lineup_ids,lineup)
 
 
@@ -284,18 +274,6 @@ def create_roster_25(select_team, roster, lineup, settings):
 
     return(roster_result)
     
-
-    # stuff = {}
-    # stuff["roster_ids"] = roster_ids
-    # stuff["lineup_ids"] = lineup_ids
-    # stuff["bench_ids"] = bench_ids
-    # stuff["order_ids"] = order_ids
-
-    # roster.set(roster_result)
-    # stuff["roster_result"] = roster.set(roster_result)
-
-    # return(stuff)
-    # return (order_ids)
 
 def select_dh(data, bench_players):
     # Init lineup as dictionary
@@ -408,21 +386,7 @@ def batting_order(data,lineup_ids,lineup):
     battingorder_ids.append(list[3]['player']['ID'])
     battingorder_result += (f'{list[3]["player"]["LastName"]} ({list[3]["player"]["Position"]})\n')
 
-
-    '''
-    print (bo1['player']['LastName'])
-    print (bo2['player']['LastName'])
-    print (bo3['player']['LastName'])
-    print (bo4['player']['LastName'])
-    print (bo5['player']['LastName'])
-    print (bo6['player']['LastName'])
-    print (bo7['player']['LastName'])
-    print (bo8['player']['LastName'])
-    print (bo9['player']['LastName'])
-    '''
     lineup.battingorder_result = battingorder_result
-    
-    # print (list[0]['player']['LastName'])
     return (battingorder_ids)
     
 
