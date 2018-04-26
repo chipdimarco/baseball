@@ -54,15 +54,15 @@ class Splash(tk.Frame):
         splash_frame.grid_columnconfigure(0,minsize=settings.width/2)
         splash_frame.grid_columnconfigure(1,minsize=settings.width/2)
         # Create Objects for Frame
-        splash_label = tk.Label(splash_frame,text="Welcome to Waban Studio Baseball",font=LARGE_FONT)
+        splash_label = tk.Label(splash_frame,text="Welcome to Waban Studio Baseball",font=LARGE_FONT, bg="forest green")
         button_setup = tk.Button(splash_frame, text="Go to Setup", width=10, 
             command = lambda: controller.show_frame(Setup))
         button_play = tk.Button(splash_frame, text="Go to Play", width=10,
             command = lambda: controller.show_frame(Play))
         # Place Objects in Frame
-        splash_label.grid(column=0,row=0, sticky="n", columnspan=2)
-        button_setup.grid(column=0,row=1, sticky="n")
-        button_play.grid(column=1,row=1,sticky="n")
+        splash_label.grid(column=0,row=0, sticky="nsew", columnspan=2)
+        button_setup.grid(column=0,row=1)
+        button_play.grid(column=1,row=1)
 
 
 # S E T U P : FRAME 2: Setup a game - read stats and create roster/lineup 
@@ -75,19 +75,21 @@ class Setup(tk.Frame):
         setup_frame.grid(column=0, row=0)
         setup_frame.grid_rowconfigure(0,minsize=settings.height/10)
         setup_frame.grid_rowconfigure(1,minsize=settings.height/10)
-        setup_frame.grid_rowconfigure(2,minsize=settings.height*.8)
+        setup_frame.grid_rowconfigure(1,minsize=settings.height/10)
+        setup_frame.grid_rowconfigure(2,minsize=settings.height/10)
+        setup_frame.grid_rowconfigure(3,minsize=settings.height*.6)
         setup_frame.grid_columnconfigure(0,minsize=settings.width/2)
         setup_frame.grid_columnconfigure(1,minsize=settings.width/2)
         # Create Objects for Frame
-        label = tk.Label(setup_frame, text = "Setup", font=LARGE_FONT)
+        label = tk.Label(setup_frame, text = "Setup", font=LARGE_FONT, bg="forest green")
         button_splash = tk.Button(setup_frame, text="Go to Splash", width=10,
             command = lambda: controller.show_frame(Splash))
         button_play = tk.Button(setup_frame, text="Go to Play", width=10,
             command = lambda: controller.show_frame(Play))
         # Place Objects in Frame
-        label.grid(column=0,row=0, sticky="n", columnspan=2)
-        button_splash.grid(column=0,row=1,sticky="n")
-        button_play.grid(column=1,row=1, sticky="n")
+        label.grid(column=0,row=0, sticky="nsew", columnspan=2)
+        button_splash.grid(column=0,row=1)
+        button_play.grid(column=1,row=1)
         #
         # - - - - - - - - - - - - - - - - - - - - - -
         #Selection Part
@@ -138,13 +140,15 @@ class Setup(tk.Frame):
         homelabel =    tk.Label(selection_board,textvariable=self.setup_result_home)
         #
         # Grid settings
-        visitingteam.grid(column=0,row=1, sticky="n")
-        pickvisitingteam.grid(column=1,row=1, sticky="n")
-        visitorlabel.grid(column=0,row=2,  sticky="n")
+
+        visitingteam.grid(column=0,row=2, sticky="n", padx=10)
+        pickvisitingteam.grid(column=0,row=3, sticky="n",padx=10)
+        visitorlabel.grid(column=0,row=4,  sticky="n")
         #
-        hometeam.grid(column=2,row=1,  sticky="n")
-        pickhometeam.grid(column=3,row=1, sticky="n")
-        homelabel.grid(column=2,row=2, sticky="n")
+        hometeam.grid(column=1,row=2,  sticky="n")
+        pickhometeam.grid(column=1,row=3, sticky="n")
+        homelabel.grid(column=1,row=4, sticky="n")
+        
     # Setup methods display results from game_setup
     def getVisitorResult(self):
         return(self.setup_result_visitor.get())
@@ -174,40 +178,33 @@ class Play(tk.Frame):
         # - - - - - - - - - - - - - - - - - - - - - -
         bleacher_board = tk.Frame(play_frame)
         # Format child frame
-        bleacher_board.grid(column=0, row=0)
+        bleacher_board.grid(column=0, row=0, sticky="nsew")
         bleacher_board.grid_rowconfigure(0,minsize=settings.height/10)
+        bleacher_board.grid_rowconfigure(1,minsize=settings.height/10)
         bleacher_board.grid_columnconfigure(0,minsize=settings.width/2)
+        bleacher_board.grid_columnconfigure(1,minsize=settings.width/2)
         # Create Objects for child frame
-        label = tk.Label(bleacher_board, text = "Play Ball!", font=LARGE_FONT)
+        label = tk.Label(bleacher_board, text = "Play Ball!", font=LARGE_FONT, bg="forest green")
         button_splash = tk.Button(bleacher_board, text="Go to Splash", width=10,
             command = lambda: controller.show_frame(Splash))
         button_setup = tk.Button(bleacher_board, text="Go to Setup", width=10,
             command = lambda: controller.show_frame(Setup))
 
-        # # Display Lineup for Visitors
-        # visitor_teamname = tk.StringVar()
-        # button_visitor_teamname = tk.Button(bleacher_board, text="Get visitor_teamname", command = lambda: visitor_teamname.set(visitor.battingorder_result))
-        # button_visitor_teamname.grid(column=1,row=0, sticky="n")
-              
-        # # Display Lineup for Home
-        # home_teamname = tk.StringVar()
-        # button_home_teamname = tk.Button(bleacher_board, text="Get home_teamname", command = lambda: home_teamname.set(home.battingorder_result))
-        # button_home_teamname.grid(column=2,row=0, sticky="n")
-
         # Place Objects in Frame
-        label.grid(column=0,row=0, sticky="n", columnspan=2)
-        button_splash.grid(column=0,row=1,sticky="w")
-        button_setup.grid(column=1,row=1,sticky="w")
+        label.grid(column=0,row=0, sticky="nsew", columnspan=2)
+        button_splash.grid(column=0, row=1)
+        button_setup.grid(column=1, row=1)
         # - - - - - - - - - - - - - - - - - - - - - -
         # FIELD BOARD - Child Frame (0,1) - Middle Row, 3 Columns
         # - - - - - - - - - - - - - - - - - - - - - -
+        # set background color with tk.
         field_board = tk.Frame(play_frame)
         # Format child frame
+        field_board.grid_rowconfigure(0,minsize=settings.height/10)
+        field_board.grid_rowconfigure(1,minsize=settings.height*.4)
         field_board.grid_columnconfigure(0,minsize=settings.width/4)
         field_board.grid_columnconfigure(1,minsize=settings.width/2)
         field_board.grid_columnconfigure(2,minsize=settings.width/4)
-        field_board.grid_rowconfigure(0,minsize=settings.height/5)
-        field_board.grid_rowconfigure(1,minsize=settings.height/2)
         field_board.grid(column=0, row =1)
         # Create Objects for child frame
         # Place Objects in Frame
@@ -230,8 +227,8 @@ class Play(tk.Frame):
 
         # - - - - - - - - - - - - - - - - - - - - - -
         # Field Board > FIELD
-        field_height = int(settings.height/2)
-        field_width = int(settings.width/2)
+        field_height = int(settings.height/3)
+        field_width = int(settings.width/3)
         y = int(field_height/4)
         x = int(field_width/4)
         diamond = (2*x,y, 3*x,2*y, 2*x,3*y, x,2*y)
@@ -244,10 +241,10 @@ class Play(tk.Frame):
         # - - - - - - - - - - - - - - - - - - - - - -
         dugout = tk.Frame(play_frame)
         dugout.grid(column=0, row=2, sticky="n")
+        dugout.grid_rowconfigure(0,minsize=settings.height*.3)
         dugout.grid_columnconfigure(0,minsize=settings.width/4)
         dugout.grid_columnconfigure(1,minsize=settings.width/4)
         dugout.grid_columnconfigure(2,minsize=settings.width/2)
-        dugout.grid_rowconfigure(0,minsize=settings.height*.4)
 
 
         # - - - - - - - - - - - - - - - - - - - - - -
@@ -269,7 +266,6 @@ class Play(tk.Frame):
         v_linescore.grid(column=1,row=1,sticky=("nw"))
         # Row 2 is Home Linescore
         h_linescore = tk.Label(linescore_frame, textvariable=atbat.h_linescore)
-        #h_linescore = tk.Label(linescore_frame, text="atbat wont work")
         h_linescore.grid(column=1,row=2,sticky=("nw"))
 
         # Dugout > PLAY BY PLAY
