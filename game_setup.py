@@ -1,8 +1,8 @@
 # 3/20/2018, 3/25/2018
 # 4/22/2018: setting the lineup object done.
 
-import tkinter as tk
-from tkinter import ttk
+#import tkinter as tk
+#from tkinter import ttk
 import json
 import random
 from game_settings import Settings

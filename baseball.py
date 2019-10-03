@@ -8,8 +8,8 @@
 # IMPORT
 from game_lineup import Lineup
 from game_atbat import Atbat
-from tkinter import *
-from tkinter import ttk
+#from tkinter import *
+#from tkinter import ttk
 from game_settings import Settings
 from game_score import Score
 import sys
@@ -33,11 +33,12 @@ def main():
     # NOTE: the Tk() class has to be initialized before the Atbat() class because
     # Atbat() needs Tk to define the StringVar() object
     
+    """
     #TKINTER MODE
     if not console_mode:
         screen = gs.GameScreen()
         print (f'Initialize Tkinter mode.')
-    '''
+    """
     #CONSOLE MODE    
     if console_mode:
 
@@ -71,7 +72,7 @@ def main():
             # Top of inning
             inning_top = atbat.inning_top(settings.inning + i, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)
             score.v_score += inning_top["v_score"]
-            v_linescore.append(inning_top["v_score"])
+#            v_linescore.append(inning_top["v_score"])
             settings.visitor_leads_off_inning = inning_top["visitor_leads_off_inning"]
             settings.half_inning = "Bottom"
             print(f'{visiting_team_name}-{score.v_score}')
@@ -79,7 +80,7 @@ def main():
             # Bottom of inning
             inning_bottom = atbat.inning_bottom(settings.inning + i, home.lineup_dictionary, settings.home_leads_off_inning, visitor.pitcher)
             score.h_score += inning_bottom["h_score"]
-            h_linescore.append(inning_bottom["h_score"])
+#            h_linescore.append(inning_bottom["h_score"])
             settings.home_leads_off_inning = inning_bottom["home_leads_off_inning"]
             settings.half_inning="Top"
             print(f'{visiting_team_name}-{score.v_score}')
@@ -87,18 +88,17 @@ def main():
         
         print (f'\nGAME OVER')
         print (visiting_team_name, end='   ')
-        for r in v_linescore:
-            print (r, end = ' ')
+#        for r in v_linescore:
+#            print (r, end = ' ')
         print (f' -- {score.v_score}')
 
         print (home_team_name, end='   ')
-        for r in h_linescore:
-            print (r, end = ' ')
+#        for r in h_linescore:
+#            print (r, end = ' ')
         print (f' -- {score.h_score}')
-    '''
     # ------- M A I N   P R O G R A M   L O O P ------- #
-    if not settings.console_mode:
-        screen.mainloop()
+#    if not settings.console_mode:
+#        screen.mainloop()
 
 if __name__ == "__main__":
     main()

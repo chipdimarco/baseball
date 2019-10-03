@@ -2,7 +2,7 @@
 # 4/20/2018 Refactoring
 # help from pythonprogramming.net
 # and their YouTube tutorials
-import tkinter as tk
+#import tkinter as tk
 from game_settings import Settings
 from game_lineup import Lineup
 from game_atbat import Atbat
@@ -19,6 +19,7 @@ v_linescore = []
 h_linescore = []
 LARGE_FONT = ("verdana",14)
 
+"""
 # The controller class
 class GameScreen(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -272,4 +273,4 @@ class Play(tk.Frame):
         # the atbat.inning_top method will also set the play_by_play StringVar, and the message object below will draw it on screen
         message = tk.Label(dugout,textvariable=atbat.play_by_play)
         message.grid(column=2,row=0,sticky=("nw"))
-
+"""

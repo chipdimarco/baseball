@@ -1,0 +1,366 @@
+{
+    "player": {
+      "ID": "11067",
+      "LastName": "Swihart",
+      "FirstName": "Blake",
+      "JerseyNumber": "23",
+      "Position": "LF"
+    },
+    "team": {
+      "ID": "113",
+      "City": "Boston",
+      "Name": "Red Sox",
+      "Abbreviation": "BOS"
+    },
+    "stats": {
+      "GamesPlayed": {
+        "@abbreviation": "G",
+        "#text": "82"
+      },
+      "AtBats": {
+        "@category": "Batting",
+        "@abbreviation": "AB",
+        "#text": "192"
+      },
+      "Runs": {
+        "@category": "Batting",
+        "@abbreviation": "R",
+        "#text": "28"
+      },
+      "Hits": {
+        "@category": "Batting",
+        "@abbreviation": "H",
+        "#text": "44"
+      },
+      "SecondBaseHits": {
+        "@category": "Batting",
+        "@abbreviation": "2B",
+        "#text": "10"
+      },
+      "ThirdBaseHits": {
+        "@category": "Batting",
+        "@abbreviation": "3B",
+        "#text": "0"
+      },
+      "Homeruns": {
+        "@category": "Batting",
+        "@abbreviation": "HR",
+        "#text": "3"
+      },
+      "EarnedRuns": {
+        "@category": "Batting",
+        "@abbreviation": "ER",
+        "#text": "28"
+      },
+      "UnearnedRuns": {
+        "@category": "Batting",
+        "@abbreviation": "UER",
+        "#text": "0"
+      },
+      "RunsBattedIn": {
+        "@category": "Batting",
+        "@abbreviation": "RBI",
+        "#text": "18"
+      },
+      "BatterWalks": {
+        "@category": "Batting",
+        "@abbreviation": "BB",
+        "#text": "15"
+      },
+      "BatterSwings": {
+        "@category": "Batting",
+        "@abbreviation": "Swi",
+        "#text": "377"
+      },
+      "BatterStrikes": {
+        "@category": "Batting",
+        "@abbreviation": "Str",
+        "#text": "388"
+      },
+      "BatterStrikesFoul": {
+        "@category": "Batting",
+        "@abbreviation": "StrF",
+        "#text": "146"
+      },
+      "BatterStrikesMiss": {
+        "@category": "Batting",
+        "@abbreviation": "StrM",
+        "#text": "96"
+      },
+      "BatterStrikesLooking": {
+        "@category": "Batting",
+        "@abbreviation": "StrL",
+        "#text": "146"
+      },
+      "BatterTagOuts": {
+        "@category": "Batting",
+        "@abbreviation": "BTO",
+        "#text": "0"
+      },
+      "BatterForceOuts": {
+        "@category": "Batting",
+        "@abbreviation": "BFO",
+        "#text": "29"
+      },
+      "BatterPutOuts": {
+        "@category": "Batting",
+        "@abbreviation": "BPO",
+        "#text": "85"
+      },
+      "BatterGroundBalls": {
+        "@category": "Batting",
+        "@abbreviation": "GroB",
+        "#text": "58"
+      },
+      "BatterFlyBalls": {
+        "@category": "Batting",
+        "@abbreviation": "FlyB",
+        "#text": "32"
+      },
+      "BatterLineDrives": {
+        "@category": "Batting",
+        "@abbreviation": "LD",
+        "#text": "33"
+      },
+      "Batter2SeamFastballs": {
+        "@category": "Batting",
+        "@abbreviation": "BFT",
+        "#text": "101"
+      },
+      "Batter4SeamFastballs": {
+        "@category": "Batting",
+        "@abbreviation": "BFF",
+        "#text": "332"
+      },
+      "BatterCurveballs": {
+        "@category": "Batting",
+        "@abbreviation": "BCU",
+        "#text": "59"
+      },
+      "BatterChangeups": {
+        "@category": "Batting",
+        "@abbreviation": "BCH",
+        "#text": "149"
+      },
+      "BatterCutters": {
+        "@category": "Batting",
+        "@abbreviation": "BFC",
+        "#text": "53"
+      },
+      "BatterSliders": {
+        "@category": "Batting",
+        "@abbreviation": "BSL",
+        "#text": "85"
+      },
+      "BatterSinkers": {
+        "@category": "Batting",
+        "@abbreviation": "BSI",
+        "#text": "53"
+      },
+      "BatterSplitters": {
+        "@category": "Batting",
+        "@abbreviation": "BFS",
+        "#text": "22"
+      },
+      "BatterStrikeouts": {
+        "@category": "Batting",
+        "@abbreviation": "SO",
+        "#text": "57"
+      },
+      "StolenBases": {
+        "@category": "Batting",
+        "@abbreviation": "SB",
+        "#text": "6"
+      },
+      "CaughtBaseSteals": {
+        "@category": "Batting",
+        "@abbreviation": "CS",
+        "#text": "1"
+      },
+      "BatterStolenBasePct": {
+        "@category": "Batting",
+        "@abbreviation": "SB%",
+        "#text": "0.857"
+      },
+      "BattingAvg": {
+        "@category": "Batting",
+        "@abbreviation": "AVG",
+        "#text": "0.229"
+      },
+      "BatterOnBasePct": {
+        "@category": "Batting",
+        "@abbreviation": "OBP",
+        "#text": "0.285"
+      },
+      "BatterSluggingPct": {
+        "@category": "Batting",
+        "@abbreviation": "SLG",
+        "#text": "0.328"
+      },
+      "BatterOnBasePlusSluggingPct": {
+        "@category": "Batting",
+        "@abbreviation": "OPS",
+        "#text": "0.613"
+      },
+      "BatterIntentionalWalks": {
+        "@category": "Batting",
+        "@abbreviation": "IBB",
+        "#text": "0"
+      },
+      "HitByPitch": {
+        "@category": "Batting",
+        "@abbreviation": "HBP",
+        "#text": "0"
+      },
+      "BatterSacrificeBunts": {
+        "@category": "Batting",
+        "@abbreviation": "SAC",
+        "#text": "0"
+      },
+      "BatterSacrificeFlies": {
+        "@category": "Batting",
+        "@abbreviation": "SF",
+        "#text": "0"
+      },
+      "TotalBases": {
+        "@category": "Batting",
+        "@abbreviation": "TB",
+        "#text": "63"
+      },
+      "ExtraBaseHits": {
+        "@category": "Batting",
+        "@abbreviation": "XBH",
+        "#text": "13"
+      },
+      "BatterDoublePlays": {
+        "@category": "Batting",
+        "@abbreviation": "BDP",
+        "#text": "0"
+      },
+      "BatterTriplePlays": {
+        "@category": "Batting",
+        "@abbreviation": "BTP",
+        "#text": "0"
+      },
+      "BatterGroundOuts": {
+        "@category": "Batting",
+        "@abbreviation": "GO",
+        "#text": "46"
+      },
+      "BatterFlyOuts": {
+        "@category": "Batting",
+        "@abbreviation": "AO",
+        "#text": "49"
+      },
+      "BatterGroundOutToFlyOutRatio": {
+        "@category": "Batting",
+        "@abbreviation": "GO/AO",
+        "#text": "0.94"
+      },
+      "PitchesFaced": {
+        "@category": "Batting",
+        "@abbreviation": "NP",
+        "#text": "801"
+      },
+      "PlateAppearances": {
+        "@category": "Batting",
+        "@abbreviation": "PA",
+        "#text": "204"
+      },
+      "LeftOnBase": {
+        "@category": "Batting",
+        "@abbreviation": "LOB",
+        "#text": "94"
+      },
+      "InningsPlayed": {
+        "@category": "Fielding",
+        "@abbreviation": "INN",
+        "#text": "370.2"
+      },
+      "TotalChances": {
+        "@category": "Fielding",
+        "@abbreviation": "TC",
+        "#text": "229"
+      },
+      "FielderTagOuts": {
+        "@category": "Fielding",
+        "@abbreviation": "FTO",
+        "#text": "2"
+      },
+      "FielderForceOuts": {
+        "@category": "Fielding",
+        "@abbreviation": "FFO",
+        "#text": "36"
+      },
+      "FielderPutOuts": {
+        "@category": "Fielding",
+        "@abbreviation": "FPO",
+        "#text": "213"
+      },
+      "OutsFaced": {
+        "@category": "Fielding",
+        "@abbreviation": "OF",
+        "#text": "1112"
+      },
+      "Assists": {
+        "@category": "Fielding",
+        "@abbreviation": "A",
+        "#text": "15"
+      },
+      "Errors": {
+        "@category": "Fielding",
+        "@abbreviation": "E",
+        "#text": "1"
+      },
+      "FielderDoublePlays": {
+        "@category": "Fielding",
+        "@abbreviation": "FDP",
+        "#text": "0"
+      },
+      "FielderTriplePlays": {
+        "@category": "Fielding",
+        "@abbreviation": "FTP",
+        "#text": "0"
+      },
+      "FielderStolenBasesAllowed": {
+        "@category": "Fielding",
+        "@abbreviation": "SB",
+        "#text": "0"
+      },
+      "FielderCaughtStealing": {
+        "@category": "Fielding",
+        "@abbreviation": "CS",
+        "#text": "0"
+      },
+      "FielderStolenBasePct": {
+        "@category": "Fielding",
+        "@abbreviation": "SB%",
+        "#text": "0.000"
+      },
+      "PassedBalls": {
+        "@category": "Fielding",
+        "@abbreviation": "PB",
+        "#text": "1"
+      },
+      "FielderWildPitches": {
+        "@category": "Fielding",
+        "@abbreviation": "WP",
+        "#text": "7"
+      },
+      "FieldingPct": {
+        "@category": "Fielding",
+        "@abbreviation": "FPCT",
+        "#text": "0.996"
+      },
+      "RangeFactor": {
+        "@category": "Fielding",
+        "@abbreviation": "RF",
+        "#text": "0.62"
+      },
+      "GamesStarted": {
+        "@category": "Miscellaneous",
+        "@abbreviation": "GS",
+        "#text": "33"
+      }
+    }
+  }

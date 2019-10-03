@@ -1,6 +1,6 @@
 import sys
 #import pygame
-import tkinter
+#import tkinter
 from game_settings import Settings
 
 settings = Settings()

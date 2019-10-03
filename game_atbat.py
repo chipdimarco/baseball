@@ -6,8 +6,8 @@
 import random
 import sys
 #import tkinter as tk
-from tkinter import *
-from tkinter import ttk
+#from tkinter import *
+#from tkinter import ttk
 from game_settings import Settings
 
 
@@ -17,14 +17,14 @@ class Atbat():
         self.v_total_runs = 0
         self.h_total_runs = 0
         # StringVar() is a Tkinter() class
-        self.play_by_play = StringVar()
+#        self.play_by_play = StringVar()
         # the .set method puts a string in that object
-        self.play_by_play.set("- - - Play by Play - - - ")
+#        self.play_by_play.set("- - - Play by Play - - - ")
         # StringVar() for linescore
-        self.v_linescore = StringVar()
-        self.v_linescore.set("Visitor: ")
-        self.h_linescore = StringVar()
-        self.h_linescore.set("Home: ")
+#        self.v_linescore = StringVar()
+#        self.v_linescore.set("Visitor: ")
+#        self.h_linescore = StringVar()
+#        self.h_linescore.set("Home: ")
 
     def play_out(self, batter, pitcher):
         self.batter = batter

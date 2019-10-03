@@ -10,6 +10,7 @@ import os
 # added to access the settings.stored_rosters setting
 from game_settings import Settings
 
+
 # environment variables"
 auth = os.environ['MSF_KEY']
 url = "https://api.mysportsfeeds.com/v1.2/pull/mlb/2017-regular/cumulative_player_stats.json"
