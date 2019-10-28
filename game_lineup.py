@@ -119,7 +119,8 @@ class Lineup():
         self.lineup_dictionary = lineup_dictionary
         lineup = []
         for i in range ( 0, len(lineup_dictionary)):
-            lineup.append(lineup_dictionary[i]['player']['LastName'])
+# v1           lineup.append(lineup_dictionary[i]['player']['LastName'])
+            lineup.append(lineup_dictionary[i]['LastName'])
         return (lineup)
 
     def get_pitcher(self,id):

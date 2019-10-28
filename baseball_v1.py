@@ -1,22 +1,24 @@
 # Use the MySportsFeeds API to retrieve MLB info
-# 10/20/2019: new version for clibaseball
-# 10/26/2019: begin using new functions
-# -----------------v1---------------------------
-# 3/18/2018: Move Tkinter screen creation to 
-#   game_screens module
+# 3/18/2018: Move Tkinter screen creation to game_screens module
+# 3/11/2018: Tkinter mode reads stats from files and layout cleanup
+# 2/25/2018: Refactor for console/tkinter modes. Full 9 inning games in either mode
+# 2/11/2018 v7: Refactor for putting the game play into the atbat class AND to use Tkinter, not pygame, for interface
+# 2/3/2018 v4: Add pygame files for functions, score, setting
 
 # IMPORT
 from game_lineup import Lineup
 from game_atbat import Atbat
+#from tkinter import *
+#from tkinter import ttk
 from game_settings import Settings
 from game_score import Score
 import sys
 
 import game_functions as gf
 import game_screens as gs
-import build_roster as build
 
 # Variables for sample data
+# These need to be configured via the UI
 stadium_name = "Waban Field"
 
 # M A I N   F U N C T I O N
@@ -28,67 +30,41 @@ def main():
     # Determine mode
     console_mode = settings.console_mode
 
+    # NOTE: the Tk() class has to be initialized before the Atbat() class because
+    # Atbat() needs Tk to define the StringVar() object
+    
+    """
+    #TKINTER MODE
+    if not console_mode:
+        screen = gs.GameScreen()
+        print (f'Initialize Tkinter mode.')
+    """
     #CONSOLE MODE    
     if console_mode:
-        visiting_team_name = input("Enter Visiting Team: ")
-        home_team_name = input("Enter Home Team: ")
-        print (f'\nThe matchup: {visiting_team_name} at {home_team_name}\n')
-        
-        # roster object
-        v_roster = build.build_game_roster(visiting_team_name, 2018)
-        h_roster = build.build_game_roster(home_team_name, 2018)
 
-        # starters object
-        v_starters = build.pick_starters_dh(v_roster)
-        h_starters = build.pick_starters_dh(h_roster)
-        # returns: rotation, lineup, bullpen, bench
-
-        # batting order object
-        # was - visitor.lineup_dictionary
-        print(f'\nVisitors\n====')
-        v_battingorder = build.make_battingorder(v_starters["lineup"], True)
-        print (f'\n{visiting_team_name}\nLineup')
-        for x in v_battingorder:
-            print (f' {x["Position"]}: {x["LastName"]}')
-        print (f'\nRotation')
-        for x in v_starters["rotation"]:
-            print (f' {x["LastName"]}')
-        print (f'\nBullpen')
-        for x in v_starters["bullpen"]:
-            print (f' {x["LastName"]}')
-        print ('\nBench')
-        for x in v_starters["bench"]:
-            print (f' {x["LastName"]}')
-        
-        # was - home.lineup_dictionary
-        print(f'\nHome\n====')
-        h_battingorder = build.make_battingorder(h_starters["lineup"], True)
-        print (f'\n{home_team_name}\nLineup')
-        for x in h_battingorder:
-            print (f' {x["Position"]}: {x["LastName"]}')
-        print (f'\nRotation')
-        for x in h_starters["rotation"]:
-            print (f' {x["LastName"]}')
-        print ('\nBullpen')
-        for x in h_starters["bullpen"]:
-            print (f' {x["LastName"]}')
-        print (f'\nBench')
-        for x in h_starters["bench"]:
-            print (f' {x["LastName"]}')
-
-
+        # Visitor Setup
+        visiting_team_name = "Yankees"
 
         visitor = Lineup()
-        visitor.pitcher = build.pick_starting_pitcher(v_starters["rotation"])
-        visitor.lineup_dictionary = v_battingorder
+        visitor_pitcher_id ="10719"
+        visitor_ids =['10728','10729','10440','11091','10730','11092','11293','10734','10726']
+        visitor_stats_file = "data/2017_nyy_stats.json"
+
+        visitor.lineup_dictionary = visitor.create_lineup_dictionary_from_file(visitor_stats_file,visitor_ids)
         visitor.lineup_lastname = visitor.create_lineup_lastname(visitor.lineup_dictionary) 
+        visitor.pitcher = visitor.get_pitcher_from_file(visitor_stats_file, visitor_pitcher_id)
 
-        home = Lineup()            
-        home.pitcher = build.pick_starting_pitcher(h_starters["rotation"])
-        home.lineup_dictionary = h_battingorder
+        # Home Setup
+        home_team_name = "Red Sox"
+
+        home = Lineup()
+        home_pitcher_id = "10432"
+        home_ids = ['10300','11064','10303', '11339','10301','12551','10297','10296','11065']
+        home_stats_file = "data/2017_bos_stats.json"
+            
+        home.lineup_dictionary = home.create_lineup_dictionary_from_file(home_stats_file,home_ids)
         home.lineup_lastname = home.create_lineup_lastname(home.lineup_dictionary)
-
-
+        home.pitcher = home.get_pitcher_from_file(home_stats_file, home_pitcher_id)
 
         atbat = Atbat()
 

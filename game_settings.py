@@ -1,13 +1,14 @@
 # Settings
+# 10-20-2019: Comment out Tkinter settings
 
 class Settings():
     def __init__(self):
         # Screen Settings
-        self.width = 900
-        self.height = 700
-        self.size = (f'{self.width}x{self.height}')
-        self.caption = "Tkinter Baseball"
-        self.diamond_color = "#4DBD33"  #4A777A
+#        self.width = 900
+#        self.height = 700
+#        self.size = (f'{self.width}x{self.height}')
+#        self.caption = "Tkinter Baseball"
+#        self.diamond_color = "#4DBD33"  #4A777A
         self.inning = 1
         self.half_inning = "Top"
         self.visitor_leads_off_inning = 0
@@ -17,7 +18,7 @@ class Settings():
         # If stored_rosters is True, access data locally, not on line
         self.stored_rosters = True
         self.done = False
-        self.screen_background = "#ECECEC"
+#        self.screen_background = "#ECECEC"
         self.team_codes = {
             'Red Sox':'bos',
             'Yankees':'nyy',
