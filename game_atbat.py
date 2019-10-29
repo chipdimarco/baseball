@@ -14,33 +14,19 @@ class Atbat():
         self.note = "Atbat"
         self.v_total_runs = 0
         self.h_total_runs = 0
-        # StringVar() is a Tkinter() class
-#        self.play_by_play = StringVar()
-        # the .set method puts a string in that object
-#        self.play_by_play.set("- - - Play by Play - - - ")
-        # StringVar() for linescore
-#        self.v_linescore = StringVar()
-#        self.v_linescore.set("Visitor: ")
-#        self.h_linescore = StringVar()
-#        self.h_linescore.set("Home: ")
+        self.v_box = {}
+        self.h_box = {}
 
     def play_out(self, batter, pitcher):
         self.batter = batter
         self.pitcher = pitcher
-        # Batter Outs
-#        b_so = int(batter['stats']['BatterStrikeouts']['#text'])
         b_so = batter['SO']
-#        b_go = int(batter['stats']['BatterGroundOuts']['#text'])
         b_go = batter['GO']
-#        b_ao = int(batter['stats']['BatterFlyOuts']['#text'])
         b_ao = batter['FO']
         # Pitcher Outs
-#        p_so = int(pitcher['stats']['PitcherStrikeouts']['#text'])
         p_so = pitcher['K']
         p_go = pitcher['PGO']
         p_ao = pitcher['PFO']
-#        p_go = int(pitcher['stats']['PitcherGroundOuts']['#text'])
-#        p_ao = int(pitcher['stats']['PitcherFlyOuts']['#text'])
         # Create a Result Array
         result_array = []
         for i in range (b_so + p_so):
@@ -56,12 +42,6 @@ class Atbat():
         self.batter = batter
         self.pitcher = pitcher
         # Batter On Base Results
-#        b_hits = int(batter['stats']['Hits']['#text'])
-#        b_bb = int(batter['stats']['BatterWalks']['#text'])
-#        b_2b = int(batter['stats']['SecondBaseHits']['#text'])
-#        b_3b = int(batter['stats']['ThirdBaseHits']['#text'])
-#        b_hr = int(batter['stats']['Homeruns']['#text'])
-#        b_1b = b_hits - ( b_2b + b_3b + b_hr )
         b_hits = batter['H']
         b_bb   = batter['BB']
         b_1b   = batter['1B']
@@ -69,12 +49,6 @@ class Atbat():
         b_3b   = batter['3B']
         b_hr   = batter['HR']
         # Pitcher On Base Results
-#        p_hits = int(pitcher['stats']['HitsAllowed']['#text'])
-#        p_bb = int(pitcher['stats']['PitcherWalks']['#text'])
-#        p_2b = int(pitcher['stats']['SecondBaseHitsAllowed']['#text'])
-#        p_3b = int(pitcher['stats']['ThirdBaseHitsAllowed']['#text'])
-#        p_hr = int(pitcher['stats']['HomerunsAllowed']['#text'])
-#        p_1b = p_hits - ( p_2b + p_3b + p_hr )
         p_hits = pitcher['HA']
         p_bb   = pitcher['BBA']
         p_1b   = pitcher['1BA']
@@ -93,8 +67,7 @@ class Atbat():
         for l in range (b_hr + p_hr):
             result_array.append('hr')
         for m in range (b_1b + p_1b):
-            result_array.append('1b')
-        
+            result_array.append('1b')        
         # Result
         return(random.choice(result_array))
 
@@ -102,38 +75,59 @@ class Atbat():
         self.batter = batter
         self.pitcher = pitcher
         # Batter info
-        b_last = batter['LastName']
+        b_id = batter['ID']
         b_pa = batter['PA']
         b_hits = batter['1B']+batter['2B']+batter['3B']+batter['HR']
         b_bb = batter['BB']
-        b_atbats = batter['AB']
         #
         # Pitcher info
-        p_last = pitcher['LastName']
-        p_tbf = pitcher['TBF']
+        p_id   = pitcher['ID']
+        p_tbf  = pitcher['TBF']
         p_hits = pitcher['1BA']+pitcher['2BA']+pitcher['3BA']+pitcher['HRA']
-        p_bb  = pitcher['BBA']
-
-        on = b_hits + b_bb + p_hits + p_bb
+        p_bb   = pitcher['BBA']
+        #
+        on    = b_hits + b_bb + p_hits + p_bb
         total = b_pa + p_tbf
-        roll = random.random()
-        pct = on/total
-        r = []
+        roll  = random.random()
+        pct   = on/total
+#        r     = []
+        r     = {}
 
+        lineup_box = {}
+        lineup_box["ID"]   = b_id
+        lineup_box["AB"]   = 0
+        lineup_box["H"]    = 0
+        lineup_box["BB"]   = 0
+        lineup_box["HR"]   = 0
+        pitching_box = {}
+        pitching_box["ID"] = p_id
+        pitching_box["HA"] = 0
+        pitching_box["K"]  = 0
+        pitching_box["W"]  = 0
+        
         if (roll < pct ):
-            r.append('Hit')
-            r.append(self.play_hit(batter,pitcher))
-            #return (f'Hit!  type: {hit_type}')
-            # Version one with roll feedback
-            # return (f'Hit! Roll is {round(roll,3)}; On is {on}; PCT is {round(pct,3)} .')
+#            r.append('Hit')
+            r["result"] = "Hit"
+            box = self.play_hit(batter, pitcher)
+            if box == 'bb':
+                lineup_box["BB"] = 1
+                pitching_box["W"] = 1
+            else:
+                lineup_box["AB"] = 1
+                lineup_box["H"]  = 1
+            if box == 'hr':
+                lineup_box["HR"] = 1
         else:
-            r.append('Out')
-            r.append(self.play_out(batter,pitcher))
-            #return(f'Out!')
-            # Version one with roll feedback
-            # return (f'Out!  Roll is {round(roll,3)}; On is {on};  PCT is {round(pct,3)}.')
+#            r.append('Out')
+            r["result"] = 'Out'
+            box = self.play_out(batter,pitcher)
+            lineup_box["AB"]  = 1
+            if box == "so":
+                pitching_box["K"] = 1
+        r["description"]  = box
+        r["lineup_box"]   = lineup_box
+        r["pitching_box"] = pitching_box
         return(r)
-        #return (f'{b_last} is the batter and {p_last} is the pitcher')
 
 
     def play_v1(self, batter, pitcher):
@@ -173,6 +167,44 @@ class Atbat():
             # return (f'Out!  Roll is {round(roll,3)}; On is {on};  PCT is {round(pct,3)}.')
         return(r)
         #return (f'{b_last} is the batter and {p_last} is the pitcher')
+
+    def play_v2(self, batter, pitcher):
+        self.batter = batter
+        self.pitcher = pitcher
+        # Batter info
+        b_last = batter['LastName']
+        b_pa = batter['PA']
+        b_hits = batter['1B']+batter['2B']+batter['3B']+batter['HR']
+        b_bb = batter['BB']
+        b_atbats = batter['AB']
+        #
+        # Pitcher info
+        p_last = pitcher['LastName']
+        p_tbf = pitcher['TBF']
+        p_hits = pitcher['1BA']+pitcher['2BA']+pitcher['3BA']+pitcher['HRA']
+        p_bb  = pitcher['BBA']
+
+        on    = b_hits + b_bb + p_hits + p_bb
+        total = b_pa + p_tbf
+        roll  = random.random()
+        pct   = on/total
+        r     = []
+
+        if (roll < pct ):
+            r.append('Hit')
+            r.append(self.play_hit(batter,pitcher))
+            #return (f'Hit!  type: {hit_type}')
+            # Version one with roll feedback
+            # return (f'Hit! Roll is {round(roll,3)}; On is {on}; PCT is {round(pct,3)} .')
+        else:
+            r.append('Out')
+            r.append(self.play_out(batter,pitcher))
+            #return(f'Out!')
+            # Version one with roll feedback
+            # return (f'Out!  Roll is {round(roll,3)}; On is {on};  PCT is {round(pct,3)}.')
+        return(r)
+        #return (f'{b_last} is the batter and {p_last} is the pitcher')
+
 
     def run_the_bases(self,scenario,ac):
         self.scenario = scenario
@@ -323,7 +355,7 @@ class Atbat():
             self.h_linescore.set(f'{self.h_linescore.get()} {str(result["h_score"])}')
             settings.inning += 1
             settings.home_leads_off_inning = result["home_leads_off_inning"]
-        return (settings,visitor,home)
+        return ( settings, visitor, home, result )
 
     # TOP of the inning
     def inning_top (self, inning, visitor_lineup_dictionary, visitor_leads_off_inning, home_pitcher):
@@ -339,26 +371,30 @@ class Atbat():
         scorecard = (f'Top of Inning {inning}')
         print (f'INNING {inning}')
         i = visitor_leads_off_inning
+        lineup_box   = []
+        pitching_box = []
 
-        while out_count < 3:  
+
+        while out_count < 3:
             up = visitor_lineup_dictionary[i%9]
             visitor_up_next = (i+1)%9
             r = self.play(up,home_pitcher)
 
             #print (f'  {i+1}: {up["lastname"]} - {r[1]}')
 #            scorecard += (f'\n{i+1}: {up["player"]["LastName"]} - {r[1]}')
-            scorecard += (f'\n{i+1}: {up["LastName"]} - {r[1]}')
-            if r[0][0] == "H":
+            scorecard += (f'\n{i+1}: {up["LastName"]} - {r["description"]}')
+            if r["result"][0] == "H":
                 # scenario 0-7 and advance_code comes from play result
-                runthebases = self.run_the_bases(scenario,r[1])
+                runthebases = self.run_the_bases(scenario,r["description"])
                 scenario = runthebases[0]
                 v_score += runthebases[1]
                 #v_score += 1
-            if r[0][0] == "O":
+            if r["result"][0] == "O":
                 out_count += 1
                 runthebases[1]=0
-#            print (f'  {i+1}: {up["player"]["LastName"]} - {r[1]} - runs scored: {runthebases[1]} runners: {scenario}')
-            print (f'  {i+1}: {up["LastName"]} - {r[1]} - runs scored: {runthebases[1]} runners: {scenario}')
+            print (f'  {i+1}: {up["LastName"]} - {r["description"]} - runs scored: {runthebases[1]} runners: {scenario}')
+            lineup_box.append(r["lineup_box"])
+            pitching_box.append(r["pitching_box"])
             i = visitor_up_next
         visitor_leads_off_inning = visitor_up_next
         self.v_total_runs += v_score
@@ -371,6 +407,8 @@ class Atbat():
         result = {}
         result["v_score"]=v_score
         result["visitor_leads_off_inning"]=visitor_leads_off_inning
+        result["lineup_box"]   = lineup_box
+        result["pitching_box"] = pitching_box
         return (result)
 
     # BOTTOM of the inning
@@ -385,39 +423,40 @@ class Atbat():
         runthebases=[scenario,0]
         h_score = 0
         scorecard = (f'Bottom of Inning {inning}')
+        lineup_box   = []
+        pitching_box = []
         i = home_leads_off_inning
 
         while out_count < 3:
             up = home_lineup_dictionary[(i)%9]
             home_up_next = (i+1)%9
             r = self.play(up,visitor_pitcher)
-
-            #print (f'  {i+1}: {up["lastname"]} - {r[1]}')
-#            scorecard += (f'\n{i+1}: {up["player"]["LastName"]} - {r[1]}')
-            scorecard += (f'\n{i+1}: {up["LastName"]} - {r[1]}')
-            if r[0][0] == "H":
-                runthebases = self.run_the_bases(scenario,r[1])
+            scorecard += (f'\n{i+1}: {up["LastName"]} - {r["description"]}')
+            if r["result"][0] == "H":
+                # scenario 0-7 and advance_code comes from play result
+                runthebases = self.run_the_bases(scenario,r["description"])
                 scenario = runthebases[0]
                 h_score += runthebases[1]
-                #h_score += 1
-            if r[0][0] == "O":
+                #v_score += 1
+            if r["result"][0] == "O":
                 out_count += 1
                 runthebases[1]=0
-#            print (f'  {i+1}: {up["player"]["LastName"]} - {r[1]} -   runs scored: {runthebases[1]}   runners: {scenario}')
-            print (f'  {i+1}: {up["LastName"]} - {r[1]} -   runs scored: {runthebases[1]}   runners: {scenario}')
+            print (f'  {i+1}: {up["LastName"]} - {r["description"]} - runs scored: {runthebases[1]} runners: {scenario}')
+            lineup_box.append(r["lineup_box"])
+            pitching_box.append(r["pitching_box"])
             i = home_up_next
 
         home_leads_off_inning = home_up_next
         self.h_total_runs += h_score
         print ( f'BOTTOM of inning {inning} completed.\n')
         #
-        # instead of printing to the console, set the string to the StringVar object.
-        #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
         scorecard += ( f'\n{home_lineup_dictionary[home_leads_off_inning]["LastName"]} will lead off next inning.')
-#        self.play_by_play.set(scorecard)
         result = {}
         result["h_score"]=h_score
         result["home_leads_off_inning"]=home_leads_off_inning
+        result["lineup_box"]   = lineup_box
+        result["pitching_box"] = pitching_box
+
         return (result)
 
 

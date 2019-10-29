@@ -15,6 +15,7 @@ class Settings():
         self.home_leads_off_inning = 0
         # If console_mode is True, the Tkinter interface is skipped
         self.console_mode = True
+        self.verbose_mode = False
         # If stored_rosters is True, access data locally, not on line
         self.stored_rosters = True
         self.done = False

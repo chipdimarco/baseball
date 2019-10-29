@@ -12,6 +12,11 @@ def doSomething():
 def done(done):
     return (not done)
 
+def print_lineup_box (lineup_box):
+    for inning in lineup_box:
+        for x in inning:
+            print (x)
+
 
 # PYGAME FUNCTIONS BELOW
 # INACTIVE
