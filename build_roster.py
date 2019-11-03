@@ -54,7 +54,8 @@ def read_roster_dict(stats_file):
 def build_game_roster(team, year):
     team = team
     year = year
-    file_name   = f'{year}-{team}.json'
+    folder_name = 'mlbstats/'
+    file_name   = f'{folder_name}{year}-{team}.json'
     stats       = open(file_name,'r')
     roster      = read_roster_dict(stats)
     game_roster = []
@@ -220,18 +221,25 @@ def pick_starters_dh(roster):
         if pos["Position"] == "3B" or pos["Position"] == "1B":
             for x in range(pos["G"]):
                 j.append(pos)
-    starter = random.choice(j)
-    bench.append(starter)
-    roster.remove(starter)
+    try:
+        starter = random.choice(j)
+        bench.append(starter)
+        roster.remove(starter)
+    except:
+        pass
     # get a middle infielder
     j = []
     for pos in roster:
-        if pos["Position"] == "SS" or pos["Position"] == "2B":
+        if pos["Position"] in ( "SS", "2B" ):
             for x in range(pos["G"]):
                 j.append(pos)
-    starter = random.choice(j)
-    bench.append(starter)
-    roster.remove(starter)
+    # NOTE - HOU ERROR HERE where list was empty 
+    try:
+        starter = random.choice(j)
+        bench.append(starter)
+        roster.remove(starter)
+    except:
+        pass
     # get an outfielder
     j = []
     for pos in roster:
@@ -296,34 +304,42 @@ def make_battingorder(starters, dh):
     # 3 - Select max OBS 
     list = sorted(starters, key=lambda player: float(player["OPS"]), reverse=True)
     bo3 = list[0]
+    bo3["bo"] = 3
     starters.remove(bo3)
     # 1 - Select max OBP 
     list = sorted(starters, key=lambda player: float(player["OBP"]), reverse=True)
     bo1 = list[0]
+    bo1["bo"] = 1
     starters.remove(bo1)
     # 4 - Select max SLG 
     list = sorted(starters, key=lambda player: float(player["SLG"]), reverse=True)
     bo4 = list[0]
+    bo4["bo"] = 4
     starters.remove(bo4)
     # 2 - Select max OBP 
     list = sorted(starters, key=lambda player: float(player["OBP"]), reverse=True)
     bo2 = list[0]
+    bo2["bo"] = 2
     starters.remove(bo2)
     # 5 - Select max OBS 
     list = sorted(starters, key=lambda player: float(player["OPS"]), reverse=True)
     bo5 = list[0]
+    bo5["bo"] = 5
     starters.remove(bo5)
     # 6 - Select max SLG 
     list = sorted(starters, key=lambda player: float(player["SLG"]), reverse=True)
     bo6 = list[0]
+    bo6["bo"] = 6
     starters.remove(bo6)
     # 7 - Select max SLG 
     list = sorted(starters, key=lambda player: float(player["SLG"]), reverse=True)
     bo7 = list[0]
+    bo7["bo"] = 7
     starters.remove(bo7)
     # 8 - Select max SLG 
     list = sorted(starters, key=lambda player: float(player["SLG"]), reverse=True)
     bo8 = list[0]
+    bo8["bo"] = 8
     starters.remove(bo8)
     battingorder.append(bo1)
     battingorder.append(bo2)
@@ -334,7 +350,9 @@ def make_battingorder(starters, dh):
     battingorder.append(bo7)
     battingorder.append(bo8)
     if dh == True:
-        battingorder.append(list[1])
+        bo9 = list[1]
+        bo9["bo"] = 9
+        battingorder.append(bo9)
     return (battingorder)
 
 def pick_starting_pitcher(rotation):

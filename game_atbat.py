@@ -16,6 +16,7 @@ class Atbat():
         self.h_total_runs = 0
         self.v_box = {}
         self.h_box = {}
+        self.play_by_play = False
 
     def play_out(self, batter, pitcher):
         self.batter = batter
@@ -75,7 +76,9 @@ class Atbat():
         self.batter = batter
         self.pitcher = pitcher
         # Batter info
+        b_bo = batter['bo']
         b_id = batter['ID']
+        b_name = batter['LastName']
         b_pa = batter['PA']
         b_hits = batter['1B']+batter['2B']+batter['3B']+batter['HR']
         b_bb = batter['BB']
@@ -94,7 +97,10 @@ class Atbat():
         r     = {}
 
         lineup_box = {}
+        lineup_box["BO"]   = b_bo
         lineup_box["ID"]   = b_id
+        lineup_box["NAME"] = b_name
+        lineup_box["POS"]  = batter["Position"]
         lineup_box["AB"]   = 0
         lineup_box["H"]    = 0
         lineup_box["BB"]   = 0
@@ -332,16 +338,19 @@ class Atbat():
                     settings.done = True
                     result = (f'Game Over')
                     print(result)
-                    return(result)
+                    return ( settings, visitor, home, result )
+#                    return(result)
         else:
             if self.h_total_runs != self.v_total_runs:
-                if half_inning == "Top":
-                    settings.done = True
-                    result = (f'Game Over')
-                    print (result)
-                    return(result)
+            #    if half_inning == "Top":
+                settings.done = True
+                result = (f'Game Over')
+                print (result)
+                return ( settings, visitor, home, result )
+#                return(result)
         result = (f'{half_inning} of inning {inning}')
-        print (result)
+        if self.play_by_play:
+            print (result)
         
         if ( half_inning == "Top"):
             result = self.inning_top(settings.inning, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)
@@ -369,7 +378,8 @@ class Atbat():
         runthebases=[scenario,0]
         v_score = 0
         scorecard = (f'Top of Inning {inning}')
-        print (f'INNING {inning}')
+        if self.play_by_play:
+            print (f'INNING {inning}')
         i = visitor_leads_off_inning
         lineup_box   = []
         pitching_box = []
@@ -392,13 +402,15 @@ class Atbat():
             if r["result"][0] == "O":
                 out_count += 1
                 runthebases[1]=0
-            print (f'  {i+1}: {up["LastName"]} - {r["description"]} - runs scored: {runthebases[1]} runners: {scenario}')
+            if self.play_by_play:
+                print (f'  {i+1}: {up["LastName"]} - {r["description"]} - runs scored: {runthebases[1]} runners: {scenario}')
             lineup_box.append(r["lineup_box"])
             pitching_box.append(r["pitching_box"])
             i = visitor_up_next
         visitor_leads_off_inning = visitor_up_next
         self.v_total_runs += v_score
-        print ( f'Top of inning {inning} completed.')
+        if self.play_by_play:
+            print ( f'Top of inning {inning} completed.')
         #
         # instead of printing to the console, set the string to the StringVar object.
         #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
@@ -441,14 +453,16 @@ class Atbat():
             if r["result"][0] == "O":
                 out_count += 1
                 runthebases[1]=0
-            print (f'  {i+1}: {up["LastName"]} - {r["description"]} - runs scored: {runthebases[1]} runners: {scenario}')
+            if self.play_by_play:
+                print (f'  {i+1}: {up["LastName"]} - {r["description"]} - runs scored: {runthebases[1]} runners: {scenario}')
             lineup_box.append(r["lineup_box"])
             pitching_box.append(r["pitching_box"])
             i = home_up_next
 
         home_leads_off_inning = home_up_next
         self.h_total_runs += h_score
-        print ( f'BOTTOM of inning {inning} completed.\n')
+        if self.play_by_play:
+            print ( f'BOTTOM of inning {inning} completed.\n')
         #
         scorecard += ( f'\n{home_lineup_dictionary[home_leads_off_inning]["LastName"]} will lead off next inning.')
         result = {}
