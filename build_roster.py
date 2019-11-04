@@ -13,7 +13,18 @@ import random
 api_url  = "https://api.mysportsfeeds.com/v1.2/pull/mlb/2018-regular/cumulative_player_stats.json"
 api_password = os.environ["API_PASSWORD"]
 api_key = os.environ["API_KEY"]
+'''
+team = "PHI"
 
+response = requests.get(
+    url = api_url,
+    params = {'team':team},
+    headers = {
+        "Authorization" : "Basic " + base64.b64encode('{}:{}'.format(api_key,api_password).encode('utf-8')).decode('ascii')
+    }
+)
+print ( response )
+'''
 ### FUNCTIONS
 def send_request(team):
     try:
@@ -109,7 +120,6 @@ def build_game_roster(team, year):
         game_roster.append(new_player)
     stats.close()
     return(game_roster)
-
 
 def pick_starters_dh(roster):
     starters = []
@@ -357,7 +367,7 @@ def make_battingorder(starters, dh):
 
 def pick_starting_pitcher(rotation):
     return (random.choice(rotation))
-'''
+
 
 def pick_starters_dh_v1(roster):
     starters = []
@@ -403,37 +413,3 @@ def pick_starters_dh_v1(roster):
     starter["Position"] = "DH"
     starters.append(starter)             
     return (starters)
-
-'''
-
-'''
-### PROCEDURE
-v_roster = build_game_roster('HOU','2018')
-h_roster = build_game_roster('BOS','2018')
-
-v_starters = pick_starters_dh(v_roster)
-h_starters = pick_starters_dh(h_roster)
-
-print(f'Starters')
-print(f'Visitors')
-for x in v_starters:
-    print (f'{x["Position"]}: {x["LastName"]}')
-
-print (f'\nHome')
-for x in h_starters:
-    print (f'{x["Position"]}: {x["LastName"]}')
-
-print(f'\nBatting Order')
-print(f'Visitors')
-
-v_battingorder = make_battingorder(v_starters, True)
-for x in v_battingorder:
-    print (f'{x["Position"]}: {x["LastName"]}')
-
-print(f'\nHome')
-h_battingorder = make_battingorder(h_starters, True)
-for x in h_battingorder:
-    print (f'{x["Position"]}: {x["LastName"]}')
-
-exit()
-'''
