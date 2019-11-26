@@ -28,6 +28,7 @@ class Lineup():
         self.lineup_ids = ""
         self.bench_ids = ""
         self.roster_result = ""
+        self.starting_pitcher_id = ""
     
     def getInfo(self,id):
         self.id = id

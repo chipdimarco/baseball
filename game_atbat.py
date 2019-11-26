@@ -38,7 +38,6 @@ class Atbat():
             result_array.append('ao')
         return(random.choice(result_array))
 
-
     def play_hit(self,batter,pitcher):
         self.batter = batter
         self.pitcher = pitcher
@@ -85,6 +84,7 @@ class Atbat():
         #
         # Pitcher info
         p_id   = pitcher['ID']
+        p_name = pitcher['LastName']
         p_tbf  = pitcher['TBF']
         p_hits = pitcher['1BA']+pitcher['2BA']+pitcher['3BA']+pitcher['HRA']
         p_bb   = pitcher['BBA']
@@ -93,9 +93,8 @@ class Atbat():
         total = b_pa + p_tbf
         roll  = random.random()
         pct   = on/total
-#        r     = []
         r     = {}
-
+        #
         lineup_box = {}
         lineup_box["BO"]   = b_bo
         lineup_box["ID"]   = b_id
@@ -107,12 +106,12 @@ class Atbat():
         lineup_box["HR"]   = 0
         pitching_box = {}
         pitching_box["ID"] = p_id
+        pitching_box["NAME"] = p_name
         pitching_box["HA"] = 0
         pitching_box["K"]  = 0
         pitching_box["W"]  = 0
-        
+        #
         if (roll < pct ):
-#            r.append('Hit')
             r["result"] = "Hit"
             box = self.play_hit(batter, pitcher)
             if box == 'bb':
@@ -124,7 +123,6 @@ class Atbat():
             if box == 'hr':
                 lineup_box["HR"] = 1
         else:
-#            r.append('Out')
             r["result"] = 'Out'
             box = self.play_out(batter,pitcher)
             lineup_box["AB"]  = 1
@@ -135,82 +133,28 @@ class Atbat():
         r["pitching_box"] = pitching_box
         return(r)
 
-
-    def play_v1(self, batter, pitcher):
-        self.batter = batter
-        self.pitcher = pitcher
-        # Batter info
-        b_last = batter['player']['LastName']
-        #print(batter['stats']['PlateAppearances'])
-        b_pa = int(batter['stats']['PlateAppearances']['#text'])
-        b_hits = int(batter['stats']['Hits']['#text'])
-        b_bb = int(batter['stats']['BatterWalks']['#text'])
-        b_atbats = int(batter['stats']['AtBats']['#text'])
-        #
-        # Pitcher info
-        p_last = pitcher['player']['LastName']
-        p_tbf = int(pitcher['stats']['TotalBattersFaced']['#text'])
-        p_hits = int(pitcher['stats']['HitsAllowed']['#text'])
-        p_bb  = int(pitcher['stats']['PitcherWalks']['#text'])
-
-        on = b_hits + b_bb + p_hits + p_bb
-        total = b_pa + p_tbf
-        roll = random.random()
-        pct = on/total
-        r = []
-
-        if (roll < pct ):
-            r.append('Hit')
-            r.append(self.play_hit(batter,pitcher))
-            #return (f'Hit!  type: {hit_type}')
-            # Version one with roll feedback
-            # return (f'Hit! Roll is {round(roll,3)}; On is {on}; PCT is {round(pct,3)} .')
-        else:
-            r.append('Out')
-            r.append(self.play_out(batter,pitcher))
-            #return(f'Out!')
-            # Version one with roll feedback
-            # return (f'Out!  Roll is {round(roll,3)}; On is {on};  PCT is {round(pct,3)}.')
-        return(r)
-        #return (f'{b_last} is the batter and {p_last} is the pitcher')
-
-    def play_v2(self, batter, pitcher):
-        self.batter = batter
-        self.pitcher = pitcher
-        # Batter info
-        b_last = batter['LastName']
-        b_pa = batter['PA']
-        b_hits = batter['1B']+batter['2B']+batter['3B']+batter['HR']
-        b_bb = batter['BB']
-        b_atbats = batter['AB']
-        #
-        # Pitcher info
-        p_last = pitcher['LastName']
-        p_tbf = pitcher['TBF']
-        p_hits = pitcher['1BA']+pitcher['2BA']+pitcher['3BA']+pitcher['HRA']
-        p_bb  = pitcher['BBA']
-
-        on    = b_hits + b_bb + p_hits + p_bb
-        total = b_pa + p_tbf
-        roll  = random.random()
-        pct   = on/total
-        r     = []
-
-        if (roll < pct ):
-            r.append('Hit')
-            r.append(self.play_hit(batter,pitcher))
-            #return (f'Hit!  type: {hit_type}')
-            # Version one with roll feedback
-            # return (f'Hit! Roll is {round(roll,3)}; On is {on}; PCT is {round(pct,3)} .')
-        else:
-            r.append('Out')
-            r.append(self.play_out(batter,pitcher))
-            #return(f'Out!')
-            # Version one with roll feedback
-            # return (f'Out!  Roll is {round(roll,3)}; On is {on};  PCT is {round(pct,3)}.')
-        return(r)
-        #return (f'{b_last} is the batter and {p_last} is the pitcher')
-
+    def test_gameover(self,h,v,half,inning):
+        result = {
+            "done": False,
+            "h": h,
+            "v": v,
+            "half": half,
+            "inning": inning,
+            "check": False
+        }
+        if inning < 9:
+            result["check"] = True
+        elif half == "T":
+            result["check"] = True
+        elif h == v:
+            result["check"] = True
+        elif h > v:
+            result["check"] = True
+            result["done"] = True
+        elif h != v and half == "F":
+            result["check"] = True
+            result["done"] = True
+        return(result)
 
     def run_the_bases(self,scenario,ac):
         self.scenario = scenario
@@ -330,6 +274,7 @@ class Atbat():
             return("Game Over")
         inning = settings.inning
         half_inning = settings.half_inning
+        '''
         if inning < 9:
             pass
         elif inning == 9:
@@ -339,26 +284,41 @@ class Atbat():
                     result = (f'Game Over')
                     print(result)
                     return ( settings, visitor, home, result )
-#                    return(result)
+        # Extra Innings scenario
         else:
-            if self.h_total_runs != self.v_total_runs:
-            #    if half_inning == "Top":
+            if self.h_total_runs == self.v_total_runs:
+                pass
+            elif half_inning == "Top":
+                pass
+            else:
                 settings.done = True
                 result = (f'Game Over')
                 print (result)
                 return ( settings, visitor, home, result )
-#                return(result)
+        '''
         result = (f'{half_inning} of inning {inning}')
         if self.play_by_play:
             print (result)
         
         if ( half_inning == "Top"):
+            check_score = self.test_gameover( self.h_total_runs, self.v_total_runs, half_inning, inning)
+            if check_score['done'] == True:
+                settings.done = True
+                result = (f'Game Over')
+                print (result)
+                return ( settings, visitor, home, result )
             result = self.inning_top(settings.inning, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)
             settings.half_inning = "Bottom"
             self.v_linescore.set(f'{self.v_linescore.get()} {str(result["v_score"])}')
             settings.visitor_leads_off_inning = result["visitor_leads_off_inning"]
             
         else:
+            check_score = self.test_gameover( self.h_total_runs, self.v_total_runs, half_inning, inning)
+            if check_score['done'] == True:
+                settings.done = True
+                result = (f'Game Over')
+                print (result)
+                return ( settings, visitor, home, result )
             result = self.inning_bottom(settings.inning, home.lineup_dictionary, settings.home_leads_off_inning, visitor.pitcher)
             settings.half_inning = "Top"
             self.h_linescore.set(f'{self.h_linescore.get()} {str(result["h_score"])}')
@@ -372,7 +332,7 @@ class Atbat():
         self.visitor_lineup_dictionary=visitor_lineup_dictionary
         self.visitor_leads_off_inning= visitor_leads_off_inning
         self.home_pitcher=home_pitcher
-        
+        #
         out_count = 0
         scenario = (0,0,0)
         runthebases=[scenario,0]
@@ -383,22 +343,17 @@ class Atbat():
         i = visitor_leads_off_inning
         lineup_box   = []
         pitching_box = []
-
-
+        #
         while out_count < 3:
             up = visitor_lineup_dictionary[i%9]
             visitor_up_next = (i+1)%9
             r = self.play(up,home_pitcher)
-
-            #print (f'  {i+1}: {up["lastname"]} - {r[1]}')
-#            scorecard += (f'\n{i+1}: {up["player"]["LastName"]} - {r[1]}')
             scorecard += (f'\n{i+1}: {up["LastName"]} - {r["description"]}')
             if r["result"][0] == "H":
                 # scenario 0-7 and advance_code comes from play result
                 runthebases = self.run_the_bases(scenario,r["description"])
                 scenario = runthebases[0]
                 v_score += runthebases[1]
-                #v_score += 1
             if r["result"][0] == "O":
                 out_count += 1
                 runthebases[1]=0
@@ -412,10 +367,7 @@ class Atbat():
         if self.play_by_play:
             print ( f'Top of inning {inning} completed.')
         #
-        # instead of printing to the console, set the string to the StringVar object.
-        #print ( f'{visitor_lineup_dictionary[visitor_leads_off_inning]["lastname"]} will lead off next inning.')
         scorecard += ( f'\n{visitor_lineup_dictionary[visitor_leads_off_inning]["LastName"]} will lead off next inning.')
-#        self.play_by_play.set( scorecard )
         result = {}
         result["v_score"]=v_score
         result["visitor_leads_off_inning"]=visitor_leads_off_inning
@@ -429,7 +381,7 @@ class Atbat():
         self.home_lineup_dictionary=home_lineup_dictionary
         self.home_leads_off_inning= home_leads_off_inning
         self.visitor_pitcher=visitor_pitcher
-        
+        #        
         out_count = 0
         scenario = (0,0,0)
         runthebases=[scenario,0]
@@ -438,7 +390,7 @@ class Atbat():
         lineup_box   = []
         pitching_box = []
         i = home_leads_off_inning
-
+        #
         while out_count < 3:
             up = home_lineup_dictionary[(i)%9]
             home_up_next = (i+1)%9
@@ -449,7 +401,6 @@ class Atbat():
                 runthebases = self.run_the_bases(scenario,r["description"])
                 scenario = runthebases[0]
                 h_score += runthebases[1]
-                #v_score += 1
             if r["result"][0] == "O":
                 out_count += 1
                 runthebases[1]=0

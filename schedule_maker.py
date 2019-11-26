@@ -27,11 +27,11 @@ league = [
 def generate_schedule():
     # return SCHEDULE
     SCHEDULE = []
-    # games_per_series
-    gps = 3
+    # games_per_series - default is 3
+    gps = 1
     # times one team hosts a series with another team
-    home_series_indiv = 4
-    home_series_outdiv = 1
+    home_series_indiv = 1
+    home_series_outdiv = 0
     for div in league:
         #print (div["Div"])
         for team in div["Teams"]:

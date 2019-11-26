@@ -1,6 +1,7 @@
 # Get lists to build teams
 # 1/27/2018, rev 2/25/2018
 # revised 9/28/2019
+# tweaks 11/21/2019
 
 # import
 import requests
@@ -10,21 +11,12 @@ import base64
 import random
 
 # environment variables"
-api_url  = "https://api.mysportsfeeds.com/v1.2/pull/mlb/2018-regular/cumulative_player_stats.json"
+api_url  = "https://api.mysportsfeeds.com/v1.2/pull/mlb/2019-regular/cumulative_player_stats.json"
 api_password = os.environ["API_PASSWORD"]
 api_key = os.environ["API_KEY"]
-'''
-team = "PHI"
+api_msf = os.environ["MSF_KEY"]
 
-response = requests.get(
-    url = api_url,
-    params = {'team':team},
-    headers = {
-        "Authorization" : "Basic " + base64.b64encode('{}:{}'.format(api_key,api_password).encode('utf-8')).decode('ascii')
-    }
-)
-print ( response )
-'''
+
 ### FUNCTIONS
 def send_request(team):
     try:
@@ -106,6 +98,7 @@ def build_game_roster(team, year):
             new_player["W"]         = int(item['stats']['Wins']['#text'])
             new_player["L"]         = int(item['stats']['Losses']['#text'])
             new_player["SV"]        = int(item['stats']['Saves']['#text'])
+            new_player["IP"]        = int( float (item['stats']['InningsPitched']['#text']))
             new_player["2BA"]       = int(item['stats']['SecondBaseHitsAllowed']['#text'])
             new_player["3BA"]       = int(item['stats']['ThirdBaseHitsAllowed']['#text'])
             new_player["HRA"]       = int(item['stats']['HomerunsAllowed']['#text'])
@@ -197,13 +190,18 @@ def pick_starters_dh(roster):
             if p["SV"] > 0:
                 for x in range(p["SV"]):
                     j.append(p)
-        starter = random.choice(j)
-        # print (f'Closer{counter} - {starter["LastName"]}')
-        five_relief_pitchers.append(starter)
-        all_pitchers.remove(starter)
-        roster.remove(starter)
+        try:
+            starter = random.choice(j)
+            # print (f'Closer{counter} - {starter["LastName"]}')
+            five_relief_pitchers.append(starter)
+            all_pitchers.remove(starter)
+            roster.remove(starter)
+        except:
+            pass
     # get three other relief pitchers
-    for counter in range(3):
+    # more if we didn't get two closers
+    add_to_roster = 5 - len(five_relief_pitchers)    
+    for counter in range(add_to_roster):
         j = []
         for p in all_pitchers:
             if p["Position"] == "P" and p["G"] - p["GS"] > 0:
@@ -222,9 +220,12 @@ def pick_starters_dh(roster):
         if pos["Position"] == "C":
             for x in range(pos["GS"]):
                 j.append(pos)
-    starter = random.choice(j)
-    bench.append(starter)
-    roster.remove(starter)
+    try:
+        starter = random.choice(j)
+        bench.append(starter)
+        roster.remove(starter)
+    except:
+        pass
     # get a corner infielder
     j = []
     for pos in roster:
@@ -265,18 +266,31 @@ def pick_starters_dh(roster):
         if pos["Position"] in ["LF","CF","RF"]:
             for x in range(pos["G"]):
                 j.append(pos)
-    starter = random.choice(j)
-    bench.append(starter)
-    roster.remove(starter)
+    try:
+        starter = random.choice(j)
+        bench.append(starter)
+        roster.remove(starter)
+    except:
+        pass
     # get another infielder
     j = []
     for pos in roster:
         if pos["Position"] in ["1B","2B","3B","SS"]:
             for x in range(pos["G"]):
                 j.append(pos)
-    starter = random.choice(j)
-    bench.append(starter)
-    roster.remove(starter)
+    try:
+        starter = random.choice(j)
+        bench.append(starter)
+        roster.remove(starter)
+    except:
+        pass
+    # Check here for enough players
+    # if the len is wrong, pick random from remaining
+    for counter in range(6 - len(bench)):
+        starter = random.choice(roster)
+        bench.append(starter)
+        roster.remove(starter)
+    #
     response = {}
     response["lineup"]=starters
     response["rotation"]=five_starting_pitchers
