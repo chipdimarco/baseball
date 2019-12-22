@@ -1,4 +1,4 @@
-11-25-2019
+12-21-2019
 CLI Baseball is a production of Waban Studio
 chip.dimarco@waban-studio.com
 www.waban-studio.com
@@ -11,8 +11,11 @@ It creates a starting lineup with a starting pitcher from that roster.
 It simulates a baseball game between two teams.
 It outputs a play-by-play description, line score, and box score of the game results.
 It can play a one-off game or a complete schedule
-In schedule mode, it creates a W-L-T standings list after the schedule is complete
+In schedule mode, it creates a Win-Loss standings list after the schedule is complete
 It handles extra innings and substitutes pitchers in late innings
+It compiles stats and writes them to a postgres db
+It queries the db and reports statistical category leaders
+
 
 ++++++++++++++++
 March 11, 2018

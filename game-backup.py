@@ -2,7 +2,6 @@
 # 11/3/2019 refactor as class
 # - 11/23/2019 add score display and extra innings handler
 # - 11/25/2019 substitute pitchers
-# - 12/21/2019 add pitching stats to db
 
 # IMPORT
 import sys
@@ -23,7 +22,7 @@ import db
 #   V A R I A B L E S
 stadium_name = "Waban Field"
 SAVE_STATS   = True
-PLAY_BY_PLAY = False
+PLAY_BY_PLAY = True
 YEAR         = 2019
 
 #   M A I N   F U N C T I O N
@@ -74,7 +73,7 @@ class Game():
         self.home.lineup_dictionary = self.h_battingorder
         self.home.lineup_lastname   = self.home.create_lineup_lastname( self.home.lineup_dictionary )
         #
-        if self.settings.PLAY_BY_PLAY:
+        if PLAY_BY_PLAY:
             print (f'\nPitching Matchup')
             print ( self.visiting_team_name.ljust(18," ") + self.home_team_name )
             print (f'{ self.visitor.pitcher["FirstName"] } { self.visitor.pitcher["LastName"] }'.ljust(17," ") + f' { self.home.pitcher["FirstName"]} {self.home.pitcher["LastName"]}')
@@ -83,7 +82,6 @@ class Game():
 
 
         #   Print Roster Info when using verbose_mode
-
     def print_roster_info(self):
         print(f'\nVisitors\n====')
         print (f'\n{ self.visiting_team_name }\nLineup')
@@ -118,22 +116,19 @@ class Game():
         print (f'{ self.visitor.pitcher["FirstName"] } { self.visitor.pitcher["LastName"] }'.ljust(17," ") + f' { self.home.pitcher["FirstName"]} {self.home.pitcher["LastName"]}')
 
     def final_score_display(self, check_score):
-        print ( f'{ self.game_number }', end=": ")
         if check_score["h"] > check_score["v"]:
-            print (f'{ self.home_team_name } { check_score["h"] } - { self.visiting_team_name } { check_score["v"] }' + f'{ " in " + str(check_score["inning"]) if check_score["inning"] > 9 else ""}') 
-        elif check_score["v"] > check_score["h"]:
             print (f'{ self.visiting_team_name } { check_score["v"] } - { self.home_team_name } { check_score["h"] }' + f'{ " in " + str(check_score["inning"]) if check_score["inning"] > 9 else ""}')
+        elif check_score["v"] > check_score["h"]:
+            print (f'{ self.home_team_name } { check_score["h"] } - { self.visiting_team_name } { check_score["v"] }' + f'{ " in " + str(check_score["inning"]) if check_score["inning"] > 9 else ""}') 
         else:
             print (f'TIE in {check_score["inning"]}: { self.home_team_name } { check_score["h"] } - { self.visiting_team_name } { check_score["v"] } ') 
 
     def check_substitutions_top(self,i):
         p = self.home.pitcher
-#        if PLAY_BY_PLAY:
-#            print (f'Top {i}th', end=": ")
+        print (f'Top {i}th', end=": ")
         if p["ID"] == self.home.starting_pitcher_id:
             if math.floor((i/9)*100) < random.randrange(100):
-#                if PLAY_BY_PLAY:
-#                    print (f'{self.home.pitcher["LastName"]} stays in.')
+                print (f'{self.home.pitcher["LastName"]} stays in.')
                 return()
         ps    = []
         ps.append(p)
@@ -147,17 +142,16 @@ class Game():
                     p_ids.append(y["ID"])
         if len(self.h_starters["bullpen"]) > 0:
             rp = random.choice(self.h_starters["bullpen"])
- #           if PLAY_BY_PLAY:
- #               print (f'New Pitcher: { rp["FirstName"] } { rp["LastName"]}')
+            print (f'New Pitcher: { rp["FirstName"] } { rp["LastName"]}')
             self.h_starters["bullpen"].remove(rp)
             self.home.pitcher = rp
 
     def check_substitutions_bottom(self,i):
         p = self.visitor.pitcher
- #       print (f'Bottom {i}th', end=": ")
+        print (f'Bottom {i}th', end=": ")
         if p["ID"] == self.visitor.starting_pitcher_id:
             if math.floor((i/9)*100) < random.randrange(100):
-#                print (f'{self.visitor.pitcher["LastName"]} stays in.')
+                print (f'{self.visitor.pitcher["LastName"]} stays in.')
                 return()
         ps    = []
         ps.append(p)
@@ -171,7 +165,7 @@ class Game():
                     p_ids.append(y["ID"])
         if len(self.v_starters["bullpen"]) > 0:
             rp = random.choice(self.v_starters["bullpen"])
-#            print (f'New Pitcher: { rp["FirstName"] } { rp["LastName"]}')
+            print (f'New Pitcher: { rp["FirstName"] } { rp["LastName"]}')
             self.v_starters["bullpen"].remove(rp)
             self.visitor.pitcher = rp
 
@@ -189,7 +183,7 @@ class Game():
             # check_substitutions - change the pitcher for 7th
             if i >= 7:
                 self.check_substitutions_top(i)
-            inning_top = self.atbat.inning_top( i, self.visitor.lineup_dictionary, self.settings.visitor_leads_off_inning, self.home.pitcher)
+            inning_top = self.atbat.inning_top( self.settings.inning + i, self.visitor.lineup_dictionary, self.settings.visitor_leads_off_inning, self.home.pitcher)
             self.score.v_score += inning_top["v_score"]
             self.v_box.linescore.append( inning_top["v_score"])
             self.settings.visitor_leads_off_inning = inning_top["visitor_leads_off_inning"]
@@ -205,7 +199,7 @@ class Game():
                 self.settings.done = True
                 self.final_score_display(check_score)
                 return (  )
-            inning_bottom = self.atbat.inning_bottom( i, self.home.lineup_dictionary, self.settings.home_leads_off_inning, self.visitor.pitcher )
+            inning_bottom = self.atbat.inning_bottom( self.settings.inning + i, self.home.lineup_dictionary, self.settings.home_leads_off_inning, self.visitor.pitcher )
             self.score.h_score += inning_bottom["h_score"]
             self.h_box.linescore.append(inning_bottom["h_score"])
             self.settings.home_leads_off_inning = inning_bottom["home_leads_off_inning"]
@@ -220,6 +214,8 @@ class Game():
                 return (  )
             i += 1
         
+
+
     #   P O S T G A M E
     def postgame(self):
         if PLAY_BY_PLAY:
@@ -238,27 +234,17 @@ class Game():
         h_box_file = self.h_box.save_box_as_json ( self.h_box )
 
         if SAVE_STATS:
-            stats_v =  db.save_box_to_db(self.v_box, self.game_number)
-            stats_h =  db.save_box_to_db(self.h_box, self.game_number)
-            pstats_v = db.save_pitching_box_to_db(self.v_box, self.game_number)
-            pstats_h = db.save_pitching_box_to_db(self.h_box, self.game_number)
-
+            stats =  db.save_box_to_db(self.v_box, self.game_number)
+            if stats:
+                print ("Stats ran")
+            else:
+                print ("Stats failed")
 
         if PLAY_BY_PLAY:
-            if stats_v and pstats_v:
-                print ("Visitor stats saved")
-            else:
-                print ("Visitor stats failed to save")
-            if stats_h and pstats_h:
-                print ("Home stats saved")
-            else:
-                print ("Home stats failed to save")
             print ( self.v_box.print_box( v_box_file ))
             print ( self.h_box.print_box( h_box_file ))
         
-            # Print the pitching line
-            self.v_box.print_pitching_box(self.v_box)
-            self.h_box.print_pitching_box(self.h_box)
+        #for p in self.v_box["pitching"]
         
         return ( self.visiting_team_name, self.score.v_score, self.home_team_name, self.score.h_score)
 

@@ -94,7 +94,7 @@ class Atbat():
         roll  = random.random()
         pct   = on/total
         r     = {}
-        #
+        # TALLY BATTER STATS HERE
         lineup_box = {}
         lineup_box["BO"]   = b_bo
         lineup_box["ID"]   = b_id
@@ -104,12 +104,15 @@ class Atbat():
         lineup_box["H"]    = 0
         lineup_box["BB"]   = 0
         lineup_box["HR"]   = 0
+        # TALLY PITCHER STATS HERE
         pitching_box = {}
         pitching_box["ID"] = p_id
         pitching_box["NAME"] = p_name
+        pitching_box["BF"] = 0
         pitching_box["HA"] = 0
         pitching_box["K"]  = 0
         pitching_box["W"]  = 0
+        pitching_box["O"]  = 0
         #
         if (roll < pct ):
             r["result"] = "Hit"
@@ -120,12 +123,14 @@ class Atbat():
             else:
                 lineup_box["AB"] = 1
                 lineup_box["H"]  = 1
+                pitching_box["HA"] = 1
             if box == 'hr':
                 lineup_box["HR"] = 1
         else:
             r["result"] = 'Out'
             box = self.play_out(batter,pitcher)
             lineup_box["AB"]  = 1
+            pitching_box["O"] = 1
             if box == "so":
                 pitching_box["K"] = 1
         r["description"]  = box
@@ -268,34 +273,14 @@ class Atbat():
             else:
                 return(scenario,0)
 
+    #   Returns settings, visitor, home, result
+    #   Calls inning_top and inning_bottom
     def half_inning(self, settings, visitor, home):
         if settings.done:
             print ("Game Over")
             return("Game Over")
         inning = settings.inning
         half_inning = settings.half_inning
-        '''
-        if inning < 9:
-            pass
-        elif inning == 9:
-            if self.h_total_runs > self.v_total_runs:
-                if half_inning == "Bottom":
-                    settings.done = True
-                    result = (f'Game Over')
-                    print(result)
-                    return ( settings, visitor, home, result )
-        # Extra Innings scenario
-        else:
-            if self.h_total_runs == self.v_total_runs:
-                pass
-            elif half_inning == "Top":
-                pass
-            else:
-                settings.done = True
-                result = (f'Game Over')
-                print (result)
-                return ( settings, visitor, home, result )
-        '''
         result = (f'{half_inning} of inning {inning}')
         if self.play_by_play:
             print (result)
@@ -309,7 +294,8 @@ class Atbat():
                 return ( settings, visitor, home, result )
             result = self.inning_top(settings.inning, visitor.lineup_dictionary, settings.visitor_leads_off_inning, home.pitcher)
             settings.half_inning = "Bottom"
-            self.v_linescore.set(f'{self.v_linescore.get()} {str(result["v_score"])}')
+#            self.v_linescore.set(f'{self.v_linescore.get()} {str(result["v_score"])}')
+            v_linescore.set(f'{self.v_linescore.get()} {str(result["v_score"])}')
             settings.visitor_leads_off_inning = result["visitor_leads_off_inning"]
             
         else:
@@ -377,7 +363,7 @@ class Atbat():
 
     # BOTTOM of the inning
     def inning_bottom (self, inning, home_lineup_dictionary, home_leads_off_inning, visitor_pitcher):
-        self.inning = inning
+        #self.inning = inning
         self.home_lineup_dictionary=home_lineup_dictionary
         self.home_leads_off_inning= home_leads_off_inning
         self.visitor_pitcher=visitor_pitcher
